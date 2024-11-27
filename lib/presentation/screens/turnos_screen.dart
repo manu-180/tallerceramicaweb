@@ -87,98 +87,103 @@ class _TurnosScreenState extends State<TurnosScreen> {
     cargarDatos(); // Cargar datos iniciales
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Obtener el ancho de la pantalla
-    final double screenWidth = MediaQuery.of(context).size.width;
+@override
+Widget build(BuildContext context) {
+  // Obtener el ancho de la pantalla
+  final double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Turnos'),
-      ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Turnos'),
+    ),
+    body: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: cambiarSemanaAtras,
+              icon: const Icon(Icons.arrow_left, size: 28),
+            ),
+            const SizedBox(width: 40), // Espaciado entre las flechas
+            IconButton(
+              onPressed: cambiarSemanaAdelante,
+              icon: const Icon(Icons.arrow_right, size: 28),
+            ),
+          ],
+        ),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start, // Alinea arriba
             children: [
-              IconButton(
-                onPressed: cambiarSemanaAtras,
-                icon: const Icon(Icons.arrow_left, size: 28),
-              ),
-              const SizedBox(width: 40), // Espaciado entre las flechas
-              IconButton(
-                onPressed: cambiarSemanaAdelante,
-                icon: const Icon(Icons.arrow_right, size: 28),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: ListView.builder(
-                    itemCount: diasUnicos.length,
-                    itemBuilder: (context, index) {
-                      final turno = diasUnicos[index];
-                      final diaFecha = '${turno['dia']} - ${turno['fecha']}';
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                        child: Align(
-                          alignment: Alignment.topLeft, // Alinear a la izquierda
-                          child: SizedBox(
-                            width: screenWidth * 0.65, // 45% del ancho de la pantalla (botones de días)
-                            child: FilledButton(
-                              onPressed: () {
-                                seleccionarDia(diaFecha);
-                              },
-                              style: ButtonStyle(
-                                shape: WidgetStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10), // Menor borderRadius
-                                  ),
+              // Sección izquierda: Botones de días
+              Expanded(
+                flex: 2,
+                child: ListView.builder(
+                  itemCount: diasUnicos.length,
+                  itemBuilder: (context, index) {
+                    final turno = diasUnicos[index];
+                    final diaFecha = '${turno['dia']} - ${turno['fecha']}';
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                      child: Align(
+                        alignment: Alignment.topLeft, // Alinear a la izquierda
+                        child: SizedBox(
+                          width: screenWidth * 0.65, // 65% del ancho de la pantalla
+                          child: ElevatedButton(
+                              onPressed: () => seleccionarDia(diaFecha),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              child: Text(
-                                diaFecha,
-                                style: const TextStyle(fontSize: 11),
-                              ),
+                            child: Text(
+                              diaFecha,
+                              style: const TextStyle(fontSize: 11),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
-                Expanded(
-                  flex: 3,
-                  child: diaSeleccionado != null
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            horariosPorDia[diaSeleccionado] != null &&
-                                    horariosPorDia[diaSeleccionado]!.isNotEmpty
-                                ? ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: horariosPorDia[diaSeleccionado]!.length,
-                                    itemBuilder: (context, index) {
-                                      final horario = horariosPorDia[diaSeleccionado]![index];
-                                      final diaYHora = '${horario['dia']} ${horario['fecha']} ${horario['hora']}';
-                                      final idClase = horario['id'];
-                                      return Padding(
-                                        padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                                        child: FractionallySizedBox(
-                                          alignment: Alignment.center,
-                                          widthFactor: 0.60,
+              ),
+              // Sección derecha: Botones de horarios
+              Expanded(
+                flex: 3,
+                child: diaSeleccionado != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min, // Mantén el tamaño mínimo
+                        children: [
+                          horariosPorDia[diaSeleccionado] != null &&
+                                  horariosPorDia[diaSeleccionado]!.isNotEmpty
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: horariosPorDia[diaSeleccionado]!.length,
+                                  itemBuilder: (context, index) {
+                                    final horario = horariosPorDia[diaSeleccionado]![index];
+                                    final diaYHora =
+                                        '${horario['dia']} ${horario['fecha']} ${horario['hora']}';
+                                    final idClase = horario['id'];
+                                    return Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                                      child: Align(
+                                        alignment: Alignment.topCenter, // Alinear arriba y centro
+                                        child: SizedBox(
+                                          width: screenWidth * 0.50, // Ajustar ancho
                                           child: FilledButton(
                                             onPressed: () {
-                                              manejarSeleccionClase(idClase, "manunv97@gmail.com"); // Usar la función personalizada
+                                              manejarSeleccionClase(
+                                                idClase,
+                                                "manunv97@gmail.com",
+                                              );
                                             },
                                             style: ButtonStyle(
-                                              backgroundColor: WidgetStateProperty.all(Colors.green),
-                                              shape: WidgetStateProperty.all(
+                                              backgroundColor: MaterialStateProperty.all(
+                                                  Colors.green),
+                                              shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(10),
                                                 ),
@@ -190,21 +195,22 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                             ),
                                           ),
                                         ),
-                                      );
-                                    },
-                                  )
-                                : const Text('No hay clases disponibles para este día.'),
-                          ],
-                        )
-                      : const Center(
-                          child: Text('Seleccione un día para ver las clases'),
-                        ),
-                ),
-              ],
-            ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : const Text('No hay clases disponibles para este día.'),
+                        ],
+                      )
+                    : const Center(
+                        child: Text('Seleccione un día para ver las clases'),
+                      ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }

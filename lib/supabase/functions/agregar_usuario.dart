@@ -1,5 +1,5 @@
-import 'package:supabase/supabase.dart';
-import 'package:taller_ceramica/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/models/clase_models.dart';
 
 class AgregarUsuario {
   final SupabaseClient supabaseClient;
@@ -8,36 +8,27 @@ class AgregarUsuario {
 
   Future<void> agregarUsuarioAClase(int idClase, String nuevoMail) async {
     try {
-      // Obtener la clase actual para consultar el listado de mails existente
-      
-      final data = await supabase.from('respaldo').select();
+      // Obtener la clase por ID
+      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
 
-      List<dynamic> mailsActuales = [];
-      
-
-      for (var i in data) {
-        if (i['id'] == idClase) {
-          mailsActuales = i['mails'];
-        }
-      }
+      final clase = ClaseModels.fromMap(data);
 
       // Agregar el nuevo mail si no está ya en la lista
-      if (!mailsActuales.contains(nuevoMail)) {
-        mailsActuales.add(nuevoMail);
+      if (!clase.mails.contains(nuevoMail)) {
+        clase.mails.add(nuevoMail);
 
         // Actualizar la base de datos con el nuevo listado de mails
-        final updateResponse = await supabaseClient
+        await supabaseClient
             .from('respaldo')
-            .update({'mails': mailsActuales})
+            .update(clase.toMap())
             .eq('id', idClase);
 
+        print("Usuario agregado con éxito.");
       } else {
         print("El mail ya está registrado en esta clase.");
       }
-    } catch (e) {
+        } catch (e) {
       print("Error: $e");
     }
   }
 }
-
-// asd
