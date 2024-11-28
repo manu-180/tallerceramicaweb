@@ -26,31 +26,18 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   
 
-  Future<void> cargarDatos() async {
-    final datos = await ObtenerTotalInfo().obtenerInfo();
-    final datosSemana = datos.where((clase) => clase.semana == semanaSeleccionada).toList();
-    datosSemana.sort((a, b) => a.id.compareTo(b.id));
+  void cargarDatos() async {
+    setState(() {
+      isLoading = true;  // Comienza la carga
+    });
 
-    final diasSet = <String>{};
-    diasUnicos = datosSemana.where((clase) {
-      final diaFecha = '${clase.dia} - ${clase.fecha}';
-      if (diasSet.contains(diaFecha)) {
-        return false;
-      } else {
-        diasSet.add(diaFecha);
-        return true;
-      }
-    }).toList();
+    // Aquí iría la lógica real de carga de tus datos (por ejemplo, de una API o base de datos)
+    await Future.delayed(const Duration(seconds: 2)); // Simulamos una carga de datos
 
-    horariosPorDia = {};
-    for (var clase in datosSemana) {
-      final diaFecha = '${clase.dia} - ${clase.fecha}';
-      horariosPorDia.putIfAbsent(diaFecha, () => []).add(clase);
-    }
-
-    if (mounted) {
-      setState(() {});
-    }
+    // Después de que los datos se hayan cargado, cambias el estado a falso
+    setState(() {
+      isLoading = false;  // Los datos han terminado de cargarse
+    });
   }
 
   void manejarSeleccionClase(int id, String user) async {
@@ -120,7 +107,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
       appBar: const CustomAppBar(),
       body: Column(
         children: [
-          SemanaNavigation(
+          _SemanaNavigation(
             semanaSeleccionada: semanaSeleccionada,
             cambiarSemanaAdelante: cambiarSemanaAdelante,
             cambiarSemanaAtras: cambiarSemanaAtras,
@@ -132,7 +119,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                 // Sección de días
                 Expanded(
                   flex: 2,
-                  child: DiaSelection(
+                  child: _DiaSelection(
                     diasUnicos: diasUnicos,
                     seleccionarDia: seleccionarDia,
                   ),
@@ -165,17 +152,16 @@ class _TurnosScreenState extends State<TurnosScreen> {
 }
 
 // Widget para la navegación de semanas
-class SemanaNavigation extends StatelessWidget {
+class _SemanaNavigation extends StatelessWidget {
   final String semanaSeleccionada;
   final VoidCallback cambiarSemanaAdelante;
   final VoidCallback cambiarSemanaAtras;
 
-  const SemanaNavigation({
-    Key? key,
+  const _SemanaNavigation({
     required this.semanaSeleccionada,
     required this.cambiarSemanaAdelante,
     required this.cambiarSemanaAtras,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -197,15 +183,14 @@ class SemanaNavigation extends StatelessWidget {
 }
 
 // Widget para la selección de días
-class DiaSelection extends StatelessWidget {
+class _DiaSelection extends StatelessWidget {
   final List<ClaseModels> diasUnicos;
   final Function(String) seleccionarDia;
 
-  const DiaSelection({
-    Key? key,
+  const _DiaSelection({
     required this.diasUnicos,
     required this.seleccionarDia,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
