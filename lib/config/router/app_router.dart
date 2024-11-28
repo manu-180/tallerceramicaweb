@@ -15,5 +15,11 @@ final appRouter = GoRouter(
       name: "turnos",
       builder: (context, state) => const TurnosScreen()
       ),
+    GoRoute(
+      path: "/misclases",
+      name: "misclases",
+      builder: (context, state) => const MisClasesScreen()
+      ),
+    
       
   ]);

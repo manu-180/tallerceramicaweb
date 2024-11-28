@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/supabase/functions/agregar_usuario.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class TurnosScreen extends StatefulWidget {
   const TurnosScreen({super.key});
@@ -11,28 +13,27 @@ class TurnosScreen extends StatefulWidget {
 }
 
 class _TurnosScreenState extends State<TurnosScreen> {
-  String semanaSeleccionada = 'semana1'; // Semana inicial
-  String? diaSeleccionado; // Día seleccionado (para mostrar horarios)
-  final List<String> semanas = ['semana1', 'semana2', 'semana3', 'semana4', 'semana5'];
 
-  List<Map<String, dynamic>> diasUnicos = [];
-  Map<String, List<Map<String, dynamic>>> horariosPorDia = {};
+  String semanaSeleccionada = 'semana1'; // Semana inicial
+  String? diaSeleccionado; // Día seleccionado
+  final List<String> semanas = ['semana1', 'semana2', 'semana3', 'semana4', 'semana5'];
+  bool isLoading = true;  // Indicador de carga
+
+
+  List<ClaseModels> todasLasClases = [];
+  List<ClaseModels> diasUnicos = [];
+  Map<String, List<ClaseModels>> horariosPorDia = {};
+
+  
 
   Future<void> cargarDatos() async {
     final datos = await ObtenerTotalInfo().obtenerInfo();
+    final datosSemana = datos.where((clase) => clase.semana == semanaSeleccionada).toList();
+    datosSemana.sort((a, b) => a.id.compareTo(b.id));
 
-    // Filtrar los datos según la semana seleccionada
-    final datosSemana = List<Map<String, dynamic>>.from(
-      datos.where((elemento) => elemento['semana'] == semanaSeleccionada),
-    );
-
-    // Ordenar por ID
-    datosSemana.sort((a, b) => a['id'].compareTo(b['id']));
-
-    // Filtrar días únicos
     final diasSet = <String>{};
-    diasUnicos = datosSemana.where((turno) {
-      final diaFecha = '${turno['dia']} - ${turno['fecha']}';
+    diasUnicos = datosSemana.where((clase) {
+      final diaFecha = '${clase.dia} - ${clase.fecha}';
       if (diasSet.contains(diaFecha)) {
         return false;
       } else {
@@ -41,38 +42,37 @@ class _TurnosScreenState extends State<TurnosScreen> {
       }
     }).toList();
 
-    // Mapear horarios por día
     horariosPorDia = {};
-    for (var turno in datosSemana) {
-      final diaFecha = '${turno['dia']} - ${turno['fecha']}';
-      if (!horariosPorDia.containsKey(diaFecha)) {
-        horariosPorDia[diaFecha] = [];
-      }
-      horariosPorDia[diaFecha]!.add(turno);
+    for (var clase in datosSemana) {
+      final diaFecha = '${clase.dia} - ${clase.fecha}';
+      horariosPorDia.putIfAbsent(diaFecha, () => []).add(clase);
     }
 
-    // Limpiar selección al cambiar semana
-    diaSeleccionado = null;
-
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
-  void manejarSeleccionClase(int id, String user) {
-    AgregarUsuario(supabase).agregarUsuarioAClase(id, user);
+  void manejarSeleccionClase(int id, String user) async {
+    await AgregarUsuario(supabase).agregarUsuarioAClase(id, user);
+
+    setState(() {
+      cargarDatos(); // Esto actualiza los horarios y el estado de los botones.
+    });
   }
 
   void cambiarSemanaAdelante() {
     final indiceActual = semanas.indexOf(semanaSeleccionada);
-    final nuevoIndice = (indiceActual + 1) % semanas.length; // Ciclo circular hacia adelante
+    final nuevoIndice = (indiceActual + 1) % semanas.length;
     semanaSeleccionada = semanas[nuevoIndice];
-    cargarDatos(); // Recargar datos con la nueva semana
+    cargarDatos();
   }
 
   void cambiarSemanaAtras() {
     final indiceActual = semanas.indexOf(semanaSeleccionada);
-    final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length; // Ciclo circular hacia atrás
+    final nuevoIndice = (indiceActual - 1 + semanas.length) % semanas.length;
     semanaSeleccionada = semanas[nuevoIndice];
-    cargarDatos(); // Recargar datos con la nueva semana
+    cargarDatos();
   }
 
   void seleccionarDia(String dia) {
@@ -81,136 +81,152 @@ class _TurnosScreenState extends State<TurnosScreen> {
     });
   }
 
+  Widget construirBotonHorario(ClaseModels clase) {
+    final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
+    final estaLlena = clase.mails.length >= 5;
+    final yaInscripto = clase.mails.contains("manunv97@gmail.com");
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: FilledButton(
+          onPressed: (estaLlena || yaInscripto)
+              ? null
+              : () => manejarSeleccionClase(clase.id, "manunv97@gmail.com"),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              (estaLlena || yaInscripto) ? Colors.grey : Colors.green,
+            ),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          child: Text(diaYHora, style: const TextStyle(fontSize: 11)),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    cargarDatos(); // Cargar datos iniciales
+    cargarDatos();
   }
 
-@override
-Widget build(BuildContext context) {
-  // Obtener el ancho de la pantalla
-  final double screenWidth = MediaQuery.of(context).size.width;
-
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text('Turnos'),
-    ),
-    body: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              onPressed: cambiarSemanaAtras,
-              icon: const Icon(Icons.arrow_left, size: 28),
-            ),
-            const SizedBox(width: 40), // Espaciado entre las flechas
-            IconButton(
-              onPressed: cambiarSemanaAdelante,
-              icon: const Icon(Icons.arrow_right, size: 28),
-            ),
-          ],
-        ),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start, // Alinea arriba
-            children: [
-              // Sección izquierda: Botones de días
-              Expanded(
-                flex: 2,
-                child: ListView.builder(
-                  itemCount: diasUnicos.length,
-                  itemBuilder: (context, index) {
-                    final turno = diasUnicos[index];
-                    final diaFecha = '${turno['dia']} - ${turno['fecha']}';
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                      child: Align(
-                        alignment: Alignment.topLeft, // Alinear a la izquierda
-                        child: SizedBox(
-                          width: screenWidth * 0.65, // 65% del ancho de la pantalla
-                          child: ElevatedButton(
-                              onPressed: () => seleccionarDia(diaFecha),
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            child: Text(
-                              diaFecha,
-                              style: const TextStyle(fontSize: 11),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              // Sección derecha: Botones de horarios
-              Expanded(
-                flex: 3,
-                child: diaSeleccionado != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min, // Mantén el tamaño mínimo
-                        children: [
-                          horariosPorDia[diaSeleccionado] != null &&
-                                  horariosPorDia[diaSeleccionado]!.isNotEmpty
-                              ? ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: horariosPorDia[diaSeleccionado]!.length,
-                                  itemBuilder: (context, index) {
-                                    final horario = horariosPorDia[diaSeleccionado]![index];
-                                    final diaYHora =
-                                        '${horario['dia']} ${horario['fecha']} ${horario['hora']}';
-                                    final idClase = horario['id'];
-                                    return Padding(
-                                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                                      child: Align(
-                                        alignment: Alignment.topCenter, // Alinear arriba y centro
-                                        child: SizedBox(
-                                          width: screenWidth * 0.50, // Ajustar ancho
-                                          child: FilledButton(
-                                            onPressed: () {
-                                              manejarSeleccionClase(
-                                                idClase,
-                                                "manunv97@gmail.com",
-                                              );
-                                            },
-                                            style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(
-                                                  Colors.green),
-                                              shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              diaYHora,
-                                              style: const TextStyle(fontSize: 11),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                )
-                              : const Text('No hay clases disponibles para este día.'),
-                        ],
-                      )
-                    : const Center(
-                        child: Text('Seleccione un día para ver las clases'),
-                      ),
-              ),
-            ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      body: Column(
+        children: [
+          SemanaNavigation(
+            semanaSeleccionada: semanaSeleccionada,
+            cambiarSemanaAdelante: cambiarSemanaAdelante,
+            cambiarSemanaAtras: cambiarSemanaAtras,
           ),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Sección de días
+                Expanded(
+                  flex: 2,
+                  child: DiaSelection(
+                    diasUnicos: diasUnicos,
+                    seleccionarDia: seleccionarDia,
+                  ),
+                ),
+                // Sección de horarios
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 40, right: 10),
+                    child: diaSeleccionado != null
+                        ? ListView.builder(
+                            itemCount: horariosPorDia[diaSeleccionado]?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              final clase = horariosPorDia[diaSeleccionado]![index];
+                              return construirBotonHorario(clase);
+                            },
+                          )
+                        : const Center(
+                            child: Text('Seleccione un día para ver las clases'),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Widget para la navegación de semanas
+class SemanaNavigation extends StatelessWidget {
+  final String semanaSeleccionada;
+  final VoidCallback cambiarSemanaAdelante;
+  final VoidCallback cambiarSemanaAtras;
+
+  const SemanaNavigation({
+    Key? key,
+    required this.semanaSeleccionada,
+    required this.cambiarSemanaAdelante,
+    required this.cambiarSemanaAtras,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          onPressed: cambiarSemanaAtras,
+          icon: const Icon(Icons.arrow_left, size: 28),
+        ),
+        const SizedBox(width: 40),
+        IconButton(
+          onPressed: cambiarSemanaAdelante,
+          icon: const Icon(Icons.arrow_right, size: 28),
         ),
       ],
-    ),
-  );
+    );
+  }
 }
+
+// Widget para la selección de días
+class DiaSelection extends StatelessWidget {
+  final List<ClaseModels> diasUnicos;
+  final Function(String) seleccionarDia;
+
+  const DiaSelection({
+    Key? key,
+    required this.diasUnicos,
+    required this.seleccionarDia,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: diasUnicos.length,
+      itemBuilder: (context, index) {
+        final clase = diasUnicos[index];
+        final diaFecha = '${clase.dia} - ${clase.fecha}';
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+          child: ElevatedButton(
+            onPressed: () => seleccionarDia(diaFecha),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Text(diaFecha, style: const TextStyle(fontSize: 11)),
+          ),
+        );
+      },
+    );
+  }
 }

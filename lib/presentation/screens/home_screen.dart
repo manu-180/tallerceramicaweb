@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,15 +7,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Taller'),
-      ),
-      body: Column(
-        children: [
-          FilledButton(onPressed: (){context.push("/turnos");}, child: const Text('Ir a turnos')),
-          FilledButton(onPressed: (){}, child: const Text("Prueba"))
-        ],
-      )
+      appBar: const CustomAppBar(),
     );
   }
 }

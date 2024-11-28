@@ -5,6 +5,7 @@ class ClaseModels {
   final String fecha;
   final String hora;
   final List<String> mails;
+  final bool? isFull;
 
   ClaseModels({
     required this.id,
@@ -13,6 +14,7 @@ class ClaseModels {
     required this.fecha,
     required this.hora,
     required this.mails,
+    this.isFull = false,
   });
 
   // Método para convertir un Map (desde Supabase) a una instancia de Clase
@@ -24,6 +26,26 @@ class ClaseModels {
       fecha: map['fecha'] as String,
       hora: map['hora'] as String,
       mails: List<String>.from(map['mails'] ?? []),
+    );
+  }
+
+  ClaseModels copyWith({
+    int? id,
+    String? dia,
+    String? semana,
+    String? fecha,
+    String? hora,
+    List<String>? mails,
+    bool? isFull,
+  }) {
+    return ClaseModels(
+      id: id ?? this.id,
+      dia: dia ?? this.dia,
+      semana: semana ?? this.semana,
+      fecha: fecha ?? this.fecha,
+      hora: hora ?? this.hora,
+      mails: mails ?? this.mails,
+      isFull: isFull ?? this.isFull,
     );
   }
 
