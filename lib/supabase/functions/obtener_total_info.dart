@@ -7,6 +7,11 @@ class ObtenerTotalInfo {
     // Convertir la lista de mapas a una lista de instancias de ClaseModels.
     return List<ClaseModels>.from(data.map((map) => ClaseModels.fromMap(map)));
   }
+  Future<List> printInfo() async {
+    final data = await supabase.from('respaldo').select();
+    // Convertir la lista de mapas a una lista de instancias de ClaseModels.
+    return data;
+  }
 }
 
 

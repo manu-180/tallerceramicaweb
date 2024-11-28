@@ -51,7 +51,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 context.go('/turnos');
               } else if (value == '/misclases') {
                 context.go('/misclases');
-              }
+              } else if (value == '/gestionhorarios') {
+                context.go('/gestionhorarios');
+              } 
             },
             itemBuilder: (BuildContext context) => [
               const PopupMenuItem(
@@ -62,6 +64,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 value: '/misclases',
                 child: Text('Mis clases' ,),
               ),
+              const PopupMenuItem(
+                value: '/gestionhorarios',
+                child: Text('gestion horarios' ,),
+              ),
+              
             ],
             icon: Icon(Icons.more_vert, color: color.surface,), // Icono del botón desplegable
           ),

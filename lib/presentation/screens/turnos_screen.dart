@@ -13,20 +13,20 @@ class TurnosScreen extends StatefulWidget {
 }
 
 class _TurnosScreenState extends State<TurnosScreen> {
-
   String semanaSeleccionada = 'semana1'; // Semana inicial
   String? diaSeleccionado; // Día seleccionado
   final List<String> semanas = ['semana1', 'semana2', 'semana3', 'semana4', 'semana5'];
-  bool isLoading = true;  // Indicador de carga
-
+  bool isLoading = true; // Indicador de carga
 
   List<ClaseModels> todasLasClases = [];
   List<ClaseModels> diasUnicos = [];
   Map<String, List<ClaseModels>> horariosPorDia = {};
 
-  
-
   Future<void> cargarDatos() async {
+    setState(() {
+      isLoading = true;
+    });
+
     final datos = await ObtenerTotalInfo().obtenerInfo();
     final datosSemana = datos.where((clase) => clase.semana == semanaSeleccionada).toList();
     datosSemana.sort((a, b) => a.id.compareTo(b.id));
@@ -49,7 +49,9 @@ class _TurnosScreenState extends State<TurnosScreen> {
     }
 
     if (mounted) {
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -132,10 +134,12 @@ class _TurnosScreenState extends State<TurnosScreen> {
                 // Sección de días
                 Expanded(
                   flex: 2,
-                  child: _DiaSelection(
-                    diasUnicos: diasUnicos,
-                    seleccionarDia: seleccionarDia,
-                  ),
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _DiaSelection(
+                          diasUnicos: diasUnicos,
+                          seleccionarDia: seleccionarDia,
+                        ),
                 ),
                 // Sección de horarios
                 Expanded(
@@ -143,13 +147,15 @@ class _TurnosScreenState extends State<TurnosScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 40, right: 10),
                     child: diaSeleccionado != null
-                        ? ListView.builder(
-                            itemCount: horariosPorDia[diaSeleccionado]?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              final clase = horariosPorDia[diaSeleccionado]![index];
-                              return construirBotonHorario(clase);
-                            },
-                          )
+                        ? isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ListView.builder(
+                                itemCount: horariosPorDia[diaSeleccionado]?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  final clase = horariosPorDia[diaSeleccionado]![index];
+                                  return construirBotonHorario(clase);
+                                },
+                              )
                         : const Center(
                             child: Text('Seleccione un día para ver las clases'),
                           ),

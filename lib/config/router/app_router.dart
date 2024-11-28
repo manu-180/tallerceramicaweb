@@ -1,6 +1,7 @@
 
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
+import 'package:taller_ceramica/presentation/screens/gestion_horarios_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: "/",
@@ -20,6 +21,12 @@ final appRouter = GoRouter(
       name: "misclases",
       builder: (context, state) => const MisClasesScreen()
       ),
+    GoRoute(
+      path: "/gestionhorarios",
+      name: "gestionhorarios",
+      builder: (context, state) => const GestionHorariosScreen()
+      ),
+    
     
       
   ]);
