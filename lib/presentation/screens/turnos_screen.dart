@@ -26,18 +26,31 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   
 
-  void cargarDatos() async {
-    setState(() {
-      isLoading = true;  // Comienza la carga
-    });
+  Future<void> cargarDatos() async {
+    final datos = await ObtenerTotalInfo().obtenerInfo();
+    final datosSemana = datos.where((clase) => clase.semana == semanaSeleccionada).toList();
+    datosSemana.sort((a, b) => a.id.compareTo(b.id));
 
-    // Aquí iría la lógica real de carga de tus datos (por ejemplo, de una API o base de datos)
-    await Future.delayed(const Duration(seconds: 2)); // Simulamos una carga de datos
+    final diasSet = <String>{};
+    diasUnicos = datosSemana.where((clase) {
+      final diaFecha = '${clase.dia} - ${clase.fecha}';
+      if (diasSet.contains(diaFecha)) {
+        return false;
+      } else {
+        diasSet.add(diaFecha);
+        return true;
+      }
+    }).toList();
 
-    // Después de que los datos se hayan cargado, cambias el estado a falso
-    setState(() {
-      isLoading = false;  // Los datos han terminado de cargarse
-    });
+    horariosPorDia = {};
+    for (var clase in datosSemana) {
+      final diaFecha = '${clase.dia} - ${clase.fecha}';
+      horariosPorDia.putIfAbsent(diaFecha, () => []).add(clase);
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void manejarSeleccionClase(int id, String user) async {
