@@ -85,22 +85,21 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   Widget construirBotonHorario(ClaseModels clase) {
     final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
-    final estaLlena = clase.mails.length >= 5;
-    final yaInscripto = clase.mails.contains("manunv97@gmail.com");
+    final estaLlena = clase.mails.length >= 5; // Verifica si la clase está llena
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,
         child: FilledButton(
-          onPressed: (estaLlena || yaInscripto)
-              ? null
-              : () => manejarSeleccionClase(clase.id, "manunv97@gmail.com"),
+          onPressed: (estaLlena) 
+              ? null  // Solo deshabilita el botón si la clase tiene 5 personas
+              : () => manejarSeleccionClase(clase.id, "Manuel Navarro"),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              (estaLlena || yaInscripto) ? Colors.grey : Colors.green,
+            backgroundColor: WidgetStateProperty.all(
+              (estaLlena) ? Colors.grey : Colors.green, // Cambia el color si está llena
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
@@ -156,9 +155,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                   return construirBotonHorario(clase);
                                 },
                               )
-                        : const Center(
-                            child: Text('Seleccione un día para ver las clases'),
-                          ),
+                        : null,
                   ),
                 ),
               ],

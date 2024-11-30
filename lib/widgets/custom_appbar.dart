@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize; // Tamaño del AppBar
 
-  const CustomAppBar({super.key})
-      : preferredSize = const Size.fromHeight(60.0);
+  const CustomAppBar({super.key}) : preferredSize = const Size.fromHeight(60.0);
+
+  @override
+  _CustomAppBarState createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  bool _isMenuOpen = false; // Estado para controlar si el menú está abierto
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: color.surface
+                    color: color.surface,
                   ),
                 ),
               ],
@@ -53,7 +59,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 context.go('/misclases');
               } else if (value == '/gestionhorarios') {
                 context.go('/gestionhorarios');
-              } 
+              } else if (value == '/usuarios') {
+                context.go('/usuarios');
+              }
             },
             itemBuilder: (BuildContext context) => [
               const PopupMenuItem(
@@ -62,15 +70,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               const PopupMenuItem(
                 value: '/misclases',
-                child: Text('Mis clases' ,),
+                child: Text('Mis clases'),
               ),
               const PopupMenuItem(
                 value: '/gestionhorarios',
-                child: Text('gestion horarios' ,),
+                child: Text('Gestión horarios'),
               ),
-              
+              const PopupMenuItem(
+                value: '/usuarios',
+                child: Text('Usuarios'),
+              ),
             ],
-            icon: Icon(Icons.more_vert, color: color.surface,), // Icono del botón desplegable
+            icon: AnimatedRotation(
+              turns: _isMenuOpen ? 0.5 : 0.0, // Rota el ícono cuando el menú está abierto
+              duration: const Duration(milliseconds: 200),
+              child: Icon(Icons.arrow_drop_down, color: color.surface),
+            ),
+            onOpened: () {
+              setState(() {
+                _isMenuOpen = true; // Menú abierto
+              });
+            },
+            onCanceled: () {
+              setState(() {
+                _isMenuOpen = false; // Menú cerrado
+              });
+            },
+            offset: const Offset(0, 45), // Ajusta la posición hacia abajo
           ),
         ],
       ),

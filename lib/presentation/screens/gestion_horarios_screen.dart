@@ -140,7 +140,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Insertar x4:'),
+                      Text(tipoAccion == "insertar"
+                  ? "Insertar x4"
+                  : "Remover x4"),
                         Switch(
                           value: insertarX4,
                           onChanged: (value) {

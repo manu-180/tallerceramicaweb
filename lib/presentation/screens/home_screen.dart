@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: FilledButton(onPressed: () {},child: const Text("print info"),),
+      // body: FilledButton(onPressed: () {},child: const Text("print info"),),
     );
   }
 }

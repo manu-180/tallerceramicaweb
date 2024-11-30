@@ -4,6 +4,7 @@ class UsuarioModels {
   final String fullname;
   final String userUid;
   final String sexo;
+  final int clasesDisponibles;
 
   UsuarioModels({
     required this.id,
@@ -11,6 +12,7 @@ class UsuarioModels {
     required this.fullname,
     required this.userUid,
     required this.sexo,
+    required this.clasesDisponibles,
   });
 
   // Función para convertir el mapa a un objeto UsuarioModels
@@ -21,6 +23,7 @@ class UsuarioModels {
       fullname: map['fullname'],
       userUid: map['user_uid'],
       sexo: map['sexo'],
+      clasesDisponibles: map['clases_disponibles'],
     );
   }
 }
