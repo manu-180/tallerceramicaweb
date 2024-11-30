@@ -13,7 +13,7 @@ class MisClasesScreen extends StatefulWidget {
 }
 
 class _MisClasesScreenState extends State<MisClasesScreen> {
-  final String usuario = "manunv97@gmail.com"; // Usuario actual (temporal)
+  final String usuario = "Manuel Navarro"; // Usuario actual (temporal)
   List<ClaseModels> clasesDelUsuario = []; // Clases donde está registrado
 
   Future<void> cargarClasesUsuario() async {
@@ -21,6 +21,9 @@ class _MisClasesScreenState extends State<MisClasesScreen> {
 
   // Filtrar las clases donde el usuario está registrado
   clasesDelUsuario = datos.where((clase) => clase.mails.contains(usuario)).toList();
+
+  // Ordenar las clases por ID
+  clasesDelUsuario.sort((a, b) => a.id.compareTo(b.id));
 
   // Verificar si el widget sigue montado antes de llamar a setState
   if (mounted) {
@@ -68,7 +71,7 @@ class _MisClasesScreenState extends State<MisClasesScreen> {
                       trailing: ElevatedButton(
                         onPressed: () {
                           // Lógica para cancelar la clase (opcional)
-                          cancelarClase(clase.id, "manunv97@gmail.com");
+                          cancelarClase(clase.id, "Manuel Navarro");
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: const Color.fromARGB(166, 252, 93, 93),

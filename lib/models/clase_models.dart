@@ -5,7 +5,7 @@ class ClaseModels {
   final String fecha;
   final String hora;
   final List<String> mails;
-  final int lugarDisponible;
+  final int? lugarDisponible;
   final bool? isFull;
 
   ClaseModels({
@@ -27,7 +27,7 @@ class ClaseModels {
       dia: map['dia'] as String,
       fecha: map['fecha'] as String,
       hora: map['hora'] as String,
-      lugarDisponible: map['lugarDisponible'] as int,
+      lugarDisponible: map['lugarDisponible'] != null ? map['lugarDisponible'] as int : null,
       mails: List<String>.from(map['mails'] ?? []),
     );
   }

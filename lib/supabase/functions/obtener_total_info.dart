@@ -1,16 +1,15 @@
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/models/clase_models.dart'; // Asegúrate de tener esta ruta correcta.
+import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/models/usuario_models.dart'; // Asegúrate de tener esta ruta correcta.
 
 class ObtenerTotalInfo {
   Future<List<ClaseModels>> obtenerInfo() async {
     final data = await supabase.from('respaldo').select();
-    // Convertir la lista de mapas a una lista de instancias de ClaseModels.
     return List<ClaseModels>.from(data.map((map) => ClaseModels.fromMap(map)));
   }
-  Future<List> printInfo() async {
-    final data = await supabase.from('respaldo').select();
-    // Convertir la lista de mapas a una lista de instancias de ClaseModels.
-    return data;
+  Future<List<UsuarioModels>> obtenerInfoUsuarios() async {
+    final data = await supabase.from('usuarios').select();
+    return List<UsuarioModels>.from(data.map((map) => UsuarioModels.fromMap(map)));
   }
 }
 
