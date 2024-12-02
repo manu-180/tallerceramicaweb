@@ -35,96 +35,117 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final user = ref.watch(authProvider); // Observa el estado del usuario
-    final color = Theme.of(context).colorScheme;
+Widget build(BuildContext context) {
+  final user = ref.watch(authProvider); // Observa el estado del usuario
+  final color = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      body: user == null
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.lock_outline, size: 80, color: Colors.grey),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Para ver tus clases debes iniciar sesión!',
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold,
-                      color: color.primary,
-                    ),
-                    textAlign: TextAlign.center,
+  return Scaffold(
+    appBar: const CustomAppBar(),
+    body: user == null
+        ? Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.lock_outline, size: 80, color: Colors.grey),
+                const SizedBox(height: 20),
+                Text(
+                  'Para ver tus clases debes iniciar sesión!',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: color.primary,
                   ),
-                ],
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          )
+        : Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: color.primary.withOpacity(0.20), // Puedes cambiar el color
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    "En esta sesión podras ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podras recuperar la clase", // El texto que deseas mostrar
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
               ),
-            )
-          : clasesDelUsuario.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.event_busy, size: 80, color: Colors.grey),
-                      const SizedBox(height: 20),
-                      Text(
-                        'No estás inscripto en ninguna clase',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          color: color.primary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: clasesDelUsuario.length,
-                  itemBuilder: (context, index) {
-                    final clase = clasesDelUsuario[index];
-                    final claseInfo = '${clase.dia} ${clase.fecha} - ${clase.hora}';
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            claseInfo,
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              cancelarClase(
-                                clase.id,
-                                user.userMetadata?['fullname'],
-                              );
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(166, 252, 93, 93),
+              const SizedBox(height: 50),
+              clasesDelUsuario.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.event_busy, size: 80, color: Colors.grey),
+                          const SizedBox(height: 20),
+                          Text(
+                            'No estás inscripto en ninguna clase',
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                              color: color.primary,
                             ),
-                            child: Text(
-                              'Cancelar',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: color.surface,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: clasesDelUsuario.length,
+                        itemBuilder: (context, index) {
+                          final clase = clasesDelUsuario[index];
+                          final claseInfo = '${clase.dia} ${clase.fecha} - ${clase.hora}';
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  claseInfo,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                trailing: ElevatedButton(
+                                  onPressed: () {
+                                    cancelarClase(
+                                      clase.id,
+                                      user.userMetadata?['fullname'],
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(166, 252, 93, 93),
+                                  ),
+                                  child: Text(
+                                    'Cancelar',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: color.surface,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-    );
-  }
+                    ),
+            ],
+          ),
+  );
+}
+
 
   void cancelarClase(int claseId, String fullname) async {
     // Simula cancelar la inscripción en la clase

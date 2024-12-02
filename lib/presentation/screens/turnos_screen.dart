@@ -134,7 +134,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10,0),
             child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
