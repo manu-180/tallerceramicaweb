@@ -25,11 +25,10 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Texto de bienvenida
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: themeColor.withOpacity(0.1),
+                color: themeColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -42,7 +41,7 @@ class HomeScreen extends StatelessWidget {
             // Imagen 1
             Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10), // Bordes redondeados
+                borderRadius: BorderRadius.circular(10), 
                 child: Image.asset(
                   'assets/images/creando.png',
                   height: 500,
@@ -64,7 +63,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: themeColor.withOpacity(0.1),
+                color: themeColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -92,7 +91,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: themeColor.withOpacity(0.1),
+                color: themeColor.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(

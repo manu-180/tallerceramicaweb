@@ -126,10 +126,28 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final themeColor = Theme.of(context).primaryColor;
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: themeColor.withOpacity(0.20),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+          ),
+            const SizedBox(height: 30),
           _SemanaNavigation(
             semanaSeleccionada: semanaSeleccionada,
             cambiarSemanaAdelante: cambiarSemanaAdelante,
@@ -190,19 +208,22 @@ class _SemanaNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          onPressed: cambiarSemanaAtras,
-          icon: const Icon(Icons.arrow_left, size: 28),
-        ),
-        const SizedBox(width: 40),
-        IconButton(
-          onPressed: cambiarSemanaAdelante,
-          icon: const Icon(Icons.arrow_right, size: 28),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          IconButton(
+            onPressed: cambiarSemanaAtras,
+            icon: const Icon(Icons.arrow_left, size: 28),
+          ),
+          const SizedBox(width: 40),
+          IconButton(
+            onPressed: cambiarSemanaAdelante,
+            icon: const Icon(Icons.arrow_right, size: 28),
+          ),
+        ],
+      ),
     );
   }
 }

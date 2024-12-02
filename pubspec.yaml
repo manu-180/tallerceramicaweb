@@ -31,6 +31,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.2.1
   flutter_riverpod: ^2.6.1
   flutter_svg: ^2.0.16
   go_router: ^14.6.1
@@ -48,6 +49,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - .env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
