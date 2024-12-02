@@ -1,5 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/functions/Obtener_id.dart';
+import 'package:taller_ceramica/supabase/functions/calcular_24hs.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 
 class RemoverUsuario {
@@ -16,13 +19,10 @@ class RemoverUsuario {
       // Agregar el nuevo mail si no está ya en la lista
       if (clase.mails.contains(user)) {
         clase.mails.remove(user);
-
-        // Actualizar la base de datos con el nuevo listado de mails
-        await supabaseClient
-            .from('respaldo')
-            .update(clase.toMap())
-            .eq('id', idClase);
-
+         await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
+          if(Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
+            ModificarCredito().agregarCreditoUsuario( await ObtenerId().obtenerID(user)); 
+          }
     }
   }
 
@@ -35,10 +35,7 @@ class RemoverUsuario {
         if(horaSeleccionada == item.hora && diaSeleccionado == item.dia){
           if(item.mails.contains(user)){
             item.mails.remove(user);
-            await supabaseClient
-            .from('respaldo')
-            .update(item.toMap())
-            .eq('id', item.id);
+            await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
           }
         }
 

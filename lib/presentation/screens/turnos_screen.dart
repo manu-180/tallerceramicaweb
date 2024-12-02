@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/supabase/functions/agregar_usuario.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
@@ -84,6 +85,8 @@ class _TurnosScreenState extends State<TurnosScreen> {
   }
 
   Widget construirBotonHorario(ClaseModels clase) {
+    final user = Supabase.instance.client.auth.currentUser;
+    
     final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
     final estaLlena = clase.mails.length >= 5; // Verifica si la clase está llena
 
@@ -94,7 +97,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
         child: FilledButton(
           onPressed: (estaLlena) 
               ? null  // Solo deshabilita el botón si la clase tiene 5 personas
-              : () => manejarSeleccionClase(clase.id, "Manuel Navarro"),
+              : () => manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"]),
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
               (estaLlena) ? Colors.grey : Colors.green, // Cambia el color si está llena

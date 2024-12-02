@@ -92,8 +92,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                   child: Card(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     child: ListTile(
-                      title: Text('${usuario.fullname} (${usuario.clasesDisponibles} créditos)'),
-                      subtitle: Text('Email: ${usuario.usuario}'),
+                      title: Text('${usuario.fullname} '),
+                      subtitle: Text(usuario.clasesDisponibles == 1 ? "(${usuario.clasesDisponibles} credito)" : "(${usuario.clasesDisponibles} creditos)"),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/config/router/app_router.dart';
 import 'package:taller_ceramica/config/theme/app_theme.dart';
+import 'package:taller_ceramica/providers/theme_provider.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
@@ -10,25 +12,32 @@ Future<void> main() async {
   );
 
   // Inicia la aplicación
-  runApp(
-    const MyApp());
+  runApp(const ProviderScope(
+      child: MyApp())
+  );
 }
 
 // Get a reference your Supabase client
 final supabase = Supabase.instance.client;
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+
+
+    final AppTheme themeNotify = ref.watch(themeNotifyProvider);
+
     return MaterialApp.router(
+      title: "Taller de ceramica",
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: AppTheme().getTheme(),
+      theme: themeNotify.getColor(),
     );
   }
+
 }
 

@@ -1,5 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/functions/Obtener_id.dart';
+import 'package:taller_ceramica/supabase/functions/obtener_clases_disponibles.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 
 class AgregarUsuario {
@@ -13,14 +16,13 @@ class AgregarUsuario {
 
       final clase = ClaseModels.fromMap(data);
 
-      if (!clase.mails.contains(nuevoMail)) {
-        clase.mails.add(nuevoMail);
+      if ( await ObtenerClasesDisponibles().clasesDisponibles(nuevoMail) > 0){
 
-        // Actualizar la base de datos con el nuevo listado de mails
-        await supabaseClient
-            .from('respaldo')
-            .update(clase.toMap())
-            .eq('id', idClase);
+        if (!clase.mails.contains(nuevoMail)) {
+        clase.mails.add(nuevoMail);
+        await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
+        ModificarCredito().removerCreditoUsuario( await ObtenerId().obtenerID(nuevoMail));
+      }
       }
     }
 
@@ -38,12 +40,13 @@ Future<void> agregarUsuarioEnCuatroClases(
       
      if (!item.mails.contains(nuevoMail) && count < 5) {
         item.mails.add(nuevoMail);
-
-        // Actualizar la base de datos con el nuevo listado de mails
-        await supabaseClient
+        if ( await ObtenerClasesDisponibles().clasesDisponibles(nuevoMail) > 0){
+          ModificarCredito().removerCreditoUsuario( await ObtenerId().obtenerID(nuevoMail));
+          await supabaseClient
             .from('respaldo')
             .update(item.toMap())
             .eq('id', item.id);
+        }        
       }
     }
   }

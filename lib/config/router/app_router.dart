@@ -1,6 +1,7 @@
 
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
+import 'package:taller_ceramica/presentation/screens/configuracion.dart';
 
 final appRouter = GoRouter(
   initialLocation: "/",
@@ -8,7 +9,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: "/",
       name: "home",
-      builder: (context, state) => HomeScreen()
+      builder: (context, state) => const HomeScreen()
       ),
     GoRoute(
       path: "/turnos",
@@ -29,6 +30,21 @@ final appRouter = GoRouter(
       path: "/usuarios",
       name: "usuarios",
       builder: (context, state) => const UsuariosScreen()
+      ),
+    GoRoute(
+      path: "/configuracion",
+      name: "configuracion",
+      builder: (context, state) => const Configuracion()
+      ),
+    GoRoute(
+      path: "/iniciar-sesion",
+      name: "iniciar sesion",
+      builder: (context, state) => LoginScreen()
+      ),
+    GoRoute(
+      path: "/crear-usuario",
+      name: "crear usuario",
+      builder: (context, state) => SignUpScreen()
       ),
     
     
