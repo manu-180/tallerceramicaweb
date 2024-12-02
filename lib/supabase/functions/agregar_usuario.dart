@@ -10,13 +10,13 @@ class AgregarUsuario {
 
   AgregarUsuario(this.supabaseClient);
 
-  Future<void> agregarUsuarioAClase(int idClase, String nuevoMail) async {
+  Future<void> agregarUsuarioAClase(int idClase, String nuevoMail, bool parametro) async {
 
       final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
 
       final clase = ClaseModels.fromMap(data);
 
-      if ( await ObtenerClasesDisponibles().clasesDisponibles(nuevoMail) > 0){
+      if ( await ObtenerClasesDisponibles().clasesDisponibles(nuevoMail) > 0 || parametro) {
 
         if (!clase.mails.contains(nuevoMail)) {
         clase.mails.add(nuevoMail);

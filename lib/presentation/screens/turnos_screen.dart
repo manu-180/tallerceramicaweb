@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/supabase/functions/agregar_usuario.dart';
-import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class TurnosScreen extends StatefulWidget {
@@ -57,7 +55,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
   }
 
   void manejarSeleccionClase(int id, String user) async {
-    await AgregarUsuario(supabase).agregarUsuarioAClase(id, user);
+    await AgregarUsuario(supabase).agregarUsuarioAClase(id, user, false);
 
     setState(() {
       cargarDatos(); // Esto actualiza los horarios y el estado de los botones.
@@ -85,32 +83,40 @@ class _TurnosScreenState extends State<TurnosScreen> {
   }
 
   Widget construirBotonHorario(ClaseModels clase) {
-    final user = Supabase.instance.client.auth.currentUser;
-    
-    final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
-    final estaLlena = clase.mails.length >= 5; // Verifica si la clase está llena
+  final user = Supabase.instance.client.auth.currentUser;
+  
+  final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
+  final estaLlena = clase.mails.length >= 5; // Verifica si la clase está llena
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.7,
-        child: FilledButton(
-          onPressed: (estaLlena) 
-              ? null  // Solo deshabilita el botón si la clase tiene 5 personas
-              : () => manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"]),
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(
-              (estaLlena) ? Colors.grey : Colors.green, // Cambia el color si está llena
-            ),
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+    child: SizedBox(
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: FilledButton(
+        onPressed: (estaLlena) 
+            ? null  // Solo deshabilita el botón si la clase tiene 5 personas
+            : () => manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"]),
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(
+            (estaLlena) ? Colors.grey : Colors.green, // Cambia el color si está llena
           ),
-          child: Text(diaYHora, style: const TextStyle(fontSize: 11)),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Text(diaYHora, style: const TextStyle(fontSize: 11)),
+            if (isLoading) 
+              const CircularProgressIndicator() // Muestra el indicador de carga dentro del botón
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   @override
   void initState() {

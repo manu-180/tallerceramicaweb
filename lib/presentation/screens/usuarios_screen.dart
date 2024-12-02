@@ -1,10 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:taller_ceramica/supabase/functions/eliminar_usuario.dart';
-import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
-import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class UsuariosScreen extends StatefulWidget {

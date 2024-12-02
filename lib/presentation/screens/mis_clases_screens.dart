@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
-import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/supabase/functions/remover_usuario.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class MisClasesScreen extends ConsumerStatefulWidget {

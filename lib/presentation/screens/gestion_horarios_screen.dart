@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/supabase/functions/agregar_usuario.dart';
-import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/supabase/functions/remover_usuario.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
@@ -68,13 +66,17 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   void seleccionarFecha(String fecha) {
-    setState(() {
-      fechaSeleccionada = fecha;
-      horariosFiltrados = horariosDisponibles.where((clase) {
-        return clase.fecha == fechaSeleccionada;
-      }).toList();
-    });
-  }
+  setState(() {
+    fechaSeleccionada = fecha;
+    horariosFiltrados = horariosDisponibles.where((clase) {
+      return clase.fecha == fechaSeleccionada;
+    }).toList();
+
+    // Ordenar las clases filtradas por su id
+    horariosFiltrados.sort((a, b) => a.id.compareTo(b.id)); // Esto ordena por el id de las clases
+  });
+}
+
 
   Future<void> mostrarDialogo(String tipoAccion, ClaseModels clase, ColorScheme color) async {
     showDialog(
@@ -168,7 +170,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
                                   // Si no se activó la opción de insertar x4, solo insertamos el usuario en la clase seleccionada
-                                  AgregarUsuario(supabase).agregarUsuarioAClase(clase.id, usuarioSeleccionado);
+                                  AgregarUsuario(supabase).agregarUsuarioAClase(clase.id, usuarioSeleccionado, true);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
 

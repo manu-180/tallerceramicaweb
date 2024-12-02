@@ -5,6 +5,7 @@ class UsuarioModels {
   final String userUid;
   final String sexo;
   final int clasesDisponibles;
+  final int theme;
 
   UsuarioModels({
     required this.id,
@@ -13,6 +14,7 @@ class UsuarioModels {
     required this.userUid,
     required this.sexo,
     required this.clasesDisponibles,
+    required this.theme,
   });
 
   // Función para convertir el mapa a un objeto UsuarioModels
@@ -24,6 +26,7 @@ class UsuarioModels {
       userUid: map['user_uid'],
       sexo: map['sexo'],
       clasesDisponibles: map['clases_disponibles'],
+      theme: map['theme'],
     );
   }
 }
