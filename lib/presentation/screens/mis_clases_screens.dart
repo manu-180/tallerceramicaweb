@@ -23,7 +23,7 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Confirmar cancelación'),
+        title: const Text('Confirmar cancelación'),
         content: Text(
             Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora) ? '¿Deseas cancelar la clase el ${clase.dia} a las ${clase.hora}?. ¡Se generará un credito para que puedas recuperarla!' : "¿Deseas cancelar la clase el ${clase.dia} a las ${clase.hora}? Ten en cuenta que si cancelas con menos de 24hs de anticipación no podrás recuperar la clase",
           style: const TextStyle(fontSize: 14),

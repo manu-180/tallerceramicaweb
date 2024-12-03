@@ -54,40 +54,66 @@ class _TurnosScreenState extends State<TurnosScreen> {
     }
   }
 
-  void mostrarConfirmacion(BuildContext context, ClaseModels clase) {
-    final user = Supabase.instance.client.auth.currentUser;
+  void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
+  final user = Supabase.instance.client.auth.currentUser;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirmar Inscripción'),
-          content: Text(
-            '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?',
-            style: const TextStyle(fontSize: 14),
+  // Obtener mensaje dinámico y condición del botón
+  String mensaje;
+  bool mostrarBotonAceptar = false;
+
+  if (user == null) {
+    mensaje = "Debes iniciar sesión para inscribirte a una clase";
+  } else if (clase.mails.contains(user.userMetadata?["fullname"])) {
+    mensaje = 'Revisa en "mis clases"';
+  } else {
+    final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?["fullname"]);
+    if (clasesDisponibles == 0) {
+      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+    } else {
+      mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+      mostrarBotonAceptar = true; // Habilitar el botón solo si tiene créditos
+    }
+  }
+
+  // Mostrar el diálogo
+  showDialog(
+    // ignore: use_build_context_synchronously
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          user == null
+              ? "Inicia sesión"
+              : clase.mails.contains(user.userMetadata?["fullname"])
+                  ? "Ya estás inscripto en esta clase"
+                  : mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ? "No puedes inscribirte a una clase" : 'Confirmar Inscripción' 
+        ),
+        content: Text(
+          mensaje,
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar el diálogo
+            },
+            child: const Text('Cancelar'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Cancelar'),
-            ),
+          if (mostrarBotonAceptar)
             ElevatedButton(
               onPressed: () {
                 // Ejecuta la función para inscribir al usuario
-                manejarSeleccionClase(
-                    clase.id, user?.userMetadata?["fullname"] ?? '');
-
+                manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"] ?? '');
                 Navigator.of(context).pop(); // Cerrar el diálogo
               },
               child: const Text('Aceptar'),
             ),
-          ],
-        );
-      },
-    );
-  }
+        ],
+      );
+    },
+  );
+}
+
 
   void manejarSeleccionClase(int id, String user) async {
     await AgregarUsuario(supabase).agregarUsuarioAClase(id, user, false);

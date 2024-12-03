@@ -223,6 +223,18 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: color.primary.withOpacity(0.20), 
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    "En esta sesión podras gestionar tus horarios. Ver quien asiste a cada clase y tambien insertar o remover usuarios de las clases", 
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+                const SizedBox(height: 20),
               DropdownButton<String>(
                 value: fechaSeleccionada,
                 hint: const Text('Selecciona una fecha'),
@@ -256,7 +268,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                               title: Text(
                                   '${clase.hora} - ${clase.dia} ${clase.fecha}'),
                               subtitle: clase.mails.isNotEmpty
-                                  ? Text('Usuarios: ${clase.mails.join(", ")}')
+                                  ? Text('Alumnos/as: ${clase.mails.join(", ")}')
                                   : const Text('No hay usuarios registrados'),
                             ),
                             Padding(
