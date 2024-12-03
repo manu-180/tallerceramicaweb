@@ -40,21 +40,37 @@ class LoginScreen extends StatelessWidget {
                 final email = emailController.text.trim();
                 final password = passwordController.text.trim();
 
-                // TODO: Completar con la lógica de Supabase para iniciar sesión
-                print('Iniciar sesión con email: $email y contraseña: $password');
-                
+                try {
                   final AuthResponse res = await supabase.auth.signInWithPassword(
-                      email: email,
-                      password: password,
-                    );
-                    final Session? session = res.session;
-                    final User? user = res.user;
+                    email: email,
+                    password: password,
+                  );
 
-                    // print(res.user);
-                    print(session?.user.appMetadata);
-                    print(session?.user.email);
-                    print(user?.actionLink);
-                context.go("/");
+                  // Si el inicio de sesión es exitoso, navega a la página principal
+                  context.go("/");
+                } on AuthException catch (e) {
+                  // Captura errores relacionados con la autenticación y muestra un mensaje
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Error de inicio de sesión: ${e.message}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } catch (e) {
+                  // Captura errores inesperados y muestra un mensaje genérico
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Ocurrió un error inesperado. Por favor, intenta nuevamente.',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               },
               child: const Text('Iniciar Sesión'),
             ),
