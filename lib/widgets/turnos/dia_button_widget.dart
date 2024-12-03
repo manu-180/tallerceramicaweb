@@ -5,10 +5,10 @@ class DiaButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;
 
   const DiaButtonWidget({
-    Key? key,
+    super.key,
     required this.diaFecha,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

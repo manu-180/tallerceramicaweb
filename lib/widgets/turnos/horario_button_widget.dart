@@ -4,9 +4,9 @@ import 'package:taller_ceramica/models/clase_models.dart'; // Si tienes un model
 class HorarioButtonWidget extends StatelessWidget {
   final ClaseModels clase; // Usando un modelo de clase
   const HorarioButtonWidget({
-    Key? key,
+    super.key,
     required this.clase,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/main.dart';
@@ -7,6 +9,8 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController fullnamecontroller = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  SignUpScreen({super.key});
 
   String capitalize(String input) {
   if (input.isEmpty) return input;
@@ -67,9 +71,7 @@ class SignUpScreen extends StatelessWidget {
                     password: password,
                     data: {'fullname': capitalize(fullname)},
                   );
-                  print(res.user?.id);
-                  print(capitalize(fullname));
-                  final respuesta = await supabase.from('usuarios').insert(
+                  await supabase.from('usuarios').insert(
                     {
                     'usuario': email, 
                     'fullname': capitalize(fullname), 
@@ -82,10 +84,9 @@ class SignUpScreen extends StatelessWidget {
                      "clases_canceladas" : []
                      }
                      );
-                  print(respuesta);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text(
+                    const SnackBar(
+                      content: Text(
                         'Registro exitoso. Por favor, verifica tu correo.',
                         style: TextStyle(color: Colors.white),
                       ),

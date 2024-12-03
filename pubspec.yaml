@@ -40,9 +40,18 @@ dependencies:
 
 dev_dependencies:
   change_app_package_name: ^1.4.0
+  flutter_launcher_icons: ^0.14.1
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/ceramicono.jpg"  # Ruta de tu ícono
+  adaptive_icon_background: "#ffffff"  # Color de fondo del ícono adaptable
+  adaptive_icon_foreground: "assets/icon/ceramicono.jpg"  # Ícono en primer plano
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -50,6 +59,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/icon/
     - .env
 
   # The following line ensures that the Material Icons font is

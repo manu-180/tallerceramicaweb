@@ -8,7 +8,7 @@ class Calcular24hs {
   // Divide la fecha (ejemplo: "05/05")
   final List<String> partesFecha = fecha.split('/');
   if (partesFecha.length != 2) {
-    throw FormatException("La fecha no está en el formato correcto (dd/MM)");
+    throw const FormatException("La fecha no está en el formato correcto (dd/MM)");
   }
   final int dia = int.parse(partesFecha[0]);
   final int mes = int.parse(partesFecha[1]);
@@ -16,7 +16,7 @@ class Calcular24hs {
   // Divide la hora (ejemplo: "16:30")
   final List<String> partesHora = hora.split(':');
   if (partesHora.length != 2) {
-    throw FormatException("La hora no está en el formato correcto (HH:mm)");
+    throw const FormatException("La hora no está en el formato correcto (HH:mm)");
   }
   final int horas = int.parse(partesHora[0]);
   final int minutos = int.parse(partesHora[1]);

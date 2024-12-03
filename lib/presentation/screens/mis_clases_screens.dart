@@ -15,6 +15,42 @@ class MisClasesScreen extends ConsumerStatefulWidget {
 class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   List<ClaseModels> clasesDelUsuario = [];
 
+
+  void mostrarCancelacion(BuildContext context, ClaseModels clase) {
+  final user = Supabase.instance.client.auth.currentUser;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmar cancelación'),
+        content: Text(
+            Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora) ? '¿Deseas cancelar la clase el ${clase.dia} a las ${clase.hora}?. ¡Se generará un credito para que puedas recuperarla!' : "¿Deseas cancelar la clase el ${clase.dia} a las ${clase.hora}? Ten en cuenta que si cancelas con menos de 24hs de anticipación no podrás recuperar la clase",
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar el diálogo
+            },
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              cancelarClase(
+                clase.id,
+                user?.userMetadata?['fullname']
+              );
+              Navigator.of(context).pop();
+            },
+            child: const Text('Aceptar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
   // Cargar clases para el usuario actual
   Future<void> cargarClasesUsuario(String fullname) async {
     final datos = await ObtenerTotalInfo().obtenerInfo();
@@ -119,10 +155,7 @@ Widget build(BuildContext context) {
                                 ),
                                 trailing: ElevatedButton(
                                   onPressed: () {
-                                    cancelarClase(
-                                      clase.id,
-                                      user.userMetadata?['fullname'],
-                                    );
+                                    mostrarCancelacion(context, clase);
                                   },
                                   style: TextButton.styleFrom(
                                     backgroundColor: const Color.fromARGB(166, 252, 93, 93),

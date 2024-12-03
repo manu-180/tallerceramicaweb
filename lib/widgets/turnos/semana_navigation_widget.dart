@@ -5,10 +5,10 @@ class SemanaNavigationWidget extends StatelessWidget {
   final VoidCallback onPressedForward;
 
   const SemanaNavigationWidget({
-    Key? key,
+    super.key,
     required this.onPressedBack,
     required this.onPressedForward,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

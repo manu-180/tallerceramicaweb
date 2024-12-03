@@ -12,10 +12,10 @@ class TurnosScreen extends StatefulWidget {
 }
 
 class _TurnosScreenState extends State<TurnosScreen> {
-  String semanaSeleccionada = 'semana1'; // Semana inicial
-  String? diaSeleccionado; // Día seleccionado
+  String semanaSeleccionada = 'semana1'; 
+  String? diaSeleccionado; 
   final List<String> semanas = ['semana1', 'semana2', 'semana3', 'semana4', 'semana5'];
-  bool isLoading = true; // Indicador de carga
+  bool isLoading = true; 
 
   List<ClaseModels> todasLasClases = [];
   List<ClaseModels> diasUnicos = [];
@@ -23,7 +23,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   Future<void> cargarDatos() async {
     setState(() {
-      isLoading = true;
+      isLoading = true; // Indicamos que se está cargando
     });
 
     final datos = await ObtenerTotalInfo().obtenerInfo();
@@ -49,10 +49,71 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
     if (mounted) {
       setState(() {
-        isLoading = false;
+        isLoading = false; // Desactivamos el indicador de carga
       });
     }
   }
+
+  void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
+  final user = Supabase.instance.client.auth.currentUser;
+
+  // Obtener mensaje dinámico y condición del botón
+  String mensaje;
+  bool mostrarBotonAceptar = false;
+
+  if (user == null) {
+    mensaje = "Debes iniciar sesión para inscribirte a una clase";
+  } else if (clase.mails.contains(user.userMetadata?["fullname"])) {
+    mensaje = 'Revisa en "mis clases"';
+  } else {
+    final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?["fullname"]);
+    if (clasesDisponibles == 0) {
+      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+    } else {
+      mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+      mostrarBotonAceptar = true; // Habilitar el botón solo si tiene créditos
+    }
+  }
+
+  // Mostrar el diálogo
+  showDialog(
+    // ignore: use_build_context_synchronously
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          user == null
+              ? "Inicia sesión"
+              : clase.mails.contains(user.userMetadata?["fullname"])
+                  ? "Ya estás inscripto en esta clase"
+                  : mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ? "No puedes inscribirte a una clase" : 'Confirmar Inscripción' 
+        ),
+        content: Text(
+          mensaje,
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar el diálogo
+            },
+            child: const Text('Cancelar'),
+          ),
+          if (mostrarBotonAceptar)
+            ElevatedButton(
+              onPressed: () {
+                // Ejecuta la función para inscribir al usuario
+                manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"] ?? '');
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: const Text('Aceptar'),
+            ),
+        ],
+      );
+    },
+  );
+}
+
 
   void manejarSeleccionClase(int id, String user) async {
     await AgregarUsuario(supabase).agregarUsuarioAClase(id, user, false);
@@ -82,52 +143,30 @@ class _TurnosScreenState extends State<TurnosScreen> {
     });
   }
 
-  Widget construirBotonHorario(ClaseModels clase) {
-  final user = Supabase.instance.client.auth.currentUser;
-  
-  final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
-  final estaLlena = clase.mails.length >= 5; // Verifica si la clase está llena
-
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-    child: SizedBox(
-      width: MediaQuery.of(context).size.width * 0.7,
-      child: FilledButton(
-        onPressed: (estaLlena) 
-            ? null  // Solo deshabilita el botón si la clase tiene 5 personas
-            : () => manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"]),
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(
-            (estaLlena) ? Colors.grey : Colors.green, // Cambia el color si está llena
-          ),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Text(diaYHora, style: const TextStyle(fontSize: 11)),
-            if (isLoading) 
-              const CircularProgressIndicator() // Muestra el indicador de carga dentro del botón
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-
   @override
   void initState() {
     super.initState();
     cargarDatos();
   }
 
+  List<String> obtenerDiasConClasesDisponibles() {
+    final diasConClases = <String>{};
+
+    horariosPorDia.forEach((dia, clases) {
+      if (clases.any((clase) => clase.mails.length < 5)) {
+        final diaSolo = dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
+        diasConClases.add(diaSolo);
+      }
+    });
+
+    return diasConClases.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final themeColor = Theme.of(context).primaryColor;
+    final color = Theme.of(context).primaryColor;
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -138,7 +177,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
             child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: themeColor.withOpacity(0.20),
+                  color: color.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -147,7 +186,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                 ),
               ),
           ),
-            const SizedBox(height: 30),
+          const SizedBox(height: 30),
           _SemanaNavigation(
             semanaSeleccionada: semanaSeleccionada,
             cambiarSemanaAdelante: cambiarSemanaAdelante,
@@ -157,7 +196,6 @@ class _TurnosScreenState extends State<TurnosScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Sección de días
                 Expanded(
                   flex: 2,
                   child: isLoading
@@ -167,8 +205,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                           seleccionarDia: seleccionarDia,
                         ),
                 ),
-                // Sección de horarios
-                Expanded(
+                                Expanded(
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 40, right: 10),
@@ -182,10 +219,113 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                   return construirBotonHorario(clase);
                                 },
                               )
-                        : null,
+                        : const SizedBox(),
                   ),
                 ),
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Builder(
+              builder: (context) {
+                final diasConClases = obtenerDiasConClasesDisponibles();
+                if (isLoading) {
+                  return const SizedBox(); 
+                } else if (diasConClases.isEmpty) {
+                  return _AvisoDeClasesDisponibles(colors: colors, color: color, diasConClases: diasConClases, text: "No hay clases disponibles esta semana.",);
+                } else {
+                  return _AvisoDeClasesDisponibles(colors: colors, color: color, diasConClases: diasConClases, text: "Hay clases disponibles el ${diasConClases.join(', ')}.",);
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget construirBotonHorario(ClaseModels clase) {
+    final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
+    final estaLlena = clase.mails.length >= 5;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: ElevatedButton(
+          onPressed: estaLlena 
+              ? null 
+              : () => mostrarConfirmacion(context, clase),
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(
+              estaLlena ? Colors.grey : Colors.green,
+            ),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(diaYHora, style: const TextStyle(fontSize: 11, color: Colors.white)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AvisoDeClasesDisponibles extends StatelessWidget {
+  const _AvisoDeClasesDisponibles({
+    required this.text,
+    required this.colors,
+    required this.color,
+    required this.diasConClases,
+  });
+
+  final ColorScheme colors;
+  final Color color;
+  final List<String> diasConClases;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [colors.secondaryContainer, colors.primary.withOpacity(0.6)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: colors.primary.withOpacity(0.55),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info,
+            color: color,
+            size: 32,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
           ),
         ],
@@ -193,6 +333,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
     );
   }
 }
+
 
 // Widget para la navegación de semanas
 class _SemanaNavigation extends StatelessWidget {
@@ -230,6 +371,9 @@ class _SemanaNavigation extends StatelessWidget {
 
 // Widget para la selección de días
 class _DiaSelection extends StatelessWidget {
+
+  
+
   final List<ClaseModels> diasUnicos;
   final Function(String) seleccionarDia;
 
