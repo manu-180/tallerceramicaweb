@@ -2,6 +2,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
 import 'package:taller_ceramica/presentation/screens/configuracion.dart';
+import 'package:taller_ceramica/presentation/screens/login_screen_animacion.dart';
 
 final appRouter = GoRouter(
   initialLocation: "/",
