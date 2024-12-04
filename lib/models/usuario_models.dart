@@ -32,4 +32,9 @@ class UsuarioModels {
       alertTrigger: map['trigger_alert'],
     );
   }
+
+  @override
+  String toString() {
+    return 'UsuarioModels(id: $id, usuario: $usuario, fullname: $fullname, userUid: $userUid, sexo: $sexo, clasesDisponibles: $clasesDisponibles, theme: $theme, alertTrigger: $alertTrigger)';
+  }
 }

@@ -70,6 +70,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 context.go('/configuracion');
               } else if (value == '/usuarios') {
                 context.go('/usuarios');
+              }else if (value == '/prueba') {
+                context.go('/prueba');
+              }else if (value == '/gestionclases') {
+                context.go('/gestionclases');
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -92,6 +96,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
               const PopupMenuItem(
                 value: '/configuracion',
                 child: Text('Configuración'),
+              ),const PopupMenuItem(
+                value: '/prueba',
+                child: Text('prueba'),
+              ),const PopupMenuItem(
+                value: '/gestionclases',
+                child: Text('gestionclases'),
               ),
             ],
             icon: AnimatedRotation(

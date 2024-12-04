@@ -12,14 +12,14 @@ class RemoverUsuario {
 
   Future<void> removerUsuarioDeClase(int idClase, String user) async {
 
-      final data = await supabaseClient.from('total').select().eq('id', idClase).single();
+      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
 
       final clase = ClaseModels.fromMap(data);
 
       // Agregar el nuevo mail si no está ya en la lista
       if (clase.mails.contains(user)) {
         clase.mails.remove(user);
-         await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
+         await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
           if(Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
             ModificarCredito().agregarCreditoUsuario( await ObtenerId().obtenerID(user)); 
           }
@@ -35,7 +35,7 @@ class RemoverUsuario {
         if(horaSeleccionada == item.hora && diaSeleccionado == item.dia){
           if(item.mails.contains(user)){
             item.mails.remove(user);
-            await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
+            await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
           }
         }
 

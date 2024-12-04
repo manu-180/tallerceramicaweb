@@ -5,7 +5,7 @@ class ClaseModels {
   final String fecha;
   final String hora;
   final List<String> mails;
-  final int? lugarDisponible;
+  late final int lugarDisponible;
   final bool? isFull;
 
   ClaseModels({
@@ -27,7 +27,7 @@ class ClaseModels {
       dia: map['dia'] as String,
       fecha: map['fecha'] as String,
       hora: map['hora'] as String,
-      lugarDisponible: map['lugarDisponible'] != null ? map['lugarDisponible'] as int : null,
+      lugarDisponible: map['lugar_disponible'] as int,
       mails: List<String>.from(map['mails'] ?? []),
     );
   }
@@ -39,7 +39,7 @@ class ClaseModels {
     String? fecha,
     String? hora,
     List<String>? mails,
-    int? lugarDisponible, 
+    required int lugarDisponible, 
     bool? isFull,
   }) {
     return ClaseModels(
@@ -49,7 +49,7 @@ class ClaseModels {
       fecha: fecha ?? this.fecha,
       hora: hora ?? this.hora,
       mails: mails ?? this.mails,
-      lugarDisponible: lugarDisponible ?? this.lugarDisponible,
+      lugarDisponible: lugarDisponible,
       isFull: isFull ?? this.isFull,
     );
   }
@@ -63,6 +63,7 @@ class ClaseModels {
       'fecha': fecha,
       'hora': hora,
       'mails': mails,
+      'lugar_disponible': lugarDisponible,
     };
   }
 }
