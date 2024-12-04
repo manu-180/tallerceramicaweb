@@ -10,24 +10,24 @@ class AgregarUsuario {
 
   AgregarUsuario(this.supabaseClient);
 
-  Future<void> agregarUsuarioAClase(int idClase, String nuevoMail, bool parametro) async {
+  Future<void> agregarUsuarioAClase(int idClase, String user, bool parametro) async {
 
       final data = await supabaseClient.from('total').select().eq('id', idClase).single();
 
       final clase = ClaseModels.fromMap(data);
 
-      if ( await ObtenerClasesDisponibles().clasesDisponibles(nuevoMail) > 0 || parametro) {
+      if ( await ObtenerClasesDisponibles().clasesDisponibles(user) > 0 || parametro) {
 
-        if (!clase.mails.contains(nuevoMail)) {
-        clase.mails.add(nuevoMail);
+        if (!clase.mails.contains(user)) {
+        clase.mails.add(user);
         await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
-        ModificarCredito().removerCreditoUsuario( await ObtenerId().obtenerID(nuevoMail));
+        ModificarCredito().removerCreditoUsuario( user);
       }
       }
     }
 
 Future<void> agregarUsuarioEnCuatroClases(
-    String diaSeleccionado, String horaSeleccionada, String nuevoMail) async {
+    String diaSeleccionado, String horaSeleccionada, String user) async {
 
   final data = await ObtenerTotalInfo().obtenerInfo();
 
@@ -38,10 +38,10 @@ Future<void> agregarUsuarioEnCuatroClases(
     if (item.dia == diaSeleccionado && item.hora == horaSeleccionada) {
       count++;
       
-     if (!item.mails.contains(nuevoMail) && count < 5) {
-        item.mails.add(nuevoMail);
-        if ( await ObtenerClasesDisponibles().clasesDisponibles(nuevoMail) > 0){
-          ModificarCredito().removerCreditoUsuario( await ObtenerId().obtenerID(nuevoMail));
+     if (!item.mails.contains(user) && count < 5) {
+        item.mails.add(user);
+        if ( await ObtenerClasesDisponibles().clasesDisponibles(user) > 0){
+          ModificarCredito().removerCreditoUsuario( user);
           await supabaseClient
             .from('total')
             .update(item.toMap())

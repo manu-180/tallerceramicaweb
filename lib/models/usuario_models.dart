@@ -6,6 +6,7 @@ class UsuarioModels {
   final String sexo;
   final int clasesDisponibles;
   final int theme;
+  final int alertTrigger;
 
   UsuarioModels({
     required this.id,
@@ -15,6 +16,7 @@ class UsuarioModels {
     required this.sexo,
     required this.clasesDisponibles,
     required this.theme,
+    required this.alertTrigger,
   });
 
   // Función para convertir el mapa a un objeto UsuarioModels
@@ -27,6 +29,7 @@ class UsuarioModels {
       sexo: map['sexo'],
       clasesDisponibles: map['clases_disponibles'],
       theme: map['theme'],
+      alertTrigger: map['trigger_alert'],
     );
   }
 }

@@ -66,17 +66,13 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   void seleccionarFecha(String fecha) {
-  setState(() {
-    fechaSeleccionada = fecha;
-    horariosFiltrados = horariosDisponibles.where((clase) {
-      return clase.fecha == fechaSeleccionada;
-    }).toList();
-
-    // Ordenar las clases filtradas por su id
-    horariosFiltrados.sort((a, b) => a.id.compareTo(b.id)); // Esto ordena por el id de las clases
-  });
-}
-
+    setState(() {
+      fechaSeleccionada = fecha;
+      horariosFiltrados = horariosDisponibles.where((clase) {
+        return clase.fecha == fechaSeleccionada;
+      }).toList();
+    });
+  }
 
   Future<void> mostrarDialogo(String tipoAccion, ClaseModels clase, ColorScheme color) async {
     showDialog(
@@ -223,18 +219,20 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: color.primary.withOpacity(0.20), 
+                    color: color.primary.withOpacity(0.20),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "En esta sesión podras gestionar tus horarios. Ver quien asiste a cada clase y tambien insertar o remover usuarios de las clases", 
+                    "En esta sesión podras gestionar tus horarios. Ver quienes asisten a tus clases y agregar o remover usuarios de las mismas",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
-                const SizedBox(height: 20),
+              ),
               DropdownButton<String>(
                 value: fechaSeleccionada,
                 hint: const Text('Selecciona una fecha'),
@@ -248,7 +246,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               if (isLoading) const CircularProgressIndicator(),                
               if (!isLoading &&
                   fechaSeleccionada != null &&
@@ -269,7 +267,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   '${clase.hora} - ${clase.dia} ${clase.fecha}'),
                               subtitle: clase.mails.isNotEmpty
                                   ? Text('Alumnos/as: ${clase.mails.join(", ")}')
-                                  : const Text('No hay usuarios registrados'),
+                                  : const Text('No hay usuarios registrados en esta clase'),
                             ),
                             Padding(
                               padding:
@@ -305,4 +303,4 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
       ),
     );
   }
-}
+} 

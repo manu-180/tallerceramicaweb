@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
+import 'package:taller_ceramica/supabase/functions/obtener_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
@@ -69,9 +71,13 @@ class _TurnosScreenState extends State<TurnosScreen> {
     final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?["fullname"]);
     if (clasesDisponibles == 0) {
       mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+    } 
+    final triggerAlert = await ObtenerAlertTrigger().alertTrigger(user.userMetadata?["fullname"]);
+    if (triggerAlert > 0 && clasesDisponibles == 0) {
+      mensaje = 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
     } else {
       mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
-      mostrarBotonAceptar = true; // Habilitar el botón solo si tiene créditos
+      mostrarBotonAceptar = true; 
     }
   }
 
@@ -86,7 +92,9 @@ class _TurnosScreenState extends State<TurnosScreen> {
               ? "Inicia sesión"
               : clase.mails.contains(user.userMetadata?["fullname"])
                   ? "Ya estás inscripto en esta clase"
-                  : mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ? "No puedes inscribirte a una clase" : 'Confirmar Inscripción' 
+                  : mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ? "No puedes inscribirte a esta clase" 
+                  : mensaje == "No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación" ? "No puedes inscribirte a esta clase" 
+                  : 'Confirmar Inscripción' 
         ),
         content: Text(
           mensaje,
@@ -104,6 +112,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
               onPressed: () {
                 // Ejecuta la función para inscribir al usuario
                 manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"] ?? '');
+                ModificarAlertTrigger().resetearAlertTrigger(user?.userMetadata?["fullname"] ?? '');
                 Navigator.of(context).pop(); // Cerrar el diálogo
               },
               child: const Text('Aceptar'),

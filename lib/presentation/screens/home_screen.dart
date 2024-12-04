@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,16 +9,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = Theme.of(context).primaryColor; // Color del tema
+    
+    final themeColor = Theme.of(context).primaryColor; 
+    final user = Supabase.instance.client.auth.currentUser;
 
     return Scaffold(
-      appBar: const CustomAppBar(), // Usa el AppBar personalizado
+      appBar: const CustomAppBar(), 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Título grande
+            
             Text(
               '¡Bienvenido a Taller de Cerámica Ricardo Rojas!',
               style: Theme.of(context).textTheme.headlineLarge,
@@ -32,13 +35,12 @@ class HomeScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
-                '¡Hola y bienvenido a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!',
+                '¡Hola ${user?.userMetadata?["fullname"]?.split(" ").first ?? ""} y bienvenido a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             const SizedBox(height: 20),
 
-            // Imagen 1
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10), 
@@ -50,16 +52,15 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 20),
 
-            // Subtítulo
             Text(
               '¿Qué hacemos?',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: 10),
 
-            // Texto sobre el taller
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -72,11 +73,10 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Imagen 2
+           
             Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10), // Bordes redondeados
+                borderRadius: BorderRadius.circular(10), 
                 child: Image.asset(
                   'assets/images/bici.webp',
                   height: 300,
@@ -87,7 +87,6 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Texto final
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -100,9 +99,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-
-            // Aquí va el footer que se verá solo cuando llegues al final de la página
-            const SizedBox(height: 10,)
           ],
         ),
       ),

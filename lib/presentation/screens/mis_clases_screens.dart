@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
@@ -41,6 +42,8 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
                 clase.id,
                 user?.userMetadata?['fullname']
               );
+              ModificarCredito().removerCreditoUsuario(user?.userMetadata?['fullname']);
+              ModificarAlertTrigger().agregarAlertTrigger(user?.userMetadata?['fullname']);
               Navigator.of(context).pop();
             },
             child: const Text('Aceptar'),

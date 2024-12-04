@@ -55,8 +55,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     }
   }
 
-  Future<void> removerCredito(int userId) async {
-    final resultado = await ModificarCredito().removerCreditoUsuario(userId);
+  Future<void> removerCredito(String user) async {
+    final resultado = await ModificarCredito().removerCreditoUsuario(user);
     if (resultado) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Crédito removido exitosamente')),
@@ -105,7 +105,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.remove, color: Colors.orange),
-                            onPressed: () => removerCredito(usuario.id),
+                            onPressed: () => removerCredito(usuario.fullname),
                           ),
                         ],
                       ),
