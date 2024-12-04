@@ -12,7 +12,7 @@ class AgregarUsuario {
 
   Future<void> agregarUsuarioAClase(int idClase, String nuevoMail, bool parametro) async {
 
-      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
+      final data = await supabaseClient.from('total').select().eq('id', idClase).single();
 
       final clase = ClaseModels.fromMap(data);
 
@@ -20,7 +20,7 @@ class AgregarUsuario {
 
         if (!clase.mails.contains(nuevoMail)) {
         clase.mails.add(nuevoMail);
-        await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
+        await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
         ModificarCredito().removerCreditoUsuario( await ObtenerId().obtenerID(nuevoMail));
       }
       }
@@ -43,7 +43,7 @@ Future<void> agregarUsuarioEnCuatroClases(
         if ( await ObtenerClasesDisponibles().clasesDisponibles(nuevoMail) > 0){
           ModificarCredito().removerCreditoUsuario( await ObtenerId().obtenerID(nuevoMail));
           await supabaseClient
-            .from('respaldo')
+            .from('total')
             .update(item.toMap())
             .eq('id', item.id);
         }        

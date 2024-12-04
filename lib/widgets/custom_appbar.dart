@@ -97,7 +97,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             icon: AnimatedRotation(
               turns: _isMenuOpen ? 0.5 : 0.0, 
               duration: const Duration(milliseconds: 200),
-              child: Icon(Icons.arrow_drop_down, color: color.surface),
+              child: Icon(Icons.keyboard_arrow_down_outlined, color: color.surface),
             ),
             onOpened: () {
               setState(() {
