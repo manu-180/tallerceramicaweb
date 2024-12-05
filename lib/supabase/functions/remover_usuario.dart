@@ -1,8 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/supabase/functions/Obtener_id.dart';
 import 'package:taller_ceramica/supabase/functions/calcular_24hs.dart';
-import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 

@@ -71,7 +71,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     horariosFiltrados = horariosDisponibles
         .where((clase) => clase.fecha == fechaSeleccionada)
         .toList()
-      ..sort((a, b) => a.id.compareTo(b.id)); // Ordenar por ID
+      ..sort((a, b) => a.id.compareTo(b.id));
   });
 }
 

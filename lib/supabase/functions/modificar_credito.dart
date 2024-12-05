@@ -1,5 +1,4 @@
 import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/models/usuario_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 

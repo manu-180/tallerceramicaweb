@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
-import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
@@ -235,6 +234,7 @@ String _obtenerTituloDialogo(String mensaje) {
             cambiarSemanaAdelante: cambiarSemanaAdelante,
             cambiarSemanaAtras: cambiarSemanaAtras,
           ),
+          const SizedBox(height: 15),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,6 +283,7 @@ String _obtenerTituloDialogo(String mensaje) {
               },
             ),
           ),
+          const SizedBox(height: 30,)
         ],
       ),
     );
@@ -403,17 +404,45 @@ class _SemanaNavigation extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          IconButton(
-            onPressed: cambiarSemanaAtras,
-            icon: const Icon(Icons.arrow_left, size: 28),
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.shade200, 
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15), 
+                  blurRadius: 1, 
+                  offset: const Offset(0, 2), 
+                ),
+              ],
+            ),
+            child: IconButton(
+              onPressed: cambiarSemanaAtras,
+              icon: const Icon(Icons.arrow_left, size: 28),
+              color: Colors.black, 
+            ),
           ),
-          const SizedBox(width: 40),
-          IconButton(
-            onPressed: cambiarSemanaAdelante,
-            icon: const Icon(Icons.arrow_right, size: 28),
+          const SizedBox(width: 45),
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.shade200, 
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15), 
+                  blurRadius: 1, 
+                  offset: const Offset(0, 2), 
+                ),
+              ],
+            ),
+            child: IconButton(
+              onPressed: cambiarSemanaAdelante,
+              icon: const Icon(Icons.arrow_right, size: 28),
+              color: Colors.black, // Color del ícono (puedes personalizarlo)
+            ),
           ),
         ],
-      ),
+      )
     );
   }
 }

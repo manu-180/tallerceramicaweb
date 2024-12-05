@@ -21,7 +21,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     final userId = user?.id; // Obtiene el id del usuario actual
-    final userFullname = user?.userMetadata?["fullname"]; // Obtiene el fullname del usuario
 
     // Lista de botones visibles para usuarios con id == 14 o 31
     final adminRoutes = [
