@@ -75,7 +75,11 @@ class _TurnosScreenState extends State<TurnosScreen> {
     final triggerAlert = await ObtenerAlertTrigger().alertTrigger(user.userMetadata?["fullname"]);
     if (triggerAlert > 0 && clasesDisponibles == 0) {
       mensaje = 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
-    } else {
+    } 
+    if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
+      mensaje = 'No puedes inscribirte a esta clase';
+    } 
+    else {
       mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
       mostrarBotonAceptar = true; 
     }
@@ -94,6 +98,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                   ? "Ya estás inscripto en esta clase"
                   : mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ? "No puedes inscribirte a esta clase" 
                   : mensaje == "No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación" ? "No puedes inscribirte a esta clase" 
+                  : mensaje == 'No puedes inscribirte a esta clase' ? "Esta clase ya paso"
                   : 'Confirmar Inscripción' 
         ),
         content: Text(

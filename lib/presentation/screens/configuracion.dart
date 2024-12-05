@@ -69,9 +69,29 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                       itemBuilder: (context, index) {
                         final color = colors[index];
                         return RadioListTile(
-                          title: Text(
-                            "El color es este",
-                            style: TextStyle(color: color),
+                          title: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.palette_outlined,
+                                color: color,
+                                size: 35,
+                              ),
+                              const SizedBox(width: 15,),
+                              Icon(
+                                Icons.palette_outlined,
+                                color: color,
+                                size: 35,
+                              ),
+                              const SizedBox(width: 15,),
+                              Icon(
+                                Icons.palette_outlined,
+                                color: color,
+                                size: 35,
+                              ),
+                              const SizedBox(width: 15,),
+                              
+                            ],
                           ),
                           activeColor: color,
                           value: index,

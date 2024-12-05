@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/main.dart'; // Asegúrate de tener esta importación
-
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -17,20 +15,42 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _CustomAppBarState extends State<CustomAppBar> {
   var user = Supabase.instance.client.auth.currentUser;
-  bool _isMenuOpen = false; 
+  bool _isMenuOpen = false;
 
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    final userId = user?.id; // Obtiene el id del usuario actual
+    final userFullname = user?.userMetadata?["fullname"]; // Obtiene el fullname del usuario
+
+    // Lista de botones visibles para usuarios con id == 14 o 31
+    final adminRoutes = [
+      {'value': '/turnos', 'label': 'Clases'},
+      {'value': '/misclases', 'label': 'Mis clases'},
+      {'value': '/configuracion', 'label': 'Configuración'},
+      {'value': '/gestionhorarios', 'label': 'Gestión de horarios'},
+      {'value': '/gestionclases', 'label': 'Gestión de clases'},
+      {'value': '/usuarios', 'label': 'Usuarios'},
+    ];
+
+    // Lista de botones visibles para otros usuarios
+    final userRoutes = [
+      {'value': '/turnos', 'label': 'Clases'},
+      {'value': '/misclases', 'label': 'Mis clases'},
+      {'value': '/configuracion', 'label': 'Configuración'},
+    ];
+
+    // Determina qué lista de botones mostrar
+    final menuItems = (userId == "b43beb8c-abea-43ab-8bf0-691e0fc66380" || userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b") ? adminRoutes : userRoutes;
 
     return AppBar(
-      backgroundColor: color.primary, 
+      backgroundColor: color.primary,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           GestureDetector(
             onTap: () {
-              context.go("/"); 
+              context.go("/");
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,64 +74,25 @@ class _CustomAppBarState extends State<CustomAppBar> {
               ],
             ),
           ),
-          const SizedBox(width: 16), 
+          const SizedBox(width: 16),
           PopupMenuButton<String>(
             onSelected: (value) {
-              
-              if (value == '/turnos') {
-                context.go('/turnos');
-              } else if (value == '/misclases') {
-                context.go('/misclases');
-              } else if (value == '/gestionhorarios') {
-                context.go('/gestionhorarios');
-              } else if (value == '/Alumnos/as') {
-                context.go('/Alumnos/as');
-              } else if (value == '/configuracion') {
-                context.go('/configuracion');
-              } else if (value == '/usuarios') {
-                context.go('/usuarios');
-              }else if (value == '/prueba') {
-                context.go('/prueba');
-              }else if (value == '/gestionclases') {
-                context.go('/gestionclases');
-              }
+              context.go(value); // Navega a la ruta seleccionada
             },
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem(
-                value: '/turnos',
-                child: Text('Clases'),
-              ),
-              const PopupMenuItem(
-                value: '/misclases',
-                child: Text('Mis clases'),
-              ),
-              const PopupMenuItem(
-                value: '/gestionhorarios',
-                child: Text('Gestión horarios'),
-              ),
-              const PopupMenuItem(
-                value: '/usuarios',
-                child: Text('Usuarios'),
-              ),
-              const PopupMenuItem(
-                value: '/configuracion',
-                child: Text('Configuración'),
-              ),const PopupMenuItem(
-                value: '/prueba',
-                child: Text('prueba'),
-              ),const PopupMenuItem(
-                value: '/gestionclases',
-                child: Text('gestionclases'),
-              ),
-            ],
+            itemBuilder: (BuildContext context) => menuItems
+                .map((route) => PopupMenuItem(
+                      value: route['value'] as String,
+                      child: Text(route['label'] as String),
+                    ))
+                .toList(),
             icon: AnimatedRotation(
-              turns: _isMenuOpen ? 0.5 : 0.0, 
+              turns: _isMenuOpen ? 0.5 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Icon(Icons.keyboard_arrow_down_outlined, color: color.surface),
             ),
             onOpened: () {
               setState(() {
-                _isMenuOpen = true; 
+                _isMenuOpen = true;
               });
             },
             onCanceled: () {
@@ -125,68 +106,61 @@ class _CustomAppBarState extends State<CustomAppBar> {
       ),
       actions: [
         user == null
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        context.go('/crear-usuario');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: color.primaryContainer,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      ),
-                      child: const Text(
-                        'Crear usuario',
-                        style: TextStyle(fontSize: 12),
-                      ),
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      context.go('/crear-usuario');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: color.primaryContainer,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.go('/iniciar-sesion');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: color.primaryContainer,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      ),
-                      child: const Text(
-                        'Iniciar sesion',
-                        style: TextStyle(fontSize: 12),
-                      ),
+                    child: const Text(
+                      'Crear usuario',
+                      style: TextStyle(fontSize: 12),
                     ),
-                  ],
-                )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        await supabase.auth.signOut();
-                        setState(() {
-                      
-                          final nuevoUsuario = Supabase.instance.client.auth.currentUser;
-                          user = nuevoUsuario; 
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: color.primaryContainer,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      ),
-                      child: const Text(
-                        'Cerrar Sesión',
-                        style: TextStyle(fontSize: 12),
-                      ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.go('/iniciar-sesion');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: color.primaryContainer,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     ),
-                  ],
-                ),
-                const SizedBox(width: 10,)
+                    child: const Text(
+                      'Iniciar sesión',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      await Supabase.instance.client.auth.signOut();
+                      setState(() {
+                        user = Supabase.instance.client.auth.currentUser;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: color.primaryContainer,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    ),
+                    child: const Text(
+                      'Cerrar sesión',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+        const SizedBox(width: 10),
       ],
     );
   }
 }
-
-
-
-
-

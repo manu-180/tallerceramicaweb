@@ -1,5 +1,6 @@
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/usuario_models.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 
 class ModificarCredito {
@@ -17,6 +18,7 @@ class ModificarCredito {
       creditosActualmente += 1;
 
       await supabase.from('usuarios').update({ 'clases_disponibles': creditosActualmente }).eq('id', userId);
+      ModificarAlertTrigger().resetearAlertTrigger(usuario.fullname);
     }
     return true;
   
@@ -32,6 +34,7 @@ class ModificarCredito {
         creditosActualmente -= 1;
         if (usuario.clasesDisponibles > 0) {
           await supabase.from('usuarios').update({ 'clases_disponibles': creditosActualmente }).eq('id', usuario.id);
+          ModificarAlertTrigger().resetearAlertTrigger(usuario.fullname);
         }
       }
     }

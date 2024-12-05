@@ -19,7 +19,7 @@ class AgregarUsuario {
 
         if (!clase.mails.contains(user)) {
         clase.mails.add(user);
-        await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
+        await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
         ModificarCredito().removerCreditoUsuario( user);
       }
       }
@@ -42,7 +42,7 @@ Future<void> agregarUsuarioEnCuatroClases(
         if ( await ObtenerClasesDisponibles().clasesDisponibles(user) > 0){
           ModificarCredito().removerCreditoUsuario( user);
           await supabaseClient
-            .from('respaldo')
+            .from('total')
             .update(item.toMap())
             .eq('id', item.id);
         }        
