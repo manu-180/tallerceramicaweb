@@ -41,8 +41,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     await cargarUsuarios();
   }
 
-  Future<void> agregarCredito(int userId) async {
-    final resultado = await ModificarCredito().agregarCreditoUsuario(userId);
+  Future<void> agregarCredito(String user) async {
+    final resultado = await ModificarCredito().agregarCreditoUsuario(user);
     if (resultado) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Crédito agregado exitosamente')),
@@ -101,7 +101,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.add, color: Colors.green),
-                            onPressed: () => agregarCredito(usuario.id),
+                            onPressed: () => agregarCredito(usuario.fullname),
                           ),
                           IconButton(
                             icon: const Icon(Icons.remove, color: Colors.orange),

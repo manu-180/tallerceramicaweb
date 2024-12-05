@@ -14,62 +14,6 @@ class GestionDeClasesScreen extends StatefulWidget {
 }
 
 class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                DropdownButton<String>(
-                  hint: const Text('Seleccione una fecha'),
-                  value: fechaSeleccionada,
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      seleccionarFecha(newValue);
-                    }
-                  },
-                  items: fechasDisponibles.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: clasesFiltradas.length,
-                    itemBuilder: (context, index) {
-                      final clase = clasesFiltradas[index];
-                      return ListTile(
-                        title: Text('${clase.fecha} - ${clase.hora}'),
-                        subtitle: Text('Lugares disponibles: ${clase.lugarDisponible}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () => modificarLugarDisponible(clase.id, true),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () => modificarLugarDisponible(clase.id, false),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: mostrarDialogoAgregarClase,
-                  child: const Text('Agregar Clase'),
-                ),
-              ],
-            ),
-    );
-  }
   List<String> fechasDisponibles = [];
   String? fechaSeleccionada;
   List<ClaseModels> clasesDisponibles = [];
@@ -124,90 +68,139 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     });
   }
 
-  Future<void> modificarLugarDisponible(int id, bool incrementar) async {
-  try {
-    if (incrementar) {
-      await ModificarLugarDisponible().agregarlugarDisponible(id);
-    } else {
-      await ModificarLugarDisponible().removerlugarDisponible(id);
-    }
-
-    // Recargar los datos después de la modificación
-    await cargarDatos();
-
-    // Filtrar nuevamente según la fecha seleccionada
-    if (fechaSeleccionada != null) {
-      seleccionarFecha(fechaSeleccionada!);
-    }
-  } catch (e) {
-    debugPrint('Error al modificar lugar disponible: $e');
-  }
-}
-
-Future<void> mostrarDialogoAgregarClase() async {
-  TextEditingController horaController = TextEditingController();
-  await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Agregar nueva clase"),
-        content: TextField(
-          controller: horaController,
-          decoration: const InputDecoration(
-            hintText: 'Ingrese la hora de la clase',
+  Future<void> mostrarDialogoAgregarClase() async {
+    final newid =await GenerarId().generarIdClase();
+    TextEditingController horaController = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Agregar nueva clase"),
+          content: TextField(
+            controller: horaController,
+            decoration: const InputDecoration(
+              hintText: 'Ingrese la hora de la clase',
+            ),
           ),
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () async {
-              if (horaController.text.isNotEmpty && fechaSeleccionada != null) {
-                final nuevaClase = ClaseModels(
-                  id: await GenerarId().generarIdClase(),
-                  fecha: fechaSeleccionada!,
-                  hora: horaController.text,
-                  dia: '',
-                  semana: '',
-                  mails: [],
-                  lugarDisponible: 10,
-                );
-
-                try {
-                  await supabase.from('usuarios').insert({
-                    'id': nuevaClase.id,
-                    'semana': nuevaClase.semana,
-                    'dia': nuevaClase.dia,
-                    'fecha': nuevaClase.fecha,
-                    'hora': nuevaClase.hora,
-                    'mails': nuevaClase.mails.length,
-                    'lugar_disponible': nuevaClase.lugarDisponible,
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                if (horaController.text.isNotEmpty) {
+                  setState(() {
+                    // Lógica para agregar una nueva clase
+                    final nuevaClase = ClaseModels(
+                      id: newid, // Generar ID único
+                      fecha: fechaSeleccionada!,
+                      hora: horaController.text,
+                      dia: '', // Día asociado
+                      semana: "", // Semana asociada
+                      mails: [],
+                      lugarDisponible: 10, // Valor predeterminado
+                    );
+                    supabase.from('usuarios').insert({
+                        'id': newid,
+                        'semana': "",
+                        'dia': "",
+                        'fecha': "",
+                        'hora': "mujer",
+                        'mails': 0,
+                        'lugar_disponible': 0,
+                      });
+                    clasesFiltradas.add(nuevaClase);
                   });
-
-                  // Recargar los datos después de agregar la clase
-                  await cargarDatos();
-                  if (fechaSeleccionada != null) {
-                    seleccionarFecha(fechaSeleccionada!);
-                  }
-                } catch (e) {
-                  debugPrint('Error al agregar clase: $e');
+                  Navigator.of(context).pop();
                 }
-
+              },
+              child: const Text("Agregar"),
+            ),
+            ElevatedButton(
+              onPressed: () {
                 Navigator.of(context).pop();
-              }
-            },
-            child: const Text("Agregar"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Cancelar"),
-          ),
-        ],
-      );
-    },
-  );
-}
+              },
+              child: const Text("Cancelar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-  
-  
+  @override
+  Widget build(BuildContext context) {
+    // final color = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            DropdownButton<String>(
+              value: fechaSeleccionada,
+              hint: const Text('Selecciona una fecha'),
+              onChanged: (value) {
+                seleccionarFecha(value!);
+              },
+              items: fechasDisponibles.map((fecha) {
+                return DropdownMenuItem(
+                  value: fecha,
+                  child: Text(fecha),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+            if (isLoading) const CircularProgressIndicator(),
+            if (!isLoading && fechaSeleccionada != null && clasesFiltradas.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: clasesFiltradas.length,
+                  itemBuilder: (context, index) {
+                    final clase = clasesFiltradas[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text('${clase.hora} - Lugares disponibles: ${clase.lugarDisponible}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                ModificarLugarDisponible().agregarlugarDisponible(clase.id);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: () {
+                                ModificarLugarDisponible().removerlugarDisponible(clase.id);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  clasesFiltradas.removeAt(index);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                if (fechaSeleccionada != null) {
+                  mostrarDialogoAgregarClase();
+                }
+              },
+              child: const Text("Agregar nueva clase"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

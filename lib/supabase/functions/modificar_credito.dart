@@ -5,23 +5,20 @@ import 'package:taller_ceramica/supabase/supabase_barril.dart';
 
 class ModificarCredito {
 
-  Future<bool> agregarCreditoUsuario(int userId) async {
+  Future<bool> agregarCreditoUsuario(String user) async {
 
-    final data = await supabase.from('usuarios').select().eq('id', userId).single();
+    final data = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-    final usuario = UsuarioModels.fromMap(data);
-
-  
-    if (usuario.id == userId) {
-
-      var creditosActualmente = usuario.clasesDisponibles;
-      creditosActualmente += 1;
-
-      await supabase.from('usuarios').update({ 'clases_disponibles': creditosActualmente }).eq('id', userId);
-      ModificarAlertTrigger().resetearAlertTrigger(usuario.fullname);
+    for (final usuario in data){
+      if (usuario.fullname == user) {
+        var creditosActualmente = usuario.clasesDisponibles;
+        creditosActualmente += 1;
+          await supabase.from('usuarios').update({ 'clases_disponibles': creditosActualmente }).eq('id', usuario.id);
+          ModificarAlertTrigger().resetearAlertTrigger(usuario.fullname);
+      }
     }
+    
     return true;
-  
   }
 
   Future<bool> removerCreditoUsuario(String user) async {

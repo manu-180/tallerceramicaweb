@@ -3,6 +3,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/Obtener_id.dart';
 import 'package:taller_ceramica/supabase/functions/calcular_24hs.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 
 class RemoverUsuario {
@@ -21,7 +22,7 @@ class RemoverUsuario {
         clase.mails.remove(user);
          await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
           if(Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
-            ModificarCredito().agregarCreditoUsuario( await ObtenerId().obtenerID(user)); 
+            ModificarLugarDisponible().agregarlugarDisponible(idClase);
           }
     }
   }
@@ -36,6 +37,7 @@ class RemoverUsuario {
           if(item.mails.contains(user)){
             item.mails.remove(user);
             await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
+            ModificarLugarDisponible().agregarlugarDisponible(item.id);
           }
         }
 

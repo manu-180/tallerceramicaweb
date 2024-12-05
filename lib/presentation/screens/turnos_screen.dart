@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
@@ -59,47 +62,57 @@ class _TurnosScreenState extends State<TurnosScreen> {
   void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
   final user = Supabase.instance.client.auth.currentUser;
 
-  // Obtener mensaje dinámico y condición del botón
+  // Inicializar variables para el mensaje y el botón
   String mensaje;
   bool mostrarBotonAceptar = false;
 
+  // Verificar si el usuario está autenticado
   if (user == null) {
     mensaje = "Debes iniciar sesión para inscribirte a una clase";
-  } else if (clase.mails.contains(user.userMetadata?["fullname"])) {
+  } else if (clase.mails.contains(user.userMetadata?['fullname'])) {
     mensaje = 'Revisa en "mis clases"';
   } else {
-    final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?["fullname"]);
-    if (clasesDisponibles == 0) {
-      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
-    } 
-    final triggerAlert = await ObtenerAlertTrigger().alertTrigger(user.userMetadata?["fullname"]);
+    // Verificar clases disponibles
+    // Verificar restricciones adicionales
+    final triggerAlert = await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
+
     if (triggerAlert > 0 && clasesDisponibles == 0) {
       mensaje = 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
-    } 
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      return;
+    }
+
+    if (clasesDisponibles == 0) {
+      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      return;
+    }
+
+    // Verificar si la clase está dentro del plazo permitido
     if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
       mensaje = 'No puedes inscribirte a esta clase';
-    } 
-    else {
-      mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
-      mostrarBotonAceptar = true; 
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      return;
     }
+
+    // Si no hay restricciones, configurar el mensaje de confirmación
+    mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+    mostrarBotonAceptar = true;
   }
 
-  // Mostrar el diálogo
+  // Mostrar el diálogo final
+  _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
+}
+
+void _mostrarDialogo(BuildContext context, String mensaje, bool mostrarBotonAceptar,
+    [ClaseModels? clase, dynamic user]) {
   showDialog(
-    // ignore: use_build_context_synchronously
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(
-          user == null
-              ? "Inicia sesión"
-              : clase.mails.contains(user.userMetadata?["fullname"])
-                  ? "Ya estás inscripto en esta clase"
-                  : mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ? "No puedes inscribirte a esta clase" 
-                  : mensaje == "No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación" ? "No puedes inscribirte a esta clase" 
-                  : mensaje == 'No puedes inscribirte a esta clase' ? "Esta clase ya paso"
-                  : 'Confirmar Inscripción' 
+          _obtenerTituloDialogo(mensaje),
         ),
         content: Text(
           mensaje,
@@ -115,9 +128,10 @@ class _TurnosScreenState extends State<TurnosScreen> {
           if (mostrarBotonAceptar)
             ElevatedButton(
               onPressed: () {
-                // Ejecuta la función para inscribir al usuario
-                manejarSeleccionClase(clase.id, user?.userMetadata?["fullname"] ?? '');
-                ModificarAlertTrigger().resetearAlertTrigger(user?.userMetadata?["fullname"] ?? '');
+                if (clase != null && user != null) {
+                  manejarSeleccionClase(clase.id, user.userMetadata?['fullname'] ?? '');
+                  ModificarAlertTrigger().resetearAlertTrigger(user.userMetadata?['fullname'] ?? '');
+                }
                 Navigator.of(context).pop(); // Cerrar el diálogo
               },
               child: const Text('Aceptar'),
@@ -128,12 +142,28 @@ class _TurnosScreenState extends State<TurnosScreen> {
   );
 }
 
+String _obtenerTituloDialogo(String mensaje) {
+  if (mensaje == "Debes iniciar sesión para inscribirte a una clase") {
+    return "Inicia sesión";
+  } else if (mensaje == 'Revisa en "mis clases"') {
+    return "Ya estás inscrito en esta clase";
+  } else if (mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ||
+      mensaje == 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación' ||
+      mensaje == 'No puedes inscribirte a esta clase') {
+    return "No puedes inscribirte a esta clase";
+  } else {
+    return "Confirmar Inscripción";
+  }
+}
+
+
 
   void manejarSeleccionClase(int id, String user) async {
     await AgregarUsuario(supabase).agregarUsuarioAClase(id, user, false);
+    
 
     setState(() {
-      cargarDatos(); // Esto actualiza los horarios y el estado de los botones.
+      cargarDatos();
     });
   }
 
@@ -165,16 +195,15 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   List<String> obtenerDiasConClasesDisponibles() {
     final diasConClases = <String>{};
+      horariosPorDia.forEach((dia, clases) {
+        if (clases.any((clase) => clase.mails.length < 5 && !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora))) {
+          final diaSolo = dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
+          diasConClases.add(diaSolo);
+        }
+      });
 
-    horariosPorDia.forEach((dia, clases) {
-      if (clases.any((clase) => clase.mails.length < 5)) {
-        final diaSolo = dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
-        diasConClases.add(diaSolo);
-      }
-    });
-
-    return diasConClases.toList();
-  }
+      return diasConClases.toList();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -268,12 +297,14 @@ class _TurnosScreenState extends State<TurnosScreen> {
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,
         child: ElevatedButton(
-          onPressed: estaLlena 
-              ? null 
+          onPressed: (estaLlena || Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora))
+              ? null
               : () => mostrarConfirmacion(context, clase),
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
-              estaLlena ? Colors.grey : Colors.green,
+              estaLlena || Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)
+                  ? Colors.grey
+                  : Colors.green,
             ),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -282,10 +313,14 @@ class _TurnosScreenState extends State<TurnosScreen> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Text(diaYHora, style: const TextStyle(fontSize: 11, color: Colors.white)),
+              Text(
+                diaYHora,
+                style: const TextStyle(fontSize: 11, color: Colors.white),
+              ),
             ],
           ),
         ),
+
       ),
     );
   }

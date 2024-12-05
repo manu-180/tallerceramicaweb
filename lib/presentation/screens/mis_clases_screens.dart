@@ -42,7 +42,7 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
                 clase.id,
                 user?.userMetadata?['fullname']
               );
-              ModificarCredito().removerCreditoUsuario(user?.userMetadata?['fullname']);
+              ModificarCredito().agregarCreditoUsuario(user?.userMetadata?['fullname']);
               ModificarAlertTrigger().agregarAlertTrigger(user?.userMetadata?['fullname']);
               Navigator.of(context).pop();
             },

@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_clases_disponibles.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
@@ -20,7 +21,10 @@ class AgregarUsuario {
         if (!clase.mails.contains(user)) {
         clase.mails.add(user);
         await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
-        ModificarCredito().removerCreditoUsuario( user);
+        ModificarLugarDisponible().removerlugarDisponible(idClase);
+        if (!parametro) {
+          ModificarCredito().removerCreditoUsuario(user);
+        }
       }
       }
     }
@@ -37,16 +41,11 @@ Future<void> agregarUsuarioEnCuatroClases(
     if (item.dia == diaSeleccionado && item.hora == horaSeleccionada) {
       count++;
       
-     if (!item.mails.contains(user) && count < 5) {
-        item.mails.add(user);
-        if ( await ObtenerClasesDisponibles().clasesDisponibles(user) > 0){
-          ModificarCredito().removerCreditoUsuario( user);
-          await supabaseClient
-            .from('total')
-            .update(item.toMap())
-            .eq('id', item.id);
-        }        
-      }
+    if (!item.mails.contains(user) && count < 5) {
+      item.mails.add(user);
+        await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
+        ModificarLugarDisponible().removerlugarDisponible(item.id);
+    }
     }
   }
   }

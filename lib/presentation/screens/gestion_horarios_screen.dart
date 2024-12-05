@@ -66,13 +66,15 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   void seleccionarFecha(String fecha) {
-    setState(() {
-      fechaSeleccionada = fecha;
-      horariosFiltrados = horariosDisponibles.where((clase) {
-        return clase.fecha == fechaSeleccionada;
-      }).toList();
-    });
-  }
+  setState(() {
+    fechaSeleccionada = fecha;
+    horariosFiltrados = horariosDisponibles
+        .where((clase) => clase.fecha == fechaSeleccionada)
+        .toList()
+      ..sort((a, b) => a.id.compareTo(b.id)); // Ordenar por ID
+  });
+}
+
 
   Future<void> mostrarDialogo(String tipoAccion, ClaseModels clase, ColorScheme color) async {
     showDialog(
