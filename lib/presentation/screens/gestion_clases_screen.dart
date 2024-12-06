@@ -5,6 +5,7 @@ import 'package:taller_ceramica/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
+import 'package:intl/intl.dart';
 
 class GestionDeClasesScreen extends StatefulWidget {
   const GestionDeClasesScreen({super.key});
@@ -68,9 +69,28 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     });
   }
 
+  String obtenerDia(String fecha) {
+    final formato = DateFormat('dd/MM');
+    final fechaParseada = formato.parse(fecha);
+    final diaSemana = DateFormat('EEEE', 'es_ES').format(fechaParseada);
+
+    final mapaDias = {
+      'Monday': 'lunes',
+      'Tuesday': 'martes',
+      'Wednesday': 'miércoles',
+      'Thursday': 'jueves',
+      'Friday': 'viernes',
+      'Saturday': 'sábado',
+      'Sunday': 'domingo'
+    };
+
+    return mapaDias[diaSemana] ?? diaSemana;
+  }
+
   Future<void> mostrarDialogoAgregarClase() async {
-    final newid =await GenerarId().generarIdClase();
+    final newid = await GenerarId().generarIdClase();
     TextEditingController horaController = TextEditingController();
+
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -79,36 +99,69 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
           content: TextField(
             controller: horaController,
             decoration: const InputDecoration(
-              hintText: 'Ingrese la hora de la clase',
+              hintText: 'Ingrese la hora de la clase (HH:mm)',
             ),
           ),
           actions: [
             ElevatedButton(
-              onPressed: () {
-                if (horaController.text.isNotEmpty) {
-                  setState(() {
-                    // Lógica para agregar una nueva clase
-                    final nuevaClase = ClaseModels(
-                      id: newid, // Generar ID único
-                      fecha: fechaSeleccionada!,
-                      hora: horaController.text,
-                      dia: '', // Día asociado
-                      semana: "", // Semana asociada
-                      mails: [],
-                      lugarDisponible: 10, // Valor predeterminado
+              onPressed: () async {
+                final hora = horaController.text;
+                if (hora.isNotEmpty && fechaSeleccionada != null) {
+                  final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+                  if (!horaFormatoValido) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Formato de hora inválido. Use HH:mm.'),
+                      ),
                     );
-                    supabase.from('usuarios').insert({
-                        'id': newid,
-                        'semana': "",
-                        'dia': "",
-                        'fecha': "",
-                        'hora': "mujer",
-                        'mails': 0,
-                        'lugar_disponible': 0,
-                      });
-                    clasesFiltradas.add(nuevaClase);
-                  });
-                  Navigator.of(context).pop();
+                    return;
+                  }
+
+                  final dia = obtenerDia(fechaSeleccionada!);
+                  final List<Map<String, dynamic>> clasesAInsertar = [];
+
+                  for (int i = 0; i < 5; i++) {
+                    final fechaBase = DateFormat('dd/MM').parse(fechaSeleccionada!);
+                    final fechaSemana = fechaBase.add(Duration(days: 7 * i));
+                    final nuevaClase = {
+                      'id': await GenerarId().generarIdClase(),
+                      'semana': 'semana${i + 1}',
+                      'dia': dia,
+                      'fecha': DateFormat('dd/MM').format(fechaSemana),
+                      'hora': hora,
+                      'mails': [],
+                      'lugares_disponibles': 5,
+                    };
+                    clasesAInsertar.add(nuevaClase);
+                  }
+
+                  try {
+                    await supabase.from('clases').insert(clasesAInsertar);
+                    setState(() {
+                      clasesFiltradas.addAll(clasesAInsertar.map((clase) => ClaseModels(
+                        id: clase['id'],
+                        semana: clase['semana'],
+                        dia: clase['dia'],
+                        fecha: clase['fecha'],
+                        hora: clase['hora'],
+                        mails: clase['mails'],
+                        lugaresDisponibles: clase['lugares_disponibles'],
+                      )));
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Clases agregadas con éxito.'),
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    debugPrint('Error al insertar clases: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Error al agregar las clases.'),
+                      ),
+                    );
+                  }
                 }
               },
               child: const Text("Agregar"),
@@ -127,8 +180,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final color = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: const CustomAppBar(),
       body: Padding(
@@ -158,20 +209,20 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                     final clase = clasesFiltradas[index];
                     return Card(
                       child: ListTile(
-                        title: Text('${clase.hora} - Lugares disponibles: ${clase.lugarDisponible}'),
+                        title: Text('${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
                               icon: const Icon(Icons.add),
                               onPressed: () {
-                                ModificarLugarDisponible().agregarlugarDisponible(clase.id);
+                                ModificarLugarDisponible().agregarLugarDisponible(clase.id);
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.remove),
                               onPressed: () {
-                                ModificarLugarDisponible().removerlugarDisponible(clase.id);
+                                ModificarLugarDisponible().removerLugarDisponible(clase.id);
                               },
                             ),
                             IconButton(

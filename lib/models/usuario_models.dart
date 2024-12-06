@@ -5,7 +5,6 @@ class UsuarioModels {
   final String userUid;
   final String sexo;
   final int clasesDisponibles;
-  final int theme;
   final int alertTrigger;
 
   UsuarioModels({
@@ -15,7 +14,6 @@ class UsuarioModels {
     required this.userUid,
     required this.sexo,
     required this.clasesDisponibles,
-    required this.theme,
     required this.alertTrigger,
   });
 
@@ -28,13 +26,12 @@ class UsuarioModels {
       userUid: map['user_uid'],
       sexo: map['sexo'],
       clasesDisponibles: map['clases_disponibles'],
-      theme: map['theme'],
       alertTrigger: map['trigger_alert'],
     );
   }
 
   @override
   String toString() {
-    return 'UsuarioModels(id: $id, usuario: $usuario, fullname: $fullname, userUid: $userUid, sexo: $sexo, clasesDisponibles: $clasesDisponibles, theme: $theme, alertTrigger: $alertTrigger)';
+    return 'UsuarioModels(id: $id, usuario: $usuario, fullname: $fullname, userUid: $userUid, sexo: $sexo, clasesDisponibles: $clasesDisponibles, alertTrigger: $alertTrigger)';
   }
 }

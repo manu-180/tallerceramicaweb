@@ -1,13 +1,14 @@
 class ClaseModels {
   final int id;
-  final String semana;
-  final String dia;
-  final String fecha;
-  final String hora;
-  final List<String> mails;
-  late final int lugarDisponible;
-  final bool? isFull;
+  final String semana; // Semana de la clase
+  final String dia; // Día de la semana
+  final String fecha; // Fecha específica (formato: dd/mm)
+  final String hora; // Hora de la clase
+  final List<String> mails; // Lista de correos electrónicos de los alumnos inscritos
+  int lugaresDisponibles = 0; // Lugares disponibles en la clase
+  bool isFull; // Indica si la clase está llena
 
+  // Constructor actualizado
   ClaseModels({
     required this.id,
     required this.semana,
@@ -15,46 +16,31 @@ class ClaseModels {
     required this.fecha,
     required this.hora,
     required this.mails,
-    required this.lugarDisponible,
+    required this.lugaresDisponibles,
     this.isFull = false,
   });
 
-  // Método para convertir un Map (desde Supabase) a una instancia de Clase
+  // Método para actualizar el estado de la clase
+  void actualizarLugaresDisponibles(int nuevosLugares) {
+    lugaresDisponibles = nuevosLugares;
+    isFull = nuevosLugares == 0; // La clase está llena si no hay lugares
+  }
+
+  // Método para crear una instancia desde un Map (útil para bases de datos)
   factory ClaseModels.fromMap(Map<String, dynamic> map) {
     return ClaseModels(
-      id: map['id'] as int,
-      semana: map['semana'] as String,
-      dia: map['dia'] as String,
-      fecha: map['fecha'] as String,
-      hora: map['hora'] as String,
-      lugarDisponible: map['lugar_disponible'] as int,
+      id: map['id'],
+      semana: map['semana'],
+      dia: map['dia'],
+      fecha: map['fecha'],
+      hora: map['hora'],
       mails: List<String>.from(map['mails'] ?? []),
+      lugaresDisponibles: map['lugar_disponible'],
+      isFull: map['lugaresDisponibles'] == 0,
     );
   }
 
-  ClaseModels copyWith({
-    int? id,
-    String? dia,
-    String? semana,
-    String? fecha,
-    String? hora,
-    List<String>? mails,
-    required int lugarDisponible, 
-    bool? isFull,
-  }) {
-    return ClaseModels(
-      id: id ?? this.id,
-      dia: dia ?? this.dia,
-      semana: semana ?? this.semana,
-      fecha: fecha ?? this.fecha,
-      hora: hora ?? this.hora,
-      mails: mails ?? this.mails,
-      lugarDisponible: lugarDisponible,
-      isFull: isFull ?? this.isFull,
-    );
-  }
-
-  // Método para convertir una instancia de Clase a un Map (para actualizar datos)
+  // Método para convertir una instancia a Map (útil para bases de datos)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -63,7 +49,8 @@ class ClaseModels {
       'fecha': fecha,
       'hora': hora,
       'mails': mails,
-      'lugar_disponible': lugarDisponible,
+      'lugaresDisponibles': lugaresDisponibles,
+      'isFull': isFull,
     };
   }
 }

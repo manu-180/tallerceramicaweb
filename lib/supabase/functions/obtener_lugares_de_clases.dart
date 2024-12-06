@@ -8,7 +8,7 @@ class ObtenerLugaresDeClases {
 
     for (final item in data) {
       if (item.id == id) {
-        return item.lugarDisponible;
+        return item.lugaresDisponibles;
       }
     }
     return 0;

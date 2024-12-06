@@ -3,15 +3,15 @@ import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 
 class ModificarLugarDisponible {
 
-  Future<bool> agregarlugarDisponible(int id) async {
+  Future<bool> agregarLugarDisponible(int id) async {
 
     final data = await ObtenerTotalInfo().obtenerInfo();
 
     for (final clase in data){
       if (clase.id == id) {
-        var lugarDisponibleActualmente = clase.lugarDisponible;
+        var lugarDisponibleActualmente = clase.lugaresDisponibles;
         lugarDisponibleActualmente += 1;
-        await supabase.from('total').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
+        await supabase.from('respaldo').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
       }
     }
     
@@ -19,15 +19,15 @@ class ModificarLugarDisponible {
   }
 
 
-  Future<bool> removerlugarDisponible(int id) async {
+  Future<bool> removerLugarDisponible(int id) async {
 
     final data = await ObtenerTotalInfo().obtenerInfo();
 
     for (final clase in data){
       if (clase.id == id) {
-        var lugarDisponibleActualmente = clase.lugarDisponible;
+        var lugarDisponibleActualmente = clase.lugaresDisponibles;
         lugarDisponibleActualmente -= 1;
-        await supabase.from('total').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
+        await supabase.from('respaldo').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
         
       }
     }

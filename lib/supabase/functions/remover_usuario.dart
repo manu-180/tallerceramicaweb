@@ -21,8 +21,10 @@ class RemoverUsuario {
         clase.mails.remove(user);
          await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
           if(Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
-            ModificarLugarDisponible().agregarlugarDisponible(idClase);
+            ModificarLugarDisponible().agregarLugarDisponible(idClase);
+          if(!parametro){
             EnviarWpp().sendWhatsAppMessage("$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
+          }
           }
           if(parametro){
             EnviarWpp().sendWhatsAppMessage("has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
@@ -40,8 +42,8 @@ class RemoverUsuario {
         if(clase.hora == item.hora && clase.dia == item.dia){
           if(item.mails.contains(user)){
             item.mails.remove(user);
-            await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
-            ModificarLugarDisponible().agregarlugarDisponible(item.id);
+            await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
+            ModificarLugarDisponible().agregarLugarDisponible(item.id);
           }
         }
 

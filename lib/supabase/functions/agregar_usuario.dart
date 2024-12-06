@@ -1,7 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
-import 'package:taller_ceramica/supabase/functions/obtener_clases_disponibles.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/widgets/enviar_wpp.dart';
@@ -15,7 +14,7 @@ class AgregarUsuario {
 
       final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-      final data = await supabaseClient.from('total').select().eq('id', idClase).single();
+      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
 
       final clase = ClaseModels.fromMap(data);
 
@@ -24,8 +23,8 @@ class AgregarUsuario {
           if (usuario.clasesDisponibles > 0 || parametro) {
             if (!clase.mails.contains(user)) {
               clase.mails.add(user);
-              await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
-              ModificarLugarDisponible().removerlugarDisponible(idClase);
+              await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
+              ModificarLugarDisponible().removerLugarDisponible(idClase);
               EnviarWpp().sendWhatsAppMessage("has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
               if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
@@ -51,8 +50,8 @@ Future<void> agregarUsuarioEnCuatroClases(
       
     if (!item.mails.contains(user) && count < 5) {
       item.mails.add(user);
-        await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
-        ModificarLugarDisponible().removerlugarDisponible(item.id);
+        await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
+        ModificarLugarDisponible().removerLugarDisponible(item.id);
     }
     }
   }
