@@ -70,22 +70,22 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   }
 
   String obtenerDia(String fecha) {
-    final formato = DateFormat('dd/MM');
-    final fechaParseada = formato.parse(fecha);
-    final diaSemana = DateFormat('EEEE', 'es_ES').format(fechaParseada);
+  final formato = DateFormat('dd/MM');
+  final fechaParseada = formato.parse(fecha);
+  final diaSemana = DateFormat('EEEE', 'es_ES').format(fechaParseada);
 
-    final mapaDias = {
-      'Monday': 'lunes',
-      'Tuesday': 'martes',
-      'Wednesday': 'miércoles',
-      'Thursday': 'jueves',
-      'Friday': 'viernes',
-      'Saturday': 'sábado',
-      'Sunday': 'domingo'
-    };
+  final mapaDias = {
+    'Monday': 'lunes',
+    'Tuesday': 'martes',
+    'Wednesday': 'miércoles',
+    'Thursday': 'jueves',
+    'Friday': 'viernes',
+    'Saturday': 'sábado',
+    'Sunday': 'domingo'
+  };
 
-    return mapaDias[diaSemana] ?? diaSemana;
-  }
+  return mapaDias[diaSemana] ?? diaSemana;
+}
 
   Future<void> mostrarDialogoAgregarClase() async {
     final newid = await GenerarId().generarIdClase();
