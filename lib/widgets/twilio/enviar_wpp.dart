@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 class EnviarWpp {
 
 Future<void> sendWhatsAppMessage(String to, String message) async {
-  const String accountSid = 'ACdb4545491a93082a090d2bc938d02268';
-  const String authToken = 'c7f5310a12d9de220f559e7f16da4714';
+  const String accountSid = 'sid';
+  const String authToken = 'token';
   const String from = 'whatsapp:+14155238886'; // Número del sandbox de Twilio
 
   final String url = 'https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json';
