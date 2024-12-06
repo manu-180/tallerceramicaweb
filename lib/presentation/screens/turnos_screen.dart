@@ -128,7 +128,7 @@ void _mostrarDialogo(BuildContext context, String mensaje, bool mostrarBotonAcep
             ElevatedButton(
               onPressed: () {
                 if (clase != null && user != null) {
-                  manejarSeleccionClase(clase.id, user.userMetadata?['fullname'] ?? '');
+                  manejarSeleccionClase(clase, user.userMetadata?['fullname'] ?? '');
                   ModificarAlertTrigger().resetearAlertTrigger(user.userMetadata?['fullname'] ?? '');
                 }
                 Navigator.of(context).pop(); // Cerrar el diálogo
@@ -157,8 +157,8 @@ String _obtenerTituloDialogo(String mensaje) {
 
 
 
-  void manejarSeleccionClase(int id, String user) async {
-    await AgregarUsuario(supabase).agregarUsuarioAClase(id, user, false);
+  void manejarSeleccionClase(ClaseModels clase, String user) async {
+    await AgregarUsuario(supabase).agregarUsuarioAClase(clase.id, user, false, clase);
     
 
     setState(() {

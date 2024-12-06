@@ -168,7 +168,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
                                   // Si no se activó la opción de insertar x4, solo insertamos el usuario en la clase seleccionada
-                                  AgregarUsuario(supabase).agregarUsuarioAClase(clase.id, usuarioSeleccionado, true);
+                                  AgregarUsuario(supabase).agregarUsuarioAClase(clase.id, usuarioSeleccionado, true, clase);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
 
