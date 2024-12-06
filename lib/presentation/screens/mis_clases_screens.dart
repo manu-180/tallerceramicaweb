@@ -196,6 +196,7 @@ Widget build(BuildContext context) {
     await RemoverUsuario(Supabase.instance.client).removerUsuarioDeClase(
       claseId,
       fullname,
+      false
     );
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

@@ -164,7 +164,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                             if (tipoAccion == "insertar") {
                               setState(() {
                                 if (insertarX4) {
-                                 AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(clase.dia, clase.hora, usuarioSeleccionado);
+                                 AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(clase, usuarioSeleccionado);
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
                                   // Si no se activó la opción de insertar x4, solo insertamos el usuario en la clase seleccionada
@@ -176,11 +176,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                             } else if (tipoAccion == "remover") {
                               setState(() {
                                 if (insertarX4) {
-                                 RemoverUsuario(supabase).removerUsuarioDeMuchasClase(clase.dia, clase.hora, usuarioSeleccionado);
+                                 RemoverUsuario(supabase).removerUsuarioDeMuchasClase(clase, usuarioSeleccionado);
                                   clase.mails.remove(usuarioSeleccionado);
                                 } else {
                                   // Si no se activó la opción de insertar x4, solo insertamos el usuario en la clase seleccionada
-                                  RemoverUsuario(supabase).removerUsuarioDeClase(clase.id, usuarioSeleccionado);
+                                  RemoverUsuario(supabase).removerUsuarioDeClase(clase.id, usuarioSeleccionado, true);
                                   clase.mails.remove(usuarioSeleccionado);
                                 }
                               });

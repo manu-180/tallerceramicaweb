@@ -4,6 +4,7 @@ import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.da
 import 'package:taller_ceramica/supabase/functions/obtener_clases_disponibles.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/widgets/enviar_wpp.dart';
 
 class AgregarUsuario {
   final SupabaseClient supabaseClient;
@@ -25,8 +26,10 @@ class AgregarUsuario {
               clase.mails.add(user);
               await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
               ModificarLugarDisponible().removerlugarDisponible(idClase);
+              EnviarWpp().sendWhatsAppMessage("has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
               if (!parametro) {
-                ModificarCredito().removerCreditoUsuario(user);
+              ModificarCredito().removerCreditoUsuario(user);
+              EnviarWpp().sendWhatsAppMessage("$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
               }
             }
           }
@@ -35,7 +38,7 @@ class AgregarUsuario {
     }
 
 Future<void> agregarUsuarioEnCuatroClases(
-    String diaSeleccionado, String horaSeleccionada, String user) async {
+    ClaseModels clase, String user) async {
 
   final data = await ObtenerTotalInfo().obtenerInfo();
 
@@ -43,7 +46,7 @@ Future<void> agregarUsuarioEnCuatroClases(
 
   for (final item in data) {
 
-    if (item.dia == diaSeleccionado && item.hora == horaSeleccionada) {
+    if (item.dia == clase.dia && item.hora == clase.hora) {
       count++;
       
     if (!item.mails.contains(user) && count < 5) {
@@ -53,6 +56,7 @@ Future<void> agregarUsuarioEnCuatroClases(
     }
     }
   }
+  EnviarWpp().sendWhatsAppMessage("Has insertado a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}");
   }
 }
 
