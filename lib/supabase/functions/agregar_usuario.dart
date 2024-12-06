@@ -4,7 +4,6 @@ import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.da
 import 'package:taller_ceramica/supabase/functions/obtener_clases_disponibles.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/widgets/twilio/enviar_wpp.dart';
 
 class AgregarUsuario {
   final SupabaseClient supabaseClient;
@@ -25,10 +24,6 @@ class AgregarUsuario {
             if (!clase.mails.contains(user)) {
               clase.mails.add(user);
               await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
-              EnviarWpp().sendWhatsAppMessage(
-  'whatsapp:+5491134272488',
-  '${user} se ha sumado a la clase del día ${claseModels.dia} ${claseModels.fecha} a las ${claseModels.hora}'
-);
               ModificarLugarDisponible().removerlugarDisponible(idClase);
               if (!parametro) {
                 ModificarCredito().removerCreditoUsuario(user);
