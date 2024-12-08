@@ -3,7 +3,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/calcular_24hs.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/widgets/enviar_wpp.dart';
+import 'package:taller_ceramica/widgets/twilio/enviar_wpp.dart';
 
 class RemoverUsuario {
   final SupabaseClient supabaseClient;
@@ -23,11 +23,12 @@ class RemoverUsuario {
           if(Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
             ModificarLugarDisponible().agregarLugarDisponible(idClase);
           if(!parametro){
-            EnviarWpp().sendWhatsAppMessage("$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
+            EnviarWpp().sendWhatsAppMessage("$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
           }
           }
           if(parametro){
-            EnviarWpp().sendWhatsAppMessage("has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
+            EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
+            EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
 
           }
     }
@@ -42,12 +43,13 @@ class RemoverUsuario {
         if(clase.hora == item.hora && clase.dia == item.dia){
           if(item.mails.contains(user)){
             item.mails.remove(user);
-            await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
+            await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
             ModificarLugarDisponible().agregarLugarDisponible(item.id);
           }
         }
 
       }
-      EnviarWpp().sendWhatsAppMessage("Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}");
+      EnviarWpp().sendWhatsAppMessage("Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}", 'whatsapp:+5491134272488');
+      EnviarWpp().sendWhatsAppMessage("Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}", 'whatsapp:+5491132820164');
   }
 }

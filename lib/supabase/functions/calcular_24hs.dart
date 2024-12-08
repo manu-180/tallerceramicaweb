@@ -49,7 +49,6 @@ bool esMenorA0Horas(String fecha, String hora) {
   final DateTime fechaActual = DateTime.now();
 
   final Duration diferencia = fechaClase.difference(fechaActual);
-  print("Diferencia en horas: ${diferencia.inHours}");
 
   return diferencia.isNegative; // Devuelve true si ya pasó la fecha.
 }

@@ -6,19 +6,18 @@ class EnviarWpp {
 
  
 
-void sendWhatsAppMessage(texto) async {
+void sendWhatsAppMessage(String texto, String num) async {
   // Configura tus credenciales de Twilio
   const accountSid = 'AC3dc31aa60bcd46645dd763faef054683';
   const authToken = 'df49799dbca2eb2cfe1b1467035f148b';
   const fromWhatsAppNumber = 'whatsapp:+14155238886'; // Número de Twilio
-  const toWhatsAppNumber = 'whatsapp:+5491134272488'; // Número del destinatario
   
   const url = 'https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json';
 
   // Datos del mensaje
   final messageData = {
     'From': fromWhatsAppNumber,
-    'To': toWhatsAppNumber,
+    'To': num,
     'Body': texto
   };
 

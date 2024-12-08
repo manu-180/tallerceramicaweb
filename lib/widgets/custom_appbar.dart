@@ -30,6 +30,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       {'value': '/gestionhorarios', 'label': 'Gestión de horarios'},
       {'value': '/gestionclases', 'label': 'Gestión de clases'},
       {'value': '/usuarios', 'label': 'Usuarios'},
+      {'value': '/prueba', 'label': 'prueba'},
     ];
 
     // Lista de botones visibles para otros usuarios
@@ -40,7 +41,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     ];
 
     // Determina qué lista de botones mostrar
-    final menuItems = (userId == "b43beb8c-abea-43ab-8bf0-691e0fc66380" || userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b") ? adminRoutes : userRoutes;
+    final menuItems = (userId == "c1b53dba-88d6-4aea-bede-603e3d9d7ff8" || userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b") ? adminRoutes : userRoutes;
 
     return AppBar(
       backgroundColor: color.primary,

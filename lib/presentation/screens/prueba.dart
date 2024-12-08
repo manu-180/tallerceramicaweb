@@ -10,6 +10,14 @@ class Prueba extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Prueba interna actualizada'),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
   onPressed: () async {},
   child: const Icon(Icons.print),

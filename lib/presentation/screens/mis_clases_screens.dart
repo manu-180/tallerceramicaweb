@@ -198,6 +198,7 @@ Widget build(BuildContext context) {
       fullname,
       false
     );
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Has cancelado tu inscripción en la clase'),

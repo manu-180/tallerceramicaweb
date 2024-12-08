@@ -6,7 +6,6 @@ class ClaseModels {
   final String hora; // Hora de la clase
   final List<String> mails; // Lista de correos electrónicos de los alumnos inscritos
   int lugaresDisponibles = 0; // Lugares disponibles en la clase
-  bool isFull; // Indica si la clase está llena
 
   // Constructor actualizado
   ClaseModels({
@@ -17,13 +16,11 @@ class ClaseModels {
     required this.hora,
     required this.mails,
     required this.lugaresDisponibles,
-    this.isFull = false,
   });
 
   // Método para actualizar el estado de la clase
   void actualizarLugaresDisponibles(int nuevosLugares) {
     lugaresDisponibles = nuevosLugares;
-    isFull = nuevosLugares == 0; // La clase está llena si no hay lugares
   }
 
   // Método para crear una instancia desde un Map (útil para bases de datos)
@@ -36,7 +33,6 @@ class ClaseModels {
       hora: map['hora'],
       mails: List<String>.from(map['mails'] ?? []),
       lugaresDisponibles: map['lugar_disponible'],
-      isFull: map['lugaresDisponibles'] == 0,
     );
   }
 
@@ -49,8 +45,7 @@ class ClaseModels {
       'fecha': fecha,
       'hora': hora,
       'mails': mails,
-      'lugaresDisponibles': lugaresDisponibles,
-      'isFull': isFull,
+      'lugar_disponible': lugaresDisponibles,
     };
   }
 }

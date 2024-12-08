@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
 import 'package:taller_ceramica/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/presentation/screens/gestion_clases_screen.dart';
-import 'package:taller_ceramica/presentation/screens/login_screen_animacion.dart';
 import 'package:taller_ceramica/presentation/screens/prueba.dart';
 
 final appRouter = GoRouter(
@@ -47,7 +46,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: "/crear-usuario",
       name: "crear usuario",
-      builder: (context, state) => SignUpScreen()
+      builder: (context, state) => const SignUpScreen()
       ),
     GoRoute(
       path: "/prueba",

@@ -210,99 +210,103 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
+  final color = Theme.of(context).colorScheme;
 
-    final color = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: color.primary.withOpacity(0.20),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    "En esta sesión podras gestionar tus horarios. Ver quienes asisten a tus clases y agregar o remover usuarios de las mismas",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
+  return Scaffold(
+    appBar: const CustomAppBar(),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: color.primary.withOpacity(0.20),
+                borderRadius: BorderRadius.circular(10),
               ),
-              DropdownButton<String>(
-                value: fechaSeleccionada,
-                hint: const Text('Selecciona una fecha'),
-                onChanged: (value) {
-                  seleccionarFecha(value!);
-                },
-                items: fechasDisponibles.map((fecha) {
-                  return DropdownMenuItem(
-                    value: fecha,
-                    child: Text(fecha),
-                  );
-                }).toList(),
+              child: Text(
+                "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas",
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
-              const SizedBox(height: 10),
-              if (isLoading) const CircularProgressIndicator(),                
-              if (!isLoading &&
-                  fechaSeleccionada != null &&
-                  horariosFiltrados.isNotEmpty)
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: horariosFiltrados.length,
-                  itemBuilder: (context, index) {
-                    final clase = horariosFiltrados[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListTile(
-                              title: Text(
-                                  '${clase.hora} - ${clase.dia} ${clase.fecha}'),
-                              subtitle: clase.mails.isNotEmpty
-                                  ? Text('Alumnos/as: ${clase.mails.join(", ")}')
-                                  : const Text('No hay usuarios registrados en esta clase'),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      mostrarDialogo("insertar", clase, color);
-                                    },
-                                    child: const Text("Insertar usuarios"),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      mostrarDialogo("remover", clase, color);
-                                    },
-                                    child: const Text("Remover usuarios"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-            ],
+            ),
           ),
-        ),
+          DropdownButton<String>(
+            value: fechaSeleccionada,
+            hint: const Text('Selecciona una fecha'),
+            onChanged: (value) {
+              seleccionarFecha(value!);
+            },
+            items: fechasDisponibles.map((fecha) {
+              return DropdownMenuItem(
+                value: fecha,
+                child: Text(fecha),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 10),
+          if (isLoading) const CircularProgressIndicator(),
+          if (!isLoading && fechaSeleccionada != null)
+            Expanded(
+              child: horariosFiltrados.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: horariosFiltrados.length,
+                      itemBuilder: (context, index) {
+                        final clase = horariosFiltrados[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  title: Text(
+                                      '${clase.hora} - ${clase.dia} ${clase.fecha}'),
+                                  subtitle: clase.mails.isNotEmpty
+                                      ? Text(
+                                          'Alumnos/as: ${clase.mails.join(", ")}')
+                                      : const Text(
+                                          'No hay usuarios registrados en esta clase'),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          mostrarDialogo(
+                                              "insertar", clase, color);
+                                        },
+                                        child: const Text("Insertar usuarios"),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          mostrarDialogo(
+                                              "remover", clase, color);
+                                        },
+                                        child: const Text("Remover usuarios"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text("No hay clases para esta fecha."),
+                    ),
+            ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 } 

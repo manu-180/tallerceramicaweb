@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/main.dart';
@@ -6,7 +8,7 @@ import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart'; // Asegúrate de tener importado el paquete correcto.
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -160,7 +162,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         'user_uid': res.user?.id,
                         'sexo': "mujer",
                         'clases_disponibles': 0,
-                        'theme': 0,
                         'recuperar': 0,
                         'trigger_alert': 0,
                         'clases_canceladas': [],

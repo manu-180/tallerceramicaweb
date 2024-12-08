@@ -5,13 +5,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:taller_ceramica/config/router/app_router.dart';
 import 'package:taller_ceramica/config/theme/app_theme.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
+import 'package:taller_ceramica/utils/storage_helpers.dart';
 
 Future<void> main() async {
-  // Cargar las variables del archivo .env
+  WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: ".env");
 
-  await Supabase.initialize(
+  await StorageHelper.clearCache();
 
+  await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL'] ?? '',
     anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
   );
@@ -19,7 +22,6 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-// Get a reference your Supabase client
 final supabase = Supabase.instance.client;
 
 class MyApp extends ConsumerWidget {

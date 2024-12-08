@@ -3,7 +3,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/widgets/enviar_wpp.dart';
+import 'package:taller_ceramica/widgets/twilio/enviar_wpp.dart';
 
 class AgregarUsuario {
   final SupabaseClient supabaseClient;
@@ -14,7 +14,7 @@ class AgregarUsuario {
 
       final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
+      final data = await supabaseClient.from('total').select().eq('id', idClase).single();
 
       final clase = ClaseModels.fromMap(data);
 
@@ -23,12 +23,16 @@ class AgregarUsuario {
           if (usuario.clasesDisponibles > 0 || parametro) {
             if (!clase.mails.contains(user)) {
               clase.mails.add(user);
-              await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
+              await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
               ModificarLugarDisponible().removerLugarDisponible(idClase);
-              EnviarWpp().sendWhatsAppMessage("has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
+              if (parametro) {
+                EnviarWpp().sendWhatsAppMessage("Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
+                EnviarWpp().sendWhatsAppMessage("Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
+              }
               if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
-              EnviarWpp().sendWhatsAppMessage("$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}");
+              EnviarWpp().sendWhatsAppMessage("$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
+              EnviarWpp().sendWhatsAppMessage("$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
               }
             }
           }
@@ -50,12 +54,12 @@ Future<void> agregarUsuarioEnCuatroClases(
       
     if (!item.mails.contains(user) && count < 5) {
       item.mails.add(user);
-        await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
+        await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
         ModificarLugarDisponible().removerLugarDisponible(item.id);
     }
     }
   }
-  EnviarWpp().sendWhatsAppMessage("Has insertado a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}");
+  EnviarWpp().sendWhatsAppMessage("Has insertado a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}", 'whatsapp:+5491134272488');
   }
 }
 
