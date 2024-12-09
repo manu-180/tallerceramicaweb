@@ -6,6 +6,7 @@ class UsuarioModels {
   final String sexo;
   final int clasesDisponibles;
   final int alertTrigger;
+  final int tema;
 
   UsuarioModels({
     required this.id,
@@ -15,6 +16,7 @@ class UsuarioModels {
     required this.sexo,
     required this.clasesDisponibles,
     required this.alertTrigger,
+    required this.tema
   });
 
   // Función para convertir el mapa a un objeto UsuarioModels
@@ -27,11 +29,12 @@ class UsuarioModels {
       sexo: map['sexo'],
       clasesDisponibles: map['clases_disponibles'],
       alertTrigger: map['trigger_alert'],
+      tema: map['tema'],
     );
   }
 
   @override
   String toString() {
-    return 'UsuarioModels(id: $id, usuario: $usuario, fullname: $fullname, userUid: $userUid, sexo: $sexo, clasesDisponibles: $clasesDisponibles, alertTrigger: $alertTrigger)';
+    return 'UsuarioModels(id: $id, usuario: $usuario, fullname: $fullname, userUid: $userUid, sexo: $sexo, clasesDisponibles: $clasesDisponibles, alertTrigger: $alertTrigger, tema: $tema)';
   }
 }

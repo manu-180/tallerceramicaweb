@@ -40,11 +40,16 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppTheme themeNotify = ref.watch(themeNotifyProvider);
 
-    return MaterialApp.router(
-      title: "Taller de cerámica",
-      routerConfig: appRouter,
-      debugShowCheckedModeBanner: false,
-      theme: themeNotify.getColor(),
+    return FutureBuilder<ThemeData>(
+      future: themeNotify.getColor(),
+      builder: (context, snapshot) {
+        return MaterialApp.router(
+          title: "Taller de cerámica",
+          routerConfig: appRouter,
+          debugShowCheckedModeBanner: false,
+          theme: snapshot.data,
+        );
+      },
     );
   }
 }
