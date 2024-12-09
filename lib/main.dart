@@ -12,12 +12,21 @@ Future<void> main() async {
 
   await dotenv.load(fileName: ".env");
 
-  await StorageHelper.clearCache();
-
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL'] ?? '',
     anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
   );
+
+  // Restaurar sesión de Supabase si existe
+  try {
+    final session = await StorageHelper.getSession();
+    if (session != null) {
+      // Si hay una sesión guardada, recuperarla
+      await Supabase.instance.client.auth.recoverSession(session as String);
+    }
+  } catch (e) {
+    debugPrint('Error al restaurar la sesión: $e');
+  }
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -28,7 +37,7 @@ class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final AppTheme themeNotify = ref.watch(themeNotifyProvider);
 
     return MaterialApp.router(

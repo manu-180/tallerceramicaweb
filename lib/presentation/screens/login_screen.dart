@@ -1,10 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/widgets/custom_appbar.dart';
+import 'dart:convert';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -15,7 +13,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -45,32 +43,36 @@ class LoginScreen extends StatelessWidget {
                 final password = passwordController.text.trim();
 
                 try {
-                  await supabase.auth.signInWithPassword(
+                  // Iniciar sesión
+                  final response = await Supabase.instance.client.auth.signInWithPassword(
                     email: email,
                     password: password,
                   );
 
-                  // Si el inicio de sesión es exitoso, navega a la página principal
-                  context.go("/");
+                  // Guardar sesión manualmente (SharedPreferences)
+                  if (response.session != null) {
+                    final prefs = await SharedPreferences.getInstance();
+                    final sessionData = response.session!.toJson();
+
+                    // Convertir sessionData en una cadena JSON antes de guardarlo
+                    await prefs.setString('session', jsonEncode(sessionData));
+                  }
+
+                  // Navegar a la pantalla principal
+                  context.go('/');
+
                 } on AuthException catch (e) {
-                  // Captura errores relacionados con la autenticación y muestra un mensaje
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(
-                        'Error de inicio de sesión: ${e.message}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                      content: Text('Error de inicio de sesión: ${e.message}'),
                       backgroundColor: Colors.red,
                     ),
                   );
                 } catch (e) {
-                  // Captura errores inesperados y muestra un mensaje genérico
+                  print("error: $e");
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text(
-                        'Ocurrió un error inesperado. Por favor, intenta nuevamente.',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      content: Text('Ocurrió un error inesperado'),
                       backgroundColor: Colors.red,
                     ),
                   );

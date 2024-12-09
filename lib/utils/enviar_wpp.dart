@@ -9,7 +9,7 @@ class EnviarWpp {
 void sendWhatsAppMessage(String texto, String num) async {
   // Configura tus credenciales de Twilio
   const accountSid = 'AC3dc31aa60bcd46645dd763faef054683';
-  const authToken = 'df49799dbca2eb2cfe1b1467035f148b';
+  const authToken = 'd057ff9d4fd127a83035a335fcd9ad67';
   const fromWhatsAppNumber = 'whatsapp:+14155238886'; // Número de Twilio
   
   const url = 'https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json';

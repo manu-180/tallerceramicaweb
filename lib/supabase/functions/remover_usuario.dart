@@ -3,7 +3,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/calcular_24hs.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/widgets/twilio/enviar_wpp.dart';
+import 'package:taller_ceramica/utils/enviar_wpp.dart';
 
 class RemoverUsuario {
   final SupabaseClient supabaseClient;

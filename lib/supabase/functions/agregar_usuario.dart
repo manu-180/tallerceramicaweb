@@ -3,7 +3,7 @@ import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/widgets/twilio/enviar_wpp.dart';
+import 'package:taller_ceramica/utils/enviar_wpp.dart';
 
 class AgregarUsuario {
   final SupabaseClient supabaseClient;
@@ -40,26 +40,45 @@ class AgregarUsuario {
       }
     }
 
-Future<void> agregarUsuarioEnCuatroClases(
-    ClaseModels clase, String user) async {
-
+Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user) async {
   final data = await ObtenerTotalInfo().obtenerInfo();
+  final Map<String, int> diaToNumero = {
+  'lunes': 1,
+  'martes': 2,
+  'miercoles': 3,
+  'jueves': 4,
+  'viernes': 5,
+  'sabado': 6,
+  'domingo': 7,
+};
+
+
+  // Ordenar las clases por el día de la semana usando el mapeo
+  data.sort((a, b) => diaToNumero[a.dia]!.compareTo(diaToNumero[b.dia]!));
 
   int count = 0;
 
   for (final item in data) {
-
+    // Verificamos que la clase sea del mismo día y hora
     if (item.dia == clase.dia && item.hora == clase.hora) {
-      count++;
-      
-    if (!item.mails.contains(user) && count < 5) {
-      item.mails.add(user);
+      // Solo agregar al usuario si aún no está en la clase y si no se ha alcanzado el límite de 4 clases
+      if (!item.mails.contains(user) && count < 4) {
+        item.mails.add(user);
         await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
         ModificarLugarDisponible().removerLugarDisponible(item.id);
-    }
+        count++; // Incrementar el contador solo cuando realmente agregas al usuario
+      }
     }
   }
-  EnviarWpp().sendWhatsAppMessage("Has insertado a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}", 'whatsapp:+5491134272488');
+
+  // Enviar el mensaje al usuario solo después de que se haya agregado a las 4 clases
+  if (count == 4) {
+    EnviarWpp().sendWhatsAppMessage(
+      "Has insertado a $user a 4 clases el día ${clase.dia} a las ${clase.hora}",
+      'whatsapp:+5491134272488'
+    );
   }
+}
+
 }
 
