@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
-import 'package:taller_ceramica/supabase/functions/cambiar_tema.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class Configuracion extends ConsumerStatefulWidget {
@@ -36,7 +35,6 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     final List<Color> colors = ref.watch(listTheColors);
     final int selectedColor = ref.watch(themeNotifyProvider).selectedColor;
     final color = Theme.of(context).colorScheme;
-    final usuarioActivo = Supabase.instance.client.auth.currentUser;
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -101,7 +99,6 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                           value: index,
                           groupValue: selectedColor,
                           onChanged: (value) {
-                            CambiarTema().cambiarTema(usuarioActivo?.userMetadata?['fullname'], index);
                             ref.read(themeNotifyProvider.notifier).changeColor(index);
                         },
                         );

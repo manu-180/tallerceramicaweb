@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
@@ -25,25 +26,46 @@ class _TurnosScreenState extends State<TurnosScreen> {
   List<ClaseModels> diasUnicos = [];
   Map<String, List<ClaseModels>> horariosPorDia = {};
 
-  Future<void> cargarDatos() async {
-    setState(() {
-      isLoading = true; // Indicamos que se está cargando
-    });
 
-    final datos = await ObtenerTotalInfo().obtenerInfo();
-    final datosSemana = datos.where((clase) => clase.semana == semanaSeleccionada).toList();
-    datosSemana.sort((a, b) => a.id.compareTo(b.id));
+Future<void> cargarDatos() async {
+  setState(() {
+    isLoading = true; // Indicamos que se está cargando
+  });
 
-    final diasSet = <String>{};
-    diasUnicos = datosSemana.where((clase) {
-      final diaFecha = '${clase.dia} - ${clase.fecha}';
-      if (diasSet.contains(diaFecha)) {
-        return false;
-      } else {
-        diasSet.add(diaFecha);
-        return true;
-      }
-    }).toList();
+  final datos = await ObtenerTotalInfo().obtenerInfo();
+  
+  // Filtramos las clases por la semana seleccionada
+  final datosSemana = datos.where((clase) => clase.semana == semanaSeleccionada).toList();
+
+  // Crea un objeto DateFormat para el formato "dd/MM/yyyy HH:mm"
+  final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
+
+  // Ordenamos primero por la fecha (ascendente) y luego por la hora (ascendente)
+  datosSemana.sort((a, b) {
+    // Concatenamos la hora al dato de fecha ya existente
+    String fechaA = '${a.fecha} ${a.hora}';
+    String fechaB = '${b.fecha} ${b.hora}';
+
+    // Convierte las fechas y horas a DateTime usando DateFormat
+    DateTime parsedFechaA = dateFormat.parse(fechaA);
+    DateTime parsedFechaB = dateFormat.parse(fechaB);
+
+    return parsedFechaA.compareTo(parsedFechaB);
+  });
+
+  // Extraemos días únicos basados en la fecha y día
+  final diasSet = <String>{};
+  diasUnicos = datosSemana.where((clase) {
+    final diaFecha = '${clase.dia} - ${clase.fecha}';
+    if (diasSet.contains(diaFecha)) {
+      return false;
+    } else {
+      diasSet.add(diaFecha);
+      return true;
+    }
+  }).toList();
+
+
 
     horariosPorDia = {};
     for (var clase in datosSemana) {

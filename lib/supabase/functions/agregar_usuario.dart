@@ -14,7 +14,7 @@ class AgregarUsuario {
 
       final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-      final data = await supabaseClient.from('total').select().eq('id', idClase).single();
+      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
 
       final clase = ClaseModels.fromMap(data);
 
@@ -23,7 +23,7 @@ class AgregarUsuario {
           if (usuario.clasesDisponibles > 0 || parametro) {
             if (!clase.mails.contains(user)) {
               clase.mails.add(user);
-              await supabaseClient.from('total').update(clase.toMap()).eq('id', idClase);
+              await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
               ModificarLugarDisponible().removerLugarDisponible(idClase);
               if (parametro) {
                 EnviarWpp().sendWhatsAppMessage("Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
@@ -64,7 +64,7 @@ Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user) async 
       // Solo agregar al usuario si aún no está en la clase y si no se ha alcanzado el límite de 4 clases
       if (!item.mails.contains(user) && count < 4) {
         item.mails.add(user);
-        await supabaseClient.from('total').update(item.toMap()).eq('id', item.id);
+        await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
         ModificarLugarDisponible().removerLugarDisponible(item.id);
         count++; // Incrementar el contador solo cuando realmente agregas al usuario
       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
@@ -39,6 +40,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
       '30/12', '31/12',
     ];
   }
+  
 
   Future<void> cargarDatos() async {
     try {
@@ -70,10 +72,24 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     fechaSeleccionada = fecha;
     horariosFiltrados = horariosDisponibles
         .where((clase) => clase.fecha == fechaSeleccionada)
-        .toList()
-      ..sort((a, b) => a.id.compareTo(b.id));
+        .toList();
+    // Ahora ordenamos por fecha y hora utilizando el mismo método de ordenación
+    horariosFiltrados.sort((a, b) {
+      final formatoFecha = DateFormat('dd/MM');
+      final fechaA = formatoFecha.parse(a.fecha);
+      final fechaB = formatoFecha.parse(b.fecha);
+
+      if (fechaA == fechaB) {
+        final formatoHora = DateFormat('HH:mm');
+        final horaA = formatoHora.parse(a.hora);
+        final horaB = formatoHora.parse(b.hora);
+        return horaA.compareTo(horaB);
+      }
+      return fechaA.compareTo(fechaB);
+    });
   });
 }
+
 
 
   Future<void> mostrarDialogo(String tipoAccion, ClaseModels clase, ColorScheme color) async {

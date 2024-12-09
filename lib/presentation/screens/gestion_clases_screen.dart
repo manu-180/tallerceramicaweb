@@ -30,6 +30,24 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     cargarDatos();
   }
 
+  void ordenarClasesPorFechaYHora() {
+  clasesFiltradas.sort((a, b) {
+    final formatoFecha = DateFormat('dd/MM');
+    final fechaA = formatoFecha.parse(a.fecha);
+    final fechaB = formatoFecha.parse(b.fecha);
+
+    if (fechaA == fechaB) {
+      
+      final formatoHora = DateFormat('HH:mm');
+      final horaA = formatoHora.parse(a.hora);
+      final horaB = formatoHora.parse(b.hora);
+      return horaA.compareTo(horaB);
+    }
+    return fechaA.compareTo(fechaB);
+  });
+}
+
+
   List<String> generarFechasLunesAViernes() {
     return [
       '02/12', '03/12', '04/12', '05/12', '06/12',
@@ -41,26 +59,27 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   }
 
   Future<void> cargarDatos() async {
-    try {
-      final datos = await ObtenerTotalInfo().obtenerInfo();
+  try {
+    final datos = await ObtenerTotalInfo().obtenerInfo();
 
-      final datosDiciembre = datos.where((clase) {
-        final fecha = clase.fecha;
-        return fecha.endsWith('/12');
-      }).toList();
+    final datosDiciembre = datos.where((clase) {
+      final fecha = clase.fecha;
+      return fecha.endsWith('/12');
+    }).toList();
 
-      setState(() {
-        clasesDisponibles = datosDiciembre;
-        clasesFiltradas = datosDiciembre;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      debugPrint('Error cargando datos: $e');
-    }
+    setState(() {
+      clasesDisponibles = datosDiciembre;
+      clasesFiltradas = List.from(datosDiciembre); // Copia de datos para filtrar
+      ordenarClasesPorFechaYHora(); // Ordenar antes de mostrar
+      isLoading = false;
+    });
+  } catch (e) {
+    setState(() {
+      isLoading = false;
+    });
+    debugPrint('Error cargando datos: $e');
   }
+}
 
   void seleccionarFecha(String fecha) {
     setState(() {
@@ -72,25 +91,42 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   }
 
   String obtenerDia(String fecha) {
-  final formato = DateFormat('dd/MM');
-  final fechaParseada = formato.parse(fecha);
-  final diaSemana = DateFormat('EEEE', 'es_ES').format(fechaParseada);
+    final formato = DateFormat('dd/MM');
+    final fechaParseada = formato.parse(fecha);
+    final diaSemana = DateFormat('EEEE', 'es_ES').format(fechaParseada);
 
-  final mapaDias = {
-    'Monday': 'lunes',
-    'Tuesday': 'martes',
-    'Wednesday': 'miércoles',
-    'Thursday': 'jueves',
-    'Friday': 'viernes',
-    'Saturday': 'sábado',
-    'Sunday': 'domingo'
-  };
+    final mapaDias = {
+      'Monday': 'lunes',
+      'Tuesday': 'martes',
+      'Wednesday': 'miércoles',
+      'Thursday': 'jueves',
+      'Friday': 'viernes',
+      'Saturday': 'sábado',
+      'Sunday': 'domingo'
+    };
 
-  return mapaDias[diaSemana] ?? diaSemana;
+    return mapaDias[diaSemana] ?? diaSemana;
+  }
+
+  Future<void> agregarLugar(int id) async {
+  setState(() {
+    final index = clasesFiltradas.indexWhere((clase) => clase.id == id);
+    if (index != -1) {
+      clasesFiltradas[index].lugaresDisponibles++;
+    }
+  });
+}
+
+  Future<void> quitarLugar(int id) async {
+  setState(() {
+    final index = clasesFiltradas.indexWhere((clase) => clase.id == id);
+    if (index != -1 && clasesFiltradas[index].lugaresDisponibles > 0) {
+      clasesFiltradas[index].lugaresDisponibles--;
+    }
+  });
 }
 
   Future<void> mostrarDialogoAgregarClase() async {
-    final newid = await GenerarId().generarIdClase();
     TextEditingController horaController = TextEditingController();
 
     await showDialog(
@@ -109,7 +145,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
               onPressed: () async {
                 final hora = horaController.text;
                 if (hora.isNotEmpty && fechaSeleccionada != null) {
-                  final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+                  final horaFormatoValido = RegExp(r'^\d{2}:\d{2}\$').hasMatch(hora);
                   if (!horaFormatoValido) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -217,14 +253,19 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.add),
-                              onPressed: () {
+                              onPressed: () async {
+                                agregarLugar(clase.id);
                                 ModificarLugarDisponible().agregarLugarDisponible(clase.id);
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.remove),
-                              onPressed: () {
-                                ModificarLugarDisponible().removerLugarDisponible(clase.id);
+                              onPressed: () async {
+                                if (clase.lugaresDisponibles > 0) {
+                                  quitarLugar(clase.id);
+                                  ModificarLugarDisponible().removerLugarDisponible(clase.id);
+
+                                }
                               },
                             ),
                             IconButton(
@@ -238,22 +279,30 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                           ],
                         ),
                       ),
-                    );
+                                          );
                   },
                 ),
               ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                if (fechaSeleccionada != null) {
-                  mostrarDialogoAgregarClase();
-                }
-              },
-              child: const Text("Agregar nueva clase"),
-            ),
+            if (!isLoading && (fechaSeleccionada == null || clasesFiltradas.isEmpty))
+              const Text("No hay clases disponibles para esta fecha."),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (fechaSeleccionada == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Por favor, selecciona una fecha antes de agregar clases.'),
+              ),
+            );
+            return;
+          }
+          mostrarDialogoAgregarClase();
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
+

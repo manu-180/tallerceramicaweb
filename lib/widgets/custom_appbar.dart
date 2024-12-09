@@ -34,6 +34,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           {'value': '/gestionhorarios', 'label': 'Gestión de horarios'},
           {'value': '/gestionclases', 'label': 'Gestión de clases'},
           {'value': '/usuarios', 'label': 'Usuarios'},
+          {'value': '/prueba', 'label': 'prueba'},
         ];
 
         // Lista de botones visibles para otros usuarios

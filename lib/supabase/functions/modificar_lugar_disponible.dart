@@ -11,7 +11,7 @@ class ModificarLugarDisponible {
       if (clase.id == id) {
         var lugarDisponibleActualmente = clase.lugaresDisponibles;
         lugarDisponibleActualmente += 1;
-        await supabase.from('total').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
+        await supabase.from('respaldo').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
       }
     }
     
@@ -27,7 +27,7 @@ class ModificarLugarDisponible {
       if (clase.id == id) {
         var lugarDisponibleActualmente = clase.lugaresDisponibles;
         lugarDisponibleActualmente -= 1;
-        await supabase.from('total').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
+        await supabase.from('respaldo').update({ 'lugar_disponible': lugarDisponibleActualmente }).eq('id', clase.id);
         
       }
     }
