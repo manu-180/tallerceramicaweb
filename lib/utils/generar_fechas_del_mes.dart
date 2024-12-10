@@ -18,6 +18,4 @@ class GenerarFechasDelMes {
 
     return fechas;
   }
-
-  
 }

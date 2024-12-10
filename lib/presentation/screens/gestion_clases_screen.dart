@@ -50,7 +50,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     });
   }
 
-
   Future<void> cargarDatos() async {
     try {
       final datos = await ObtenerTotalInfo().obtenerInfo();

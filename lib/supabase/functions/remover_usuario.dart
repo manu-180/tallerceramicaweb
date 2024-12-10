@@ -13,11 +13,8 @@ class RemoverUsuario {
 
   Future<void> removerUsuarioDeClase(
       int idClase, String user, bool parametro) async {
-    final data = await supabaseClient
-        .from('total')
-        .select()
-        .eq('id', idClase)
-        .single();
+    final data =
+        await supabaseClient.from('respaldo').select().eq('id', idClase).single();
 
     final clase = ClaseModels.fromMap(data);
 
@@ -25,7 +22,7 @@ class RemoverUsuario {
     if (clase.mails.contains(user)) {
       clase.mails.remove(user);
       await supabaseClient
-          .from('total')
+          .from('respaldo')
           .update(clase.toMap())
           .eq('id', idClase);
       ModificarLugarDisponible().agregarLugarDisponible(idClase);
@@ -55,7 +52,7 @@ class RemoverUsuario {
         if (item.mails.contains(user)) {
           item.mails.remove(user);
           await supabaseClient
-              .from('total')
+              .from('respaldo')
               .update(item.toMap())
               .eq('id', item.id);
           ModificarLugarDisponible().agregarLugarDisponible(item.id);

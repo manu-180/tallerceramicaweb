@@ -10,7 +10,7 @@ class ModificarLugarDisponible {
         var lugarDisponibleActualmente = clase.lugaresDisponibles;
         lugarDisponibleActualmente += 1;
         await supabase
-            .from('total')
+            .from('respaldo')
             .update({'lugar_disponible': lugarDisponibleActualmente}).eq(
                 'id', clase.id);
       }
@@ -27,7 +27,7 @@ class ModificarLugarDisponible {
         var lugarDisponibleActualmente = clase.lugaresDisponibles;
         lugarDisponibleActualmente -= 1;
         await supabase
-            .from('total')
+            .from('respaldo')
             .update({'lugar_disponible': lugarDisponibleActualmente}).eq(
                 'id', clase.id);
       }

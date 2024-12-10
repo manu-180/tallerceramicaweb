@@ -33,7 +33,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     cargarDatos();
   }
 
-
   Future<void> cargarDatos() async {
     try {
       final datos = await ObtenerTotalInfo().obtenerInfo();
@@ -81,6 +80,24 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
       });
     });
   }
+
+  void cambiarFecha(bool siguiente) {
+  setState(() {
+    final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
+
+    if (siguiente) {
+      // Ir a la siguiente fecha y volver al inicio si es la última
+      fechaSeleccionada = fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
+    } else {
+      // Ir a la fecha anterior y volver al final si es la primera
+      fechaSeleccionada = fechasDisponibles[
+        (indexActual - 1 + fechasDisponibles.length) % fechasDisponibles.length
+      ];
+    }
+    seleccionarFecha(fechaSeleccionada!);
+  });
+}
+
 
   Future<void> mostrarDialogo(
       String tipoAccion, ClaseModels clase, ColorScheme color) async {
@@ -248,8 +265,59 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                 ),
               ),
             ),
-            _DiaSeleccionado(
-                text: fechaSeleccionada ?? '', colors: colors, color: color),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey.shade200,
+                    boxShadow: [
+                      BoxShadow(
+                        color: colors.primaryContainer.withOpacity(0.15),
+                        blurRadius: 1,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      cambiarFecha(false);
+                    },
+                    icon: const Icon(Icons.arrow_left, size: 28),
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                _DiaSeleccionado(
+                  text: fechaSeleccionada ?? '',
+                  colors: colors,
+                  color: color,
+                ),
+                const SizedBox(width: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey.shade200,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 1,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      cambiarFecha(true);
+                    },
+                    icon: const Icon(Icons.arrow_right, size: 28),
+                    color:
+                        Colors.black, // Color del ícono (puedes personalizarlo)
+                  ),
+                ),
+              ],
+            ),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -336,8 +404,12 @@ class _DiaSeleccionado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
+      width: screenWidth * 0.35, 
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [colors.secondaryContainer, colors.primary.withOpacity(0.6)],
@@ -346,16 +418,19 @@ class _DiaSeleccionado extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Text(
-        text.isEmpty
-            ? "Seleccione una fecha"
-            : DiaConFecha().obtenerDiaDeLaSemana(text),
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+      child: Center(
+        child: Text(
+          text.isEmpty
+              ? "Seleccione una fecha"
+              : DiaConFecha().obtenerDiaDeLaSemana(text),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );
   }
 }
+

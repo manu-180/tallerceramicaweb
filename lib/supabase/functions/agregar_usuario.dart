@@ -14,11 +14,8 @@ class AgregarUsuario {
       int idClase, String user, bool parametro, ClaseModels claseModels) async {
     final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-    final data = await supabaseClient
-        .from('total')
-        .select()
-        .eq('id', idClase)
-        .single();
+    final data =
+        await supabaseClient.from('respaldo').select().eq('id', idClase).single();
 
     final clase = ClaseModels.fromMap(data);
 
@@ -28,7 +25,7 @@ class AgregarUsuario {
           if (!clase.mails.contains(user)) {
             clase.mails.add(user);
             await supabaseClient
-                .from('total')
+                .from('respaldo')
                 .update(clase.toMap())
                 .eq('id', idClase);
             ModificarLugarDisponible().removerLugarDisponible(idClase);
@@ -80,7 +77,7 @@ class AgregarUsuario {
         if (!item.mails.contains(user) && count < 4) {
           item.mails.add(user);
           await supabaseClient
-              .from('total')
+              .from('respaldo')
               .update(item.toMap())
               .eq('id', item.id);
           ModificarLugarDisponible().removerLugarDisponible(item.id);
