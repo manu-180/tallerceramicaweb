@@ -42,8 +42,12 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
                 clase.id,
                 user?.userMetadata?['fullname']
               );
+              if (Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora))
+              {
               ModificarCredito().agregarCreditoUsuario(user?.userMetadata?['fullname']);
-              ModificarAlertTrigger().agregarAlertTrigger(user?.userMetadata?['fullname']);
+              } else {
+                ModificarAlertTrigger().agregarAlertTrigger(user?.userMetadata?['fullname']);
+                }
               Navigator.of(context).pop();
             },
             child: const Text('Aceptar'),
@@ -140,7 +144,10 @@ Widget build(BuildContext context) {
                         itemCount: clasesDelUsuario.length,
                         itemBuilder: (context, index) {
                           final clase = clasesDelUsuario[index];
-                          final claseInfo = '${clase.dia} ${clase.fecha} - ${clase.hora}';
+                          final partesFecha = clase.fecha.split('/');
+                          final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+                          final diaMesAnio = '${clase.dia} $diaMes';
+                          final claseInfo = '$diaMesAnio - ${clase.hora}';
 
                           return Padding(
                             padding: const EdgeInsets.symmetric(

@@ -32,15 +32,21 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   List<String> generarFechasLunesAViernes() {
-    return [
-      '02/12', '03/12', '04/12', '05/12', '06/12',
-      '09/12', '10/12', '11/12', '12/12', '13/12',
-      '16/12', '17/12', '18/12', '19/12', '20/12',
-      '23/12', '24/12', '26/12', '27/12',
-      '30/12', '31/12',
-    ];
+    final DateFormat formato = DateFormat('dd/MM/yyyy');
+    final List<String> fechas = [];
+    final DateTime inicio = DateTime(2024, 12, 2);
+    final DateTime fin = DateTime(2024, 12, 31);
+
+    for (DateTime fecha = inicio;
+        fecha.isBefore(fin) || fecha.isAtSameMomentAs(fin);
+        fecha = fecha.add(const Duration(days: 1))) {
+      if (fecha.weekday >= DateTime.monday && fecha.weekday <= DateTime.friday) {
+        fechas.add(formato.format(fecha));
+      }
+    }
+
+    return fechas;
   }
-  
 
   Future<void> cargarDatos() async {
     try {
@@ -49,7 +55,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
 
       final datosDiciembre = datos.where((clase) {
         final fecha = clase.fecha;
-        return fecha.endsWith('/12');
+        return fecha.endsWith('/2024');
       }).toList();
 
       setState(() {
@@ -68,29 +74,26 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   void seleccionarFecha(String fecha) {
-  setState(() {
-    fechaSeleccionada = fecha;
-    horariosFiltrados = horariosDisponibles
-        .where((clase) => clase.fecha == fechaSeleccionada)
-        .toList();
-    // Ahora ordenamos por fecha y hora utilizando el mismo método de ordenación
-    horariosFiltrados.sort((a, b) {
-      final formatoFecha = DateFormat('dd/MM');
-      final fechaA = formatoFecha.parse(a.fecha);
-      final fechaB = formatoFecha.parse(b.fecha);
+    setState(() {
+      fechaSeleccionada = fecha;
+      horariosFiltrados = horariosDisponibles
+          .where((clase) => clase.fecha == fechaSeleccionada)
+          .toList();
+      horariosFiltrados.sort((a, b) {
+        final formatoFecha = DateFormat('dd/MM/yyyy');
+        final fechaA = formatoFecha.parse(a.fecha);
+        final fechaB = formatoFecha.parse(b.fecha);
 
-      if (fechaA == fechaB) {
-        final formatoHora = DateFormat('HH:mm');
-        final horaA = formatoHora.parse(a.hora);
-        final horaB = formatoHora.parse(b.hora);
-        return horaA.compareTo(horaB);
-      }
-      return fechaA.compareTo(fechaB);
+        if (fechaA == fechaB) {
+          final formatoHora = DateFormat('HH:mm');
+          final horaA = formatoHora.parse(a.hora);
+          final horaB = formatoHora.parse(b.hora);
+          return horaA.compareTo(horaB);
+        }
+        return fechaA.compareTo(fechaB);
+      });
     });
-  });
-}
-
-
+  }
 
   Future<void> mostrarDialogo(String tipoAccion, ClaseModels clase, ColorScheme color) async {
     showDialog(
@@ -156,9 +159,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                      Text(tipoAccion == "insertar"
-                  ? "Insertar x4"
-                  : "Remover x4"),
+                        Text(tipoAccion == "insertar"
+                            ? "Insertar x4"
+                            : "Remover x4"),
                         Switch(
                           value: insertarX4,
                           onChanged: (value) {
@@ -180,23 +183,28 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                             if (tipoAccion == "insertar") {
                               setState(() {
                                 if (insertarX4) {
-                                 AgregarUsuario(supabase).agregarUsuarioEnCuatroClases(clase, usuarioSeleccionado);
+                                  AgregarUsuario(supabase)
+                                      .agregarUsuarioEnCuatroClases(
+                                          clase, usuarioSeleccionado);
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
-                                  // Si no se activó la opción de insertar x4, solo insertamos el usuario en la clase seleccionada
-                                  AgregarUsuario(supabase).agregarUsuarioAClase(clase.id, usuarioSeleccionado, true, clase);
+                                  AgregarUsuario(supabase)
+                                      .agregarUsuarioAClase(clase.id,
+                                          usuarioSeleccionado, true, clase);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
-
                               });
                             } else if (tipoAccion == "remover") {
                               setState(() {
                                 if (insertarX4) {
-                                 RemoverUsuario(supabase).removerUsuarioDeMuchasClase(clase, usuarioSeleccionado);
+                                  RemoverUsuario(supabase)
+                                      .removerUsuarioDeMuchasClase(
+                                          clase, usuarioSeleccionado);
                                   clase.mails.remove(usuarioSeleccionado);
                                 } else {
-                                  // Si no se activó la opción de insertar x4, solo insertamos el usuario en la clase seleccionada
-                                  RemoverUsuario(supabase).removerUsuarioDeClase(clase.id, usuarioSeleccionado, true);
+                                  RemoverUsuario(supabase)
+                                      .removerUsuarioDeClase(
+                                          clase.id, usuarioSeleccionado, true);
                                   clase.mails.remove(usuarioSeleccionado);
                                 }
                               });
@@ -226,103 +234,99 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final color = Theme.of(context).colorScheme;
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
 
-  return Scaffold(
-    appBar: const CustomAppBar(),
-    body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: color.primary.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas",
-                style: Theme.of(context).textTheme.bodyLarge,
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color.primary.withOpacity(0.20),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
             ),
-          ),
-          DropdownButton<String>(
-            value: fechaSeleccionada,
-            hint: const Text('Selecciona una fecha'),
-            onChanged: (value) {
-              seleccionarFecha(value!);
-            },
-            items: fechasDisponibles.map((fecha) {
-              return DropdownMenuItem(
-                value: fecha,
-                child: Text(fecha),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 10),
-          if (isLoading) const CircularProgressIndicator(),
-          if (!isLoading && fechaSeleccionada != null)
-            Expanded(
-              child: horariosFiltrados.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: horariosFiltrados.length,
-                      itemBuilder: (context, index) {
-                        final clase = horariosFiltrados[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ListTile(
-                                  title: Text(
-                                      '${clase.hora} - ${clase.dia} ${clase.fecha}'),
-                                  subtitle: clase.mails.isNotEmpty
-                                      ? Text(
-                                          'Alumnos/as: ${clase.mails.join(", ")}')
-                                      : const Text(
-                                          'No hay usuarios registrados en esta clase'),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          mostrarDialogo(
-                                              "insertar", clase, color);
-                                        },
-                                        child: const Text("Insertar usuarios"),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          mostrarDialogo(
-                                              "remover", clase, color);
-                                        },
-                                        child: const Text("Remover usuarios"),
-                                      ),
-                                    ],
+            DropdownButton<String>(
+              value: fechaSeleccionada,
+              hint: const Text('Selecciona una fecha'),
+              onChanged: (value) {
+                seleccionarFecha(value!);
+              },
+              items: fechasDisponibles.map((fecha) {
+                return DropdownMenuItem(
+                  value: fecha,
+                  child: Text(fecha),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+            if (isLoading) const CircularProgressIndicator(),
+            if (!isLoading && fechaSeleccionada != null)
+              Expanded(
+                child: horariosFiltrados.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: horariosFiltrados.length,
+                        itemBuilder: (context, index) {
+                          final clase = horariosFiltrados[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                        '${clase.dia} - ${clase.hora}'),
+                                    subtitle: Text(
+                                        'Usuarios: ${clase.mails.join(", ")}'),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            mostrarDialogo("insertar", clase,
+                                                color);
+                                          },
+                                          child: const Text("Agregar Usuario"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            mostrarDialogo("remover", clase,
+                                                color);
+                                          },
+                                          child: const Text("Remover Usuario"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    )
-                  : const Center(
-                      child: Text("No hay clases para esta fecha."),
-                    ),
-            ),
-        ],
+                          );
+                        },
+                      )
+                    : const Center(
+                        child: Text("No hay horarios disponibles para esta fecha."),
+                      ),
+              ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-} 

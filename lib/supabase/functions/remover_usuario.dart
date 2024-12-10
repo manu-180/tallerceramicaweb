@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/calcular_24hs.dart';
+import 'package:taller_ceramica/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/utils/enviar_wpp.dart';
@@ -19,18 +20,16 @@ class RemoverUsuario {
       // Agregar el nuevo mail si no está ya en la lista
       if (clase.mails.contains(user)) {
         clase.mails.remove(user);
-         await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
-          if(Calcular24hs().esMayorA24Horas(clase.fecha, clase.hora)) {
-            ModificarLugarDisponible().agregarLugarDisponible(idClase);
-          if(!parametro){
-            EnviarWpp().sendWhatsAppMessage("$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
-          }
-          }
-          if(parametro){
-            EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
-            EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
-
-          }
+        await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
+        ModificarLugarDisponible().agregarLugarDisponible(idClase);
+          
+        if(!parametro){
+          EnviarWpp().sendWhatsAppMessage("$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
+        }
+        if(parametro){
+          EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
+          EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
+        }
     }
   }
 

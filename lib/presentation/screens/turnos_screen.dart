@@ -312,7 +312,10 @@ String _obtenerTituloDialogo(String mensaje) {
   }
 
   Widget construirBotonHorario(ClaseModels clase) {
-    final diaYHora = '${clase.dia} ${clase.fecha} ${clase.hora}';
+    final partesFecha = clase.fecha.split('/');
+    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+    final diaMesAnio = '${clase.dia} - ${clase.fecha}';
+    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
     final estaLlena = clase.mails.length >= 5;
 
     return Padding(
@@ -488,11 +491,17 @@ class _DiaSelection extends StatelessWidget {
       itemCount: diasUnicos.length,
       itemBuilder: (context, index) {
         final clase = diasUnicos[index];
-        final diaFecha = '${clase.dia} - ${clase.fecha}';
+        
+        // Procesar clase.fecha para mostrar solo día y mes
+        final partesFecha = clase.fecha.split('/');
+        final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+        final diaMesAnio = '${clase.dia} - ${clase.fecha}';
+        
+        final diaFecha = '${clase.dia} - $diaMes';
         return Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
           child: ElevatedButton(
-            onPressed: () => seleccionarDia(diaFecha),
+            onPressed: () => seleccionarDia(diaMesAnio),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
