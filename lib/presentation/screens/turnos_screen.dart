@@ -298,9 +298,9 @@ String _obtenerTituloDialogo(String mensaje) {
                 if (isLoading) {
                   return const SizedBox(); 
                 } else if (diasConClases.isEmpty) {
-                  return _AvisoDeClasesDisponibles(colors: colors, color: color, diasConClases: diasConClases, text: "No hay clases disponibles esta semana.",);
+                  return _AvisoDeClasesDisponibles(colors: colors, color: color, text: "No hay clases disponibles esta semana.",);
                 } else {
-                  return _AvisoDeClasesDisponibles(colors: colors, color: color, diasConClases: diasConClases, text: "Hay clases disponibles el ${diasConClases.join(', ')}.",);
+                  return _AvisoDeClasesDisponibles(colors: colors, color: color, text: "Hay clases disponibles el ${diasConClases.join(', ')}.",);
                 }
               },
             ),
@@ -357,12 +357,10 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     required this.text,
     required this.colors,
     required this.color,
-    required this.diasConClases,
   });
 
   final ColorScheme colors;
   final Color color;
-  final List<String> diasConClases;
   final String text;
 
   @override

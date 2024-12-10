@@ -35,6 +35,7 @@ class Calcular24hs {
 
   bool esMenorA0Horas(String fecha, String hora) {
     // Dividir la fecha en día, mes y año
+    
     final List<String> partesFecha = fecha.split('/');
     if (partesFecha.length != 3) {
       throw const FormatException("La fecha no está en el formato correcto (dd/MM/yyyy)");

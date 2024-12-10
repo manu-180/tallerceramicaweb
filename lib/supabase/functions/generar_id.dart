@@ -15,14 +15,21 @@ class GenerarId {
   }
 
   Future<int> generarIdClase() async {
-    final listclase = await ObtenerTotalInfo().obtenerInfo();
-    listclase.sort((a, b) => a.id.compareTo(b.id));
+  final listclase = await ObtenerTotalInfo().obtenerInfo();
 
-    for (int i = 0; i < listclase.length - 1; i++) {
-      if (listclase[i].id + 1 != listclase[i + 1].id) {
-        return listclase[i].id + 1;
-      }
-    }
-    return listclase.last.id + 1;
+  if (listclase.isEmpty) {
+    return 1; 
   }
+
+  listclase.sort((a, b) => a.id.compareTo(b.id));
+
+  for (int i = 0; i < listclase.length - 1; i++) {
+    if (listclase[i].id + 1 != listclase[i + 1].id) {
+      return listclase[i].id + 1;
+    }
+  }
+
+  return listclase.last.id + 1;
+}
+
 }

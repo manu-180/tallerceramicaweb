@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
@@ -235,7 +236,9 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
+    final color = Theme.of(context).primaryColor;
+    final colors = Theme.of(context).colorScheme;
+    
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -248,7 +251,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: color.primary.withOpacity(0.20),
+                  color: colors.primary.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -257,6 +260,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                 ),
               ),
             ),
+            _DiaSeleccionado(text: fechaSeleccionada ?? '', colors: colors, color: color),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -287,9 +291,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                 children: [
                                   ListTile(
                                     title: Text(
-                                        '${clase.dia} - ${clase.hora}'),
-                                    subtitle: Text(
-                                        'Usuarios: ${clase.mails.join(", ")}'),
+                                        '${clase.hora} - Alumnos/as: ${clase.mails.join(", ")}'),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -300,14 +302,14 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                         ElevatedButton(
                                           onPressed: () {
                                             mostrarDialogo("insertar", clase,
-                                                color);
+                                                colors);
                                           },
                                           child: const Text("Agregar Usuario"),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
                                             mostrarDialogo("remover", clase,
-                                                color);
+                                                colors);
                                           },
                                           child: const Text("Remover Usuario"),
                                         ),
@@ -325,6 +327,41 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                       ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DiaSeleccionado extends StatelessWidget {
+  const _DiaSeleccionado({
+    required this.text,
+    required this.colors,
+    required this.color,
+  });
+
+  final ColorScheme colors;
+  final Color color;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [colors.secondaryContainer, colors.primary.withOpacity(0.6)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Text(text.isEmpty? "Seleccione una fecha" :
+        DiaConFecha().obtenerDiaDeLaSemana(text),
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
       ),
     );

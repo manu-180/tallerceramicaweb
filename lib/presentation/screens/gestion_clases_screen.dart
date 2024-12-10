@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/supabase/functions/eliminar_clase.dart';
 import 'package:taller_ceramica/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
+import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/utils/encontrar_semana.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 import 'package:intl/intl.dart';
@@ -152,14 +154,14 @@ String obtenerDia(DateTime fecha) {
   }
 }
 
-Future<void> mostrarDialogoAgregarClase() async {
+Future<void> mostrarDialogoAgregarClase(String dia) async {
   TextEditingController horaController = TextEditingController();
 
   await showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text("Agregar nueva clase"),
+        title: Text("Agregar nueva clase todos los $dia"),
         content: TextField(
           controller: horaController,
           decoration: const InputDecoration(
@@ -171,17 +173,17 @@ Future<void> mostrarDialogoAgregarClase() async {
             onPressed: () async {
               final hora = horaController.text;
               if (hora.isNotEmpty && fechaSeleccionada != null) {
-                final hora = horaController.text;
-                  final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+                final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
 
-                  if (!horaFormatoValido) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Formato de hora inválido. Asegúrate de usar HH:mm (por ejemplo, 14:30).'),
-                      ),
-                    );
-                    return;
-                  }
+                if (!horaFormatoValido) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Formato de hora inválido. Asegúrate de usar HH:mm (por ejemplo, 14:30).'),
+                    ),
+                  );
+                  return;
+                }
+
                 // Convertir la fecha seleccionada de String a DateTime
                 DateTime fechaBase;
                 try {
@@ -198,48 +200,50 @@ Future<void> mostrarDialogoAgregarClase() async {
                 // Aquí, 'obtenerDia' ahora recibe un DateTime y funciona correctamente
                 final dia = obtenerDia(fechaBase);
 
-                final List<Map<String, dynamic>> clasesAInsertar = [];
-              
-                for (int i = 0; i < 5; i++) {
-                  final fechaSemana = fechaBase.add(Duration(days: 7 * i)); // Calcular la fecha de cada semana
-                  final nuevaClase = {
-                    'id': await GenerarId().generarIdClase(),
-                    'semana': EncontrarSemana().obtenerSemana(fechaSeleccionada!),
-                    'dia': dia,
-                    'fecha': DateFormat('dd/MM/yyyy').format(fechaSemana), // Asegurarse de que la fecha esté en formato String
-                    'hora': hora,
-                    'mails': [],
-                    'lugar_disponible': 5,
-                  };
-                  clasesAInsertar.add(nuevaClase);
-                }
                 for (int i = 0; i < 5; i++) {
                   final fechaSemana = fechaBase.add(Duration(days: 7 * i));
-                try {
-                  await supabase.from('respaldo').insert({
-                        'id': await GenerarId().generarIdClase(),
-                        'semana': EncontrarSemana().obtenerSemana(fechaSeleccionada!),
-                        'dia': dia,
-                        'fecha': DateFormat('dd/MM/yyyy').format(fechaSemana),
-                        'hora': hora,
-                        'mails': [],
-                        'lugar_disponible': 5
-                      });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Clases agregadas con éxito.'),
-                    ),
-                  );
-                  Navigator.of(context).pop();
-                } catch (e) {
-                  debugPrint('Error al insertar clases: $e');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Error al agregar las clases.'),
-                    ),
-                  );
+                  final fechaStr = DateFormat('dd/MM/yyyy').format(fechaSemana);
+
+                  // Verificar si ya existe una clase con la misma fecha y hora
+                  final existingClass = await supabase
+                      .from('respaldo')
+                      .select()
+                      .eq('fecha', fechaStr)
+                      .eq('hora', hora)
+                      .maybeSingle();
+
+                  if (existingClass != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('La clase del $fechaStr a las $hora ya existe.'),
+                      ),
+                    );
+                    continue; // No insertar esta clase, pasa a la siguiente iteración
+                  }
+
+                  // Insertar la nueva clase si no existe
+                  try {
+                    await supabase.from('respaldo').insert({
+                      'id': await GenerarId().generarIdClase(),
+                      'semana': "semana${i + 1}",
+                      'dia': dia,
+                      'fecha': fechaStr,
+                      'hora': hora,
+                      'mails': [],
+                      'lugar_disponible': 5,
+                    });
+                  } catch (e) {
+                    debugPrint('Error al insertar clase: $e');
+                  }
                 }
-              }}
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Clases agregadas con éxito.'),
+                  ),
+                );
+                Navigator.of(context).pop();
+              }
             },
             child: const Text("Agregar"),
           ),
@@ -257,10 +261,14 @@ Future<void> mostrarDialogoAgregarClase() async {
 
 
 
-
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
+    final color = Theme.of(context).primaryColor;
+    final colors = Theme.of(context).colorScheme;
+    final partesFecha = fechaSeleccionada?.split('/');
+    final diaMes = '${partesFecha?[0]}/${partesFecha?[1]}';
+    
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: Padding(
@@ -272,7 +280,7 @@ Future<void> mostrarDialogoAgregarClase() async {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: color.primary.withOpacity(0.20),
+                  color: colors.primary.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -281,6 +289,7 @@ Future<void> mostrarDialogoAgregarClase() async {
                 ),
               ),
             ),
+            _DiaSeleccionado(text: fechaSeleccionada ?? 'Seleccione una fecha', colors: colors, color: color),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -350,6 +359,7 @@ Future<void> mostrarDialogoAgregarClase() async {
                                 if (respuesta == true) {
                                   setState(() {
                                     clasesFiltradas.removeAt(index);
+                                    EliminarClase().eliminarClase(clase.id);
                                   });
                                 }
                               },
@@ -367,7 +377,7 @@ Future<void> mostrarDialogoAgregarClase() async {
       floatingActionButton: SizedBox(
         width: 200,
         child: FloatingActionButton(
-          backgroundColor: color.secondaryContainer,
+          backgroundColor: colors.secondaryContainer,
           onPressed: () {
             if (fechaSeleccionada == null) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -377,7 +387,7 @@ Future<void> mostrarDialogoAgregarClase() async {
               );
               return;
             }
-            mostrarDialogoAgregarClase();
+            mostrarDialogoAgregarClase(DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!));
           },
           child: const Text("Crear una clase nueva"),
         ),
@@ -386,3 +396,38 @@ Future<void> mostrarDialogoAgregarClase() async {
   }
 }
 
+
+class _DiaSeleccionado extends StatelessWidget {
+  const _DiaSeleccionado({
+    required this.text,
+    required this.colors,
+    required this.color,
+  });
+
+  final ColorScheme colors;
+  final Color color;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [colors.secondaryContainer, colors.primary.withOpacity(0.6)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Text(text.isEmpty? "Seleccione una fecha" :
+        DiaConFecha().obtenerDiaDeLaSemana(text),
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+}
