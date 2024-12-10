@@ -20,7 +20,7 @@ class EliminarUsuario {
         var alumnos = clase.mails;
         alumnos.remove(user);
         await supabase
-            .from('respaldo')
+            .from('total')
             .update({'mails': alumnos}).eq('id', clase.id);
       }
     }

@@ -9,6 +9,7 @@ import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.da
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/utils/encontrar_semana.dart';
+import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 import 'package:intl/intl.dart';
 
@@ -29,7 +30,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   @override
   void initState() {
     super.initState();
-    fechasDisponibles = generarFechasLunesAViernes();
+    fechasDisponibles = GenerarFechasDelMes().generarFechasLunesAViernes();
     cargarDatos();
   }
 
@@ -49,23 +50,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     });
   }
 
-  List<String> generarFechasLunesAViernes() {
-    final DateFormat formato = DateFormat('dd/MM/yyyy');
-    final List<String> fechas = [];
-    final DateTime inicio = DateTime(2024, 12, 2);
-    final DateTime fin = DateTime(2024, 12, 31);
-
-    for (DateTime fecha = inicio;
-        fecha.isBefore(fin) || fecha.isAtSameMomentAs(fin);
-        fecha = fecha.add(const Duration(days: 1))) {
-      if (fecha.weekday >= DateTime.monday &&
-          fecha.weekday <= DateTime.friday) {
-        fechas.add(formato.format(fecha));
-      }
-    }
-
-    return fechas;
-  }
 
   Future<void> cargarDatos() async {
     try {

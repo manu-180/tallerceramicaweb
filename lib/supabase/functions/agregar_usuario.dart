@@ -15,7 +15,7 @@ class AgregarUsuario {
     final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
     final data = await supabaseClient
-        .from('respaldo')
+        .from('total')
         .select()
         .eq('id', idClase)
         .single();
@@ -28,7 +28,7 @@ class AgregarUsuario {
           if (!clase.mails.contains(user)) {
             clase.mails.add(user);
             await supabaseClient
-                .from('respaldo')
+                .from('total')
                 .update(clase.toMap())
                 .eq('id', idClase);
             ModificarLugarDisponible().removerLugarDisponible(idClase);
@@ -80,7 +80,7 @@ class AgregarUsuario {
         if (!item.mails.contains(user) && count < 4) {
           item.mails.add(user);
           await supabaseClient
-              .from('respaldo')
+              .from('total')
               .update(item.toMap())
               .eq('id', item.id);
           ModificarLugarDisponible().removerLugarDisponible(item.id);

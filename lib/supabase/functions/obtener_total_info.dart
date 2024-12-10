@@ -4,7 +4,7 @@ import 'package:taller_ceramica/models/usuario_models.dart'; // Asegúrate de te
 
 class ObtenerTotalInfo {
   Future<List<ClaseModels>> obtenerInfo() async {
-    final data = await supabase.from('respaldo').select();
+    final data = await supabase.from('total').select();
     return List<ClaseModels>.from(data.map((map) => ClaseModels.fromMap(map)));
   }
 
