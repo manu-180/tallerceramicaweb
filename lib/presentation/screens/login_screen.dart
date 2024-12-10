@@ -44,7 +44,8 @@ class LoginScreen extends StatelessWidget {
 
                 try {
                   // Iniciar sesión
-                  final response = await Supabase.instance.client.auth.signInWithPassword(
+                  final response =
+                      await Supabase.instance.client.auth.signInWithPassword(
                     email: email,
                     password: password,
                   );
@@ -60,7 +61,6 @@ class LoginScreen extends StatelessWidget {
 
                   // Navegar a la pantalla principal
                   context.go('/');
-
                 } on AuthException catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

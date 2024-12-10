@@ -1,7 +1,6 @@
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
 
 class GenerarId {
-
   Future<int> generarIdUsuario() async {
     final listausuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
     listausuarios.sort((a, b) => a.id.compareTo(b.id));
@@ -15,21 +14,20 @@ class GenerarId {
   }
 
   Future<int> generarIdClase() async {
-  final listclase = await ObtenerTotalInfo().obtenerInfo();
+    final listclase = await ObtenerTotalInfo().obtenerInfo();
 
-  if (listclase.isEmpty) {
-    return 1; 
-  }
-
-  listclase.sort((a, b) => a.id.compareTo(b.id));
-
-  for (int i = 0; i < listclase.length - 1; i++) {
-    if (listclase[i].id + 1 != listclase[i + 1].id) {
-      return listclase[i].id + 1;
+    if (listclase.isEmpty) {
+      return 1;
     }
+
+    listclase.sort((a, b) => a.id.compareTo(b.id));
+
+    for (int i = 0; i < listclase.length - 1; i++) {
+      if (listclase[i].id + 1 != listclase[i + 1].id) {
+        return listclase[i].id + 1;
+      }
+    }
+
+    return listclase.last.id + 1;
   }
-
-  return listclase.last.id + 1;
-}
-
 }

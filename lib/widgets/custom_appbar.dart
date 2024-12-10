@@ -21,7 +21,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
     final color = Theme.of(context).colorScheme;
 
     return StreamBuilder<User?>(
-      stream: Supabase.instance.client.auth.onAuthStateChange.map((event) => event.session?.user),
+      stream: Supabase.instance.client.auth.onAuthStateChange
+          .map((event) => event.session?.user),
       builder: (context, snapshot) {
         final user = snapshot.data;
         final userId = user?.id; // Obtiene el id del usuario actual
@@ -45,7 +46,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ];
 
         // Determina qué lista de botones mostrar
-        final menuItems = (userId == "c1b53dba-88d6-4aea-bede-603e3d9d7ff8" || userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
+        final menuItems = (userId == "c1b53dba-88d6-4aea-bede-603e3d9d7ff8" ||
+                userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
             ? adminRoutes
             : userRoutes;
 
@@ -94,7 +96,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 icon: AnimatedRotation(
                   turns: _isMenuOpen ? 0.5 : 0.0,
                   duration: const Duration(milliseconds: 200),
-                  child: Icon(Icons.keyboard_arrow_down_outlined, color: color.surface),
+                  child: Icon(Icons.keyboard_arrow_down_outlined,
+                      color: color.surface),
                 ),
                 onOpened: () {
                   setState(() {
@@ -121,7 +124,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: color.primaryContainer,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                         ),
                         child: const Text(
                           'Crear usuario',
@@ -135,7 +139,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: color.primaryContainer,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                         ),
                         child: const Text(
                           'Iniciar sesión',

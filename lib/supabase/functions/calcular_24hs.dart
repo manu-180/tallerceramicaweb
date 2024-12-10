@@ -1,11 +1,10 @@
 class Calcular24hs {
-
-  
   bool esMayorA24Horas(String fecha, String hora) {
     // Dividir la fecha en día, mes y año
     final List<String> partesFecha = fecha.split('/');
     if (partesFecha.length != 3) {
-      throw const FormatException("La fecha no está en el formato correcto (dd/MM/yyyy)");
+      throw const FormatException(
+          "La fecha no está en el formato correcto (dd/MM/yyyy)");
     }
     final int dia = int.parse(partesFecha[0]);
     final int mes = int.parse(partesFecha[1]);
@@ -14,7 +13,8 @@ class Calcular24hs {
     // Dividir la hora en horas y minutos
     final List<String> partesHora = hora.split(':');
     if (partesHora.length != 2) {
-      throw const FormatException("La hora no está en el formato correcto (HH:mm)");
+      throw const FormatException(
+          "La hora no está en el formato correcto (HH:mm)");
     }
     final int horas = int.parse(partesHora[0]);
     final int minutos = int.parse(partesHora[1]);
@@ -32,13 +32,13 @@ class Calcular24hs {
     return diferencia.inHours > 24;
   }
 
-
   bool esMenorA0Horas(String fecha, String hora) {
     // Dividir la fecha en día, mes y año
-    
+
     final List<String> partesFecha = fecha.split('/');
     if (partesFecha.length != 3) {
-      throw const FormatException("La fecha no está en el formato correcto (dd/MM/yyyy)");
+      throw const FormatException(
+          "La fecha no está en el formato correcto (dd/MM/yyyy)");
     }
     final int dia = int.parse(partesFecha[0]);
     final int mes = int.parse(partesFecha[1]);
@@ -47,7 +47,8 @@ class Calcular24hs {
     // Dividir la hora en horas y minutos
     final List<String> partesHora = hora.split(':');
     if (partesHora.length != 2) {
-      throw const FormatException("La hora no está en el formato correcto (HH:mm)");
+      throw const FormatException(
+          "La hora no está en el formato correcto (HH:mm)");
     }
     final int horas = int.parse(partesHora[0]);
     final int minutos = int.parse(partesHora[1]);
@@ -64,8 +65,4 @@ class Calcular24hs {
     // Verificar si la diferencia es negativa (ya pasó la fecha)
     return diferencia.isNegative;
   }
-
-
-
-
 }

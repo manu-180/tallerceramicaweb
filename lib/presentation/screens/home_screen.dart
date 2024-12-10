@@ -5,29 +5,24 @@ import 'package:taller_ceramica/widgets/custom_appbar.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
-    
-    final themeColor = Theme.of(context).primaryColor; 
+    final themeColor = Theme.of(context).primaryColor;
     final user = Supabase.instance.client.auth.currentUser;
 
     return Scaffold(
-      appBar: const CustomAppBar(), 
+      appBar: const CustomAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             Text(
               '¡Bienvenido a Taller de Cerámica Ricardo Rojas!',
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -40,10 +35,9 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-
             Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10), 
+                borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
                   'assets/images/creando.png',
                   height: 500,
@@ -52,15 +46,12 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
             Text(
               '¿Qué hacemos?',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: 10),
-
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -73,10 +64,9 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-           
             Center(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10), 
+                borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
                   'assets/images/bici.webp',
                   height: 300,
@@ -86,7 +76,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(

@@ -86,12 +86,16 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
               itemBuilder: (context, index) {
                 final usuario = usuarios[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     child: ListTile(
                       title: Text('${usuario.fullname} '),
-                      subtitle: Text(usuario.clasesDisponibles == 1 ? "(${usuario.clasesDisponibles} credito)" : "(${usuario.clasesDisponibles} creditos)"),
+                      subtitle: Text(usuario.clasesDisponibles == 1
+                          ? "(${usuario.clasesDisponibles} credito)"
+                          : "(${usuario.clasesDisponibles} creditos)"),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -104,7 +108,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                             onPressed: () => agregarCredito(usuario.fullname),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.remove, color: Colors.orange),
+                            icon:
+                                const Icon(Icons.remove, color: Colors.orange),
                             onPressed: () => removerCredito(usuario.fullname),
                           ),
                         ],

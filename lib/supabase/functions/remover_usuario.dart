@@ -11,44 +11,62 @@ class RemoverUsuario {
 
   RemoverUsuario(this.supabaseClient);
 
-  Future<void> removerUsuarioDeClase(int idClase, String user, bool parametro) async {
+  Future<void> removerUsuarioDeClase(
+      int idClase, String user, bool parametro) async {
+    final data = await supabaseClient
+        .from('respaldo')
+        .select()
+        .eq('id', idClase)
+        .single();
 
-      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
+    final clase = ClaseModels.fromMap(data);
 
-      final clase = ClaseModels.fromMap(data);
+    // Agregar el nuevo mail si no está ya en la lista
+    if (clase.mails.contains(user)) {
+      clase.mails.remove(user);
+      await supabaseClient
+          .from('respaldo')
+          .update(clase.toMap())
+          .eq('id', idClase);
+      ModificarLugarDisponible().agregarLugarDisponible(idClase);
 
-      // Agregar el nuevo mail si no está ya en la lista
-      if (clase.mails.contains(user)) {
-        clase.mails.remove(user);
-        await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
-        ModificarLugarDisponible().agregarLugarDisponible(idClase);
-          
-        if(!parametro){
-          EnviarWpp().sendWhatsAppMessage("$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
-        }
-        if(parametro){
-          EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
-          EnviarWpp().sendWhatsAppMessage("Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
-        }
+      if (!parametro) {
+        EnviarWpp().sendWhatsAppMessage(
+            "$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+            'whatsapp:+5491134272488');
+      }
+      if (parametro) {
+        EnviarWpp().sendWhatsAppMessage(
+            "Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+            'whatsapp:+5491134272488');
+        EnviarWpp().sendWhatsAppMessage(
+            "Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+            'whatsapp:+5491132820164');
+      }
     }
   }
 
-  Future<void> removerUsuarioDeMuchasClase(ClaseModels clase, String user) async {
-    
-      final data = await ObtenerTotalInfo().obtenerInfo();
+  Future<void> removerUsuarioDeMuchasClase(
+      ClaseModels clase, String user) async {
+    final data = await ObtenerTotalInfo().obtenerInfo();
 
-
-      for (final item in data){
-        if(clase.hora == item.hora && clase.dia == item.dia){
-          if(item.mails.contains(user)){
-            item.mails.remove(user);
-            await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
-            ModificarLugarDisponible().agregarLugarDisponible(item.id);
-          }
+    for (final item in data) {
+      if (clase.hora == item.hora && clase.dia == item.dia) {
+        if (item.mails.contains(user)) {
+          item.mails.remove(user);
+          await supabaseClient
+              .from('respaldo')
+              .update(item.toMap())
+              .eq('id', item.id);
+          ModificarLugarDisponible().agregarLugarDisponible(item.id);
         }
-
       }
-      EnviarWpp().sendWhatsAppMessage("Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}", 'whatsapp:+5491134272488');
-      EnviarWpp().sendWhatsAppMessage("Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}", 'whatsapp:+5491132820164');
+    }
+    EnviarWpp().sendWhatsAppMessage(
+        "Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}",
+        'whatsapp:+5491134272488');
+    EnviarWpp().sendWhatsAppMessage(
+        "Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}",
+        'whatsapp:+5491132820164');
   }
 }

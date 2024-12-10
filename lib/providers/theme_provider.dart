@@ -6,7 +6,8 @@ import 'package:taller_ceramica/config/theme/app_theme.dart';
 final listTheColors = Provider((ref) => listColors);
 
 // Proveedor para manejar el estado del tema
-final themeNotifyProvider = StateNotifierProvider<ThemeNotify, AppTheme>((ref) => ThemeNotify());
+final themeNotifyProvider =
+    StateNotifierProvider<ThemeNotify, AppTheme>((ref) => ThemeNotify());
 
 // Clase ThemeNotify que extiende StateNotifier
 class ThemeNotify extends StateNotifier<AppTheme> {

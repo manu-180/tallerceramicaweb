@@ -34,24 +34,22 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   }
 
   void ordenarClasesPorFechaYHora() {
-  clasesFiltradas.sort((a, b) {
-    final formatoFecha = DateFormat('dd/MM');
-    final fechaA = formatoFecha.parse(a.fecha);
-    final fechaB = formatoFecha.parse(b.fecha);
+    clasesFiltradas.sort((a, b) {
+      final formatoFecha = DateFormat('dd/MM');
+      final fechaA = formatoFecha.parse(a.fecha);
+      final fechaB = formatoFecha.parse(b.fecha);
 
-    if (fechaA == fechaB) {
-      
-      final formatoHora = DateFormat('HH:mm');
-      final horaA = formatoHora.parse(a.hora);
-      final horaB = formatoHora.parse(b.hora);
-      return horaA.compareTo(horaB);
-    }
-    return fechaA.compareTo(fechaB);
-  });
-}
+      if (fechaA == fechaB) {
+        final formatoHora = DateFormat('HH:mm');
+        final horaA = formatoHora.parse(a.hora);
+        final horaB = formatoHora.parse(b.hora);
+        return horaA.compareTo(horaB);
+      }
+      return fechaA.compareTo(fechaB);
+    });
+  }
 
-
-   List<String> generarFechasLunesAViernes() {
+  List<String> generarFechasLunesAViernes() {
     final DateFormat formato = DateFormat('dd/MM/yyyy');
     final List<String> fechas = [];
     final DateTime inicio = DateTime(2024, 12, 2);
@@ -60,7 +58,8 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     for (DateTime fecha = inicio;
         fecha.isBefore(fin) || fecha.isAtSameMomentAs(fin);
         fecha = fecha.add(const Duration(days: 1))) {
-      if (fecha.weekday >= DateTime.monday && fecha.weekday <= DateTime.friday) {
+      if (fecha.weekday >= DateTime.monday &&
+          fecha.weekday <= DateTime.friday) {
         fechas.add(formato.format(fecha));
       }
     }
@@ -71,7 +70,6 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
   Future<void> cargarDatos() async {
     try {
       final datos = await ObtenerTotalInfo().obtenerInfo();
-
 
       setState(() {
         clasesDisponibles = datos;
@@ -113,8 +111,10 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
       }
     });
   }
+
   // Función para mostrar el diálogo de confirmación
-  Future<bool?> mostrarDialogoConfirmacion(BuildContext context, String mensaje) {
+  Future<bool?> mostrarDialogoConfirmacion(
+      BuildContext context, String mensaje) {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -140,126 +140,138 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     );
   }
 
-String obtenerDia(DateTime fecha) {
-  // Utiliza el parámetro 'fecha' de tipo DateTime correctamente
-  switch (fecha.weekday) {
-    case DateTime.monday: return 'lunes';
-    case DateTime.tuesday: return 'martes';
-    case DateTime.wednesday: return 'miercoles';
-    case DateTime.thursday: return 'jueves';
-    case DateTime.friday: return 'viernes';
-    case DateTime.saturday: return 'sabado';
-    case DateTime.sunday: return 'domingo';
-    default: return 'Desconocido'; // En caso de que falle la conversión
+  String obtenerDia(DateTime fecha) {
+    // Utiliza el parámetro 'fecha' de tipo DateTime correctamente
+    switch (fecha.weekday) {
+      case DateTime.monday:
+        return 'lunes';
+      case DateTime.tuesday:
+        return 'martes';
+      case DateTime.wednesday:
+        return 'miercoles';
+      case DateTime.thursday:
+        return 'jueves';
+      case DateTime.friday:
+        return 'viernes';
+      case DateTime.saturday:
+        return 'sabado';
+      case DateTime.sunday:
+        return 'domingo';
+      default:
+        return 'Desconocido'; // En caso de que falle la conversión
+    }
   }
-}
 
-Future<void> mostrarDialogoAgregarClase(String dia) async {
-  TextEditingController horaController = TextEditingController();
+  Future<void> mostrarDialogoAgregarClase(String dia) async {
+    TextEditingController horaController = TextEditingController();
 
-  await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Agregar nueva clase todos los $dia"),
-        content: TextField(
-          controller: horaController,
-          decoration: const InputDecoration(
-            hintText: 'Ingrese la hora de la clase (HH:mm)',
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Agregar nueva clase todos los $dia"),
+          content: TextField(
+            controller: horaController,
+            decoration: const InputDecoration(
+              hintText: 'Ingrese la hora de la clase (HH:mm)',
+            ),
           ),
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () async {
-              final hora = horaController.text;
-              if (hora.isNotEmpty && fechaSeleccionada != null) {
-                final horaFormatoValido = RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                final hora = horaController.text;
+                if (hora.isNotEmpty && fechaSeleccionada != null) {
+                  final horaFormatoValido =
+                      RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
 
-                if (!horaFormatoValido) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Formato de hora inválido. Asegúrate de usar HH:mm (por ejemplo, 14:30).'),
-                    ),
-                  );
-                  return;
-                }
-
-                // Convertir la fecha seleccionada de String a DateTime
-                DateTime fechaBase;
-                try {
-                  fechaBase = DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Formato de fecha inválido. Use dd/MM/yyyy.'),
-                    ),
-                  );
-                  return;
-                }
-
-                // Aquí, 'obtenerDia' ahora recibe un DateTime y funciona correctamente
-                final dia = obtenerDia(fechaBase);
-
-                for (int i = 0; i < 5; i++) {
-                  final fechaSemana = fechaBase.add(Duration(days: 7 * i));
-                  final fechaStr = DateFormat('dd/MM/yyyy').format(fechaSemana);
-
-                  // Verificar si ya existe una clase con la misma fecha y hora
-                  final existingClass = await supabase
-                      .from('respaldo')
-                      .select()
-                      .eq('fecha', fechaStr)
-                      .eq('hora', hora)
-                      .maybeSingle();
-
-                  if (existingClass != null) {
+                  if (!horaFormatoValido) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('La clase del $fechaStr a las $hora ya existe.'),
+                      const SnackBar(
+                        content: Text(
+                            'Formato de hora inválido. Asegúrate de usar HH:mm (por ejemplo, 14:30).'),
                       ),
                     );
-                    continue; // No insertar esta clase, pasa a la siguiente iteración
+                    return;
                   }
 
-                  // Insertar la nueva clase si no existe
+                  // Convertir la fecha seleccionada de String a DateTime
+                  DateTime fechaBase;
                   try {
-                    await supabase.from('respaldo').insert({
-                      'id': await GenerarId().generarIdClase(),
-                      'semana': "semana${i + 1}",
-                      'dia': dia,
-                      'fecha': fechaStr,
-                      'hora': hora,
-                      'mails': [],
-                      'lugar_disponible': 5,
-                    });
+                    fechaBase =
+                        DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
                   } catch (e) {
-                    debugPrint('Error al insertar clase: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Formato de fecha inválido. Use dd/MM/yyyy.'),
+                      ),
+                    );
+                    return;
                   }
+
+                  // Aquí, 'obtenerDia' ahora recibe un DateTime y funciona correctamente
+                  final dia = obtenerDia(fechaBase);
+
+                  for (int i = 0; i < 5; i++) {
+                    final fechaSemana = fechaBase.add(Duration(days: 7 * i));
+                    final fechaStr =
+                        DateFormat('dd/MM/yyyy').format(fechaSemana);
+
+                    // Verificar si ya existe una clase con la misma fecha y hora
+                    final existingClass = await supabase
+                        .from('respaldo')
+                        .select()
+                        .eq('fecha', fechaStr)
+                        .eq('hora', hora)
+                        .maybeSingle();
+
+                    if (existingClass != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'La clase del $fechaStr a las $hora ya existe.'),
+                        ),
+                      );
+                      continue; // No insertar esta clase, pasa a la siguiente iteración
+                    }
+
+                    // Insertar la nueva clase si no existe
+                    try {
+                      await supabase.from('respaldo').insert({
+                        'id': await GenerarId().generarIdClase(),
+                        'semana': "semana${i + 1}",
+                        'dia': dia,
+                        'fecha': fechaStr,
+                        'hora': hora,
+                        'mails': [],
+                        'lugar_disponible': 5,
+                      });
+                    } catch (e) {
+                      debugPrint('Error al insertar clase: $e');
+                    }
+                  }
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Clases agregadas con éxito.'),
+                    ),
+                  );
+                  Navigator.of(context).pop();
                 }
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Clases agregadas con éxito.'),
-                  ),
-                );
+              },
+              child: const Text("Agregar"),
+            ),
+            ElevatedButton(
+              onPressed: () {
                 Navigator.of(context).pop();
-              }
-            },
-            child: const Text("Agregar"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Cancelar"),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
+              },
+              child: const Text("Cancelar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +279,6 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
     final colors = Theme.of(context).colorScheme;
     final partesFecha = fechaSeleccionada?.split('/');
     final diaMes = '${partesFecha?[0]}/${partesFecha?[1]}';
-    
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -289,7 +300,10 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
                 ),
               ),
             ),
-            _DiaSeleccionado(text: fechaSeleccionada ?? 'Seleccione una fecha', colors: colors, color: color),
+            _DiaSeleccionado(
+                text: fechaSeleccionada ?? 'Seleccione una fecha',
+                colors: colors,
+                color: color),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -305,7 +319,9 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
             ),
             const SizedBox(height: 10),
             if (isLoading) const CircularProgressIndicator(),
-            if (!isLoading && fechaSeleccionada != null && clasesFiltradas.isNotEmpty)
+            if (!isLoading &&
+                fechaSeleccionada != null &&
+                clasesFiltradas.isNotEmpty)
               Expanded(
                 child: ListView.builder(
                   itemCount: clasesFiltradas.length,
@@ -313,7 +329,8 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
                     final clase = clasesFiltradas[index];
                     return Card(
                       child: ListTile(
-                        title: Text('${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
+                        title: Text(
+                            '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -322,13 +339,13 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
                               onPressed: () async {
                                 // Muestra un diálogo de confirmación antes de agregar el crédito
                                 bool? respuesta = await mostrarDialogoConfirmacion(
-                                  context,
-                                  "¿Quieres agregar un crédito a esta clase?"
-                                );
-                                
+                                    context,
+                                    "¿Quieres agregar un crédito a esta clase?");
+
                                 if (respuesta == true) {
                                   agregarLugar(clase.id);
-                                  ModificarLugarDisponible().agregarLugarDisponible(clase.id);
+                                  ModificarLugarDisponible()
+                                      .agregarLugarDisponible(clase.id);
                                 }
                               },
                             ),
@@ -337,13 +354,14 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
                               onPressed: () async {
                                 // Muestra un diálogo de confirmación antes de remover el crédito
                                 bool? respuesta = await mostrarDialogoConfirmacion(
-                                  context,
-                                  "¿Quieres remover un crédito a esta clase?"
-                                );
+                                    context,
+                                    "¿Quieres remover un crédito a esta clase?");
 
-                                if (respuesta == true && clase.lugaresDisponibles > 0) {
+                                if (respuesta == true &&
+                                    clase.lugaresDisponibles > 0) {
                                   quitarLugar(clase.id);
-                                  ModificarLugarDisponible().removerLugarDisponible(clase.id);
+                                  ModificarLugarDisponible()
+                                      .removerLugarDisponible(clase.id);
                                 }
                               },
                             ),
@@ -352,9 +370,8 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
                               onPressed: () async {
                                 // Muestra un diálogo de confirmación antes de eliminar la clase
                                 bool? respuesta = await mostrarDialogoConfirmacion(
-                                  context,
-                                  "¿Estás seguro/a que quieres eliminar esta clase?"
-                                );
+                                    context,
+                                    "¿Estás seguro/a que quieres eliminar esta clase?");
 
                                 if (respuesta == true) {
                                   setState(() {
@@ -367,7 +384,7 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
                           ],
                         ),
                       ),
-                                          );
+                    );
                   },
                 ),
               ),
@@ -382,12 +399,14 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
             if (fechaSeleccionada == null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Por favor, selecciona una fecha antes de agregar clases.'),
+                  content: Text(
+                      'Por favor, selecciona una fecha antes de agregar clases.'),
                 ),
               );
               return;
             }
-            mostrarDialogoAgregarClase(DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!));
+            mostrarDialogoAgregarClase(
+                DiaConFecha().obtenerDiaDeLaSemana(fechaSeleccionada!));
           },
           child: const Text("Crear una clase nueva"),
         ),
@@ -395,7 +414,6 @@ Future<void> mostrarDialogoAgregarClase(String dia) async {
     );
   }
 }
-
 
 class _DiaSeleccionado extends StatelessWidget {
   const _DiaSeleccionado({
@@ -420,8 +438,10 @@ class _DiaSeleccionado extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Text(text.isEmpty? "Seleccione una fecha" :
-        DiaConFecha().obtenerDiaDeLaSemana(text),
+      child: Text(
+        text.isEmpty
+            ? "Seleccione una fecha"
+            : DiaConFecha().obtenerDiaDeLaSemana(text),
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,

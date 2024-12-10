@@ -41,7 +41,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     for (DateTime fecha = inicio;
         fecha.isBefore(fin) || fecha.isAtSameMomentAs(fin);
         fecha = fecha.add(const Duration(days: 1))) {
-      if (fecha.weekday >= DateTime.monday && fecha.weekday <= DateTime.friday) {
+      if (fecha.weekday >= DateTime.monday &&
+          fecha.weekday <= DateTime.friday) {
         fechas.add(formato.format(fecha));
       }
     }
@@ -62,7 +63,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
       setState(() {
         horariosDisponibles = datosDiciembre;
         horariosFiltrados = datosDiciembre;
-        usuariosDisponibles = usuarios.map((usuario) => usuario.fullname).toList();
+        usuariosDisponibles =
+            usuarios.map((usuario) => usuario.fullname).toList();
         usuariosDisponiblesOriginal = List.from(usuariosDisponibles);
         isLoading = false;
       });
@@ -96,7 +98,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     });
   }
 
-  Future<void> mostrarDialogo(String tipoAccion, ClaseModels clase, ColorScheme color) async {
+  Future<void> mostrarDialogo(
+      String tipoAccion, ClaseModels clase, ColorScheme color) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -189,9 +192,11 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                           clase, usuarioSeleccionado);
                                   clase.mails.add(usuarioSeleccionado);
                                 } else {
-                                  AgregarUsuario(supabase)
-                                      .agregarUsuarioAClase(clase.id,
-                                          usuarioSeleccionado, true, clase);
+                                  AgregarUsuario(supabase).agregarUsuarioAClase(
+                                      clase.id,
+                                      usuarioSeleccionado,
+                                      true,
+                                      clase);
                                   clase.mails.add(usuarioSeleccionado);
                                 }
                               });
@@ -238,7 +243,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
-    
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -260,7 +264,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                 ),
               ),
             ),
-            _DiaSeleccionado(text: fechaSeleccionada ?? '', colors: colors, color: color),
+            _DiaSeleccionado(
+                text: fechaSeleccionada ?? '', colors: colors, color: color),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -301,15 +306,15 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
-                                            mostrarDialogo("insertar", clase,
-                                                colors);
+                                            mostrarDialogo(
+                                                "insertar", clase, colors);
                                           },
                                           child: const Text("Agregar Usuario"),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
-                                            mostrarDialogo("remover", clase,
-                                                colors);
+                                            mostrarDialogo(
+                                                "remover", clase, colors);
                                           },
                                           child: const Text("Remover Usuario"),
                                         ),
@@ -323,7 +328,8 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                         },
                       )
                     : const Center(
-                        child: Text("No hay horarios disponibles para esta fecha."),
+                        child: Text(
+                            "No hay horarios disponibles para esta fecha."),
                       ),
               ),
           ],
@@ -356,8 +362,10 @@ class _DiaSeleccionado extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Text(text.isEmpty? "Seleccione una fecha" :
-        DiaConFecha().obtenerDiaDeLaSemana(text),
+      child: Text(
+        text.isEmpty
+            ? "Seleccione una fecha"
+            : DiaConFecha().obtenerDiaDeLaSemana(text),
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,

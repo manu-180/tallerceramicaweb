@@ -17,15 +17,11 @@ class Configuracion extends ConsumerStatefulWidget {
 class _ConfiguracionState extends ConsumerState<Configuracion> {
   User? user;
 
-  
-
   @override
   void initState() {
     super.initState();
     // Establece el usuario actual cuando la pantalla se inicializa
-    user = ref.read(authProvider); 
-
-  
+    user = ref.read(authProvider);
   }
 
   @override
@@ -66,7 +62,8 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                   children: [
                     ListView.builder(
                       shrinkWrap: true, // Evita problemas de scroll
-                      physics: const NeverScrollableScrollPhysics(), // Desactiva el scroll dentro del ExpansionTile
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Desactiva el scroll dentro del ExpansionTile
                       itemCount: colors.length,
                       itemBuilder: (context, index) {
                         final color = colors[index];
@@ -79,28 +76,35 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                                 color: color,
                                 size: 35,
                               ),
-                              const SizedBox(width: 15,),
+                              const SizedBox(
+                                width: 15,
+                              ),
                               Icon(
                                 Icons.palette_outlined,
                                 color: color,
                                 size: 35,
                               ),
-                              const SizedBox(width: 15,),
+                              const SizedBox(
+                                width: 15,
+                              ),
                               Icon(
                                 Icons.palette_outlined,
                                 color: color,
                                 size: 35,
                               ),
-                              const SizedBox(width: 15,),
-                              
+                              const SizedBox(
+                                width: 15,
+                              ),
                             ],
                           ),
                           activeColor: color,
                           value: index,
                           groupValue: selectedColor,
                           onChanged: (value) {
-                            ref.read(themeNotifyProvider.notifier).changeColor(index);
-                        },
+                            ref
+                                .read(themeNotifyProvider.notifier)
+                                .changeColor(index);
+                          },
                         );
                       },
                     ),

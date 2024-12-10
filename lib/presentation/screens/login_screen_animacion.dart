@@ -36,7 +36,8 @@ class _LoginScreenAnimacionState extends State<LoginScreenAnimacion>
 
     _barController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300), // Duración de la animación de la barra
+      duration: const Duration(
+          milliseconds: 300), // Duración de la animación de la barra
     );
   }
 
@@ -87,7 +88,9 @@ class _LoginScreenAnimacionState extends State<LoginScreenAnimacion>
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             width: _boxWidth,
-            height: _showInput ? 120.0 : 60.0, // Ajusta la altura para incluir el input y la barra
+            height: _showInput
+                ? 120.0
+                : 60.0, // Ajusta la altura para incluir el input y la barra
             decoration: BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.circular(10),

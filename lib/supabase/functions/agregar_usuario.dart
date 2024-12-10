@@ -10,75 +10,90 @@ class AgregarUsuario {
 
   AgregarUsuario(this.supabaseClient);
 
-  Future<void> agregarUsuarioAClase(int idClase, String user, bool parametro, ClaseModels claseModels) async {
+  Future<void> agregarUsuarioAClase(
+      int idClase, String user, bool parametro, ClaseModels claseModels) async {
+    final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-      final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
+    final data = await supabaseClient
+        .from('respaldo')
+        .select()
+        .eq('id', idClase)
+        .single();
 
-      final data = await supabaseClient.from('respaldo').select().eq('id', idClase).single();
+    final clase = ClaseModels.fromMap(data);
 
-      final clase = ClaseModels.fromMap(data);
-
-      for (final usuario in usuarios) {
-        if (usuario.fullname == user) {
-          if (usuario.clasesDisponibles > 0 || parametro) {
-            if (!clase.mails.contains(user)) {
-              clase.mails.add(user);
-              await supabaseClient.from('respaldo').update(clase.toMap()).eq('id', idClase);
-              ModificarLugarDisponible().removerLugarDisponible(idClase);
-              if (parametro) {
-                EnviarWpp().sendWhatsAppMessage("Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
-                EnviarWpp().sendWhatsAppMessage("Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
-              }
-              if (!parametro) {
+    for (final usuario in usuarios) {
+      if (usuario.fullname == user) {
+        if (usuario.clasesDisponibles > 0 || parametro) {
+          if (!clase.mails.contains(user)) {
+            clase.mails.add(user);
+            await supabaseClient
+                .from('respaldo')
+                .update(clase.toMap())
+                .eq('id', idClase);
+            ModificarLugarDisponible().removerLugarDisponible(idClase);
+            if (parametro) {
+              EnviarWpp().sendWhatsAppMessage(
+                  "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+                  'whatsapp:+5491134272488');
+              EnviarWpp().sendWhatsAppMessage(
+                  "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+                  'whatsapp:+5491132820164');
+            }
+            if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
-              EnviarWpp().sendWhatsAppMessage("$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491134272488');
-              EnviarWpp().sendWhatsAppMessage("$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}", 'whatsapp:+5491132820164');
-              }
+              EnviarWpp().sendWhatsAppMessage(
+                  "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+                  'whatsapp:+5491134272488');
+              EnviarWpp().sendWhatsAppMessage(
+                  "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
+                  'whatsapp:+5491132820164');
             }
           }
         }
       }
     }
+  }
 
-Future<void> agregarUsuarioEnCuatroClases(ClaseModels clase, String user) async {
-  final data = await ObtenerTotalInfo().obtenerInfo();
-  final Map<String, int> diaToNumero = {
-  'lunes': 1,
-  'martes': 2,
-  'miercoles': 3,
-  'jueves': 4,
-  'viernes': 5,
-  'sabado': 6,
-  'domingo': 7,
-};
+  Future<void> agregarUsuarioEnCuatroClases(
+      ClaseModels clase, String user) async {
+    final data = await ObtenerTotalInfo().obtenerInfo();
+    final Map<String, int> diaToNumero = {
+      'lunes': 1,
+      'martes': 2,
+      'miercoles': 3,
+      'jueves': 4,
+      'viernes': 5,
+      'sabado': 6,
+      'domingo': 7,
+    };
 
+    // Ordenar las clases por el día de la semana usando el mapeo
+    data.sort((a, b) => diaToNumero[a.dia]!.compareTo(diaToNumero[b.dia]!));
 
-  // Ordenar las clases por el día de la semana usando el mapeo
-  data.sort((a, b) => diaToNumero[a.dia]!.compareTo(diaToNumero[b.dia]!));
+    int count = 0;
 
-  int count = 0;
-
-  for (final item in data) {
-    // Verificamos que la clase sea del mismo día y hora
-    if (item.dia == clase.dia && item.hora == clase.hora) {
-      // Solo agregar al usuario si aún no está en la clase y si no se ha alcanzado el límite de 4 clases
-      if (!item.mails.contains(user) && count < 4) {
-        item.mails.add(user);
-        await supabaseClient.from('respaldo').update(item.toMap()).eq('id', item.id);
-        ModificarLugarDisponible().removerLugarDisponible(item.id);
-        count++; // Incrementar el contador solo cuando realmente agregas al usuario
+    for (final item in data) {
+      // Verificamos que la clase sea del mismo día y hora
+      if (item.dia == clase.dia && item.hora == clase.hora) {
+        // Solo agregar al usuario si aún no está en la clase y si no se ha alcanzado el límite de 4 clases
+        if (!item.mails.contains(user) && count < 4) {
+          item.mails.add(user);
+          await supabaseClient
+              .from('respaldo')
+              .update(item.toMap())
+              .eq('id', item.id);
+          ModificarLugarDisponible().removerLugarDisponible(item.id);
+          count++; // Incrementar el contador solo cuando realmente agregas al usuario
+        }
       }
     }
-  }
 
-  // Enviar el mensaje al usuario solo después de que se haya agregado a las 4 clases
-  if (count == 4) {
-    EnviarWpp().sendWhatsAppMessage(
-      "Has insertado a $user a 4 clases el día ${clase.dia} a las ${clase.hora}",
-      'whatsapp:+5491134272488'
-    );
+    // Enviar el mensaje al usuario solo después de que se haya agregado a las 4 clases
+    if (count == 4) {
+      EnviarWpp().sendWhatsAppMessage(
+          "Has insertado a $user a 4 clases el día ${clase.dia} a las ${clase.hora}",
+          'whatsapp:+5491134272488');
+    }
   }
 }
-
-}
-

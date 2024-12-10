@@ -4,7 +4,8 @@ class ClaseModels {
   final String dia; // Día de la semana
   final String fecha; // Fecha específica (formato: dd/mm)
   final String hora; // Hora de la clase
-  final List<String> mails; // Lista de correos electrónicos de los alumnos inscritos
+  final List<String>
+      mails; // Lista de correos electrónicos de los alumnos inscritos
   int lugaresDisponibles = 0; // Lugares disponibles en la clase
 
   // Constructor actualizado

@@ -38,8 +38,7 @@ class AuthNotifier extends StateNotifier<User?> {
 }
 
 /// Provider que expone el estado de autenticación
-final authProvider =
-    StateNotifierProvider<AuthNotifier, User?>((ref) {
+final authProvider = StateNotifierProvider<AuthNotifier, User?>((ref) {
   final supabase = Supabase.instance.client;
   return AuthNotifier(supabase);
 });

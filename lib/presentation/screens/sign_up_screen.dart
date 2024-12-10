@@ -32,7 +32,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         .join(' ');
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     final fullname = fullnamecontroller.text.trim();
                     final email = emailController.text.trim();
                     final password = passwordController.text.trim();
-        
+
                     if (fullname.isEmpty || email.isEmpty || password.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -97,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       );
                       return;
                     }
-        
+
                     if (password.length < 6) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -110,18 +109,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       );
                       return;
                     }
-        
+
                     try {
                       final listausuarios =
                           await ObtenerTotalInfo().obtenerInfoUsuarios();
-        
+
                       // Verifica si el email o fullname ya existen
-                      final emailExiste = listausuarios.any(
-                          (usuario) => usuario.usuario == email);
+                      final emailExiste = listausuarios
+                          .any((usuario) => usuario.usuario == email);
                       final fullnameExiste = listausuarios.any((usuario) =>
                           usuario.fullname.toLowerCase() ==
                           fullname.toLowerCase());
-        
+
                       if (emailExiste) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -134,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                         return;
                       }
-        
+
                       if (fullnameExiste) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -147,14 +146,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                         return;
                       }
-        
+
                       // Si pasa las validaciones, procede con el registro
                       final AuthResponse res = await supabase.auth.signUp(
                         email: email,
                         password: password,
                         data: {'fullname': capitalize(fullname)},
                       );
-        
+
                       await supabase.from('usuarios').insert({
                         'id': await GenerarId().generarIdUsuario(),
                         'usuario': email,
@@ -166,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         'trigger_alert': 0,
                         'clases_canceladas': [],
                       });
-        
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -176,7 +175,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           backgroundColor: Colors.green,
                         ),
                       );
-        
+
                       // Opcional: Redirigir después del éxito
                       // context.go("/");
                     } on AuthException catch (e) {
