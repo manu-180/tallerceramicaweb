@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/utils/dia_con_fecha.dart';
+import 'package:taller_ceramica/widgets/custom_box.dart';
 
 class MostrarDiaSegunFecha extends StatelessWidget {
   const MostrarDiaSegunFecha({
-    super.key, 
+    super.key,
     required this.text,
     required this.colors,
     required this.color,
@@ -44,30 +44,11 @@ class MostrarDiaSegunFecha extends StatelessWidget {
           ),
         ),
         SizedBox(width: screenWidth * 0.05),
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          width: screenWidth * 0.35,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colors.secondaryContainer,
-                colors.primary.withOpacity(0.6)
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Center(
-            child: Text(
-              text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
+       CustomBox(
+        width: screenWidth * 0.35,
+        color1: colors.secondaryContainer,
+        color2: colors.primary.withOpacity(0.6),
+        text: text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text)
         ),
         SizedBox(width: screenWidth * 0.05),
         Container(
@@ -94,3 +75,5 @@ class MostrarDiaSegunFecha extends StatelessWidget {
     );
   }
 }
+
+

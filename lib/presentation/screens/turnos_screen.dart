@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
-import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
@@ -20,59 +19,55 @@ class TurnosScreen extends StatefulWidget {
 
 class _TurnosScreenState extends State<TurnosScreen> {
   List<String> fechasDisponibles = [];
-  String semanaSeleccionada = 'semana1';
-  String? diaSeleccionado;
-  final List<String> semanas = [
-    'semana1',
-    'semana2',
-    'semana3',
-    'semana4',
-    'semana5'
-  ];
-  bool isLoading = true;
+  String semanaSeleccionada = 'semana1'; 
+  String? diaSeleccionado; 
+  final List<String> semanas = ['semana1', 'semana2', 'semana3', 'semana4', 'semana5'];
+  bool isLoading = true; 
 
   List<ClaseModels> todasLasClases = [];
   List<ClaseModels> diasUnicos = [];
   Map<String, List<ClaseModels>> horariosPorDia = {};
 
-  Future<void> cargarDatos() async {
-    setState(() {
-      isLoading = true; // Indicamos que se está cargando
-    });
 
-    final datos = await ObtenerTotalInfo().obtenerInfo();
+Future<void> cargarDatos() async {
+  setState(() {
+    isLoading = true; // Indicamos que se está cargando
+  });
 
-    // Filtramos las clases por la semana seleccionada
-    final datosSemana =
-        datos.where((clase) => clase.semana == semanaSeleccionada).toList();
+  final datos = await ObtenerTotalInfo().obtenerInfo();
+  
+  // Filtramos las clases por la semana seleccionada
+  final datosSemana = datos.where((clase) => clase.semana == semanaSeleccionada).toList();
 
-    // Crea un objeto DateFormat para el formato "dd/MM/yyyy HH:mm"
-    final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
+  // Crea un objeto DateFormat para el formato "dd/MM/yyyy HH:mm"
+  final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
 
-    // Ordenamos primero por la fecha (ascendente) y luego por la hora (ascendente)
-    datosSemana.sort((a, b) {
-      // Concatenamos la hora al dato de fecha ya existente
-      String fechaA = '${a.fecha} ${a.hora}';
-      String fechaB = '${b.fecha} ${b.hora}';
+  // Ordenamos primero por la fecha (ascendente) y luego por la hora (ascendente)
+  datosSemana.sort((a, b) {
+    // Concatenamos la hora al dato de fecha ya existente
+    String fechaA = '${a.fecha} ${a.hora}';
+    String fechaB = '${b.fecha} ${b.hora}';
 
-      // Convierte las fechas y horas a DateTime usando DateFormat
-      DateTime parsedFechaA = dateFormat.parse(fechaA);
-      DateTime parsedFechaB = dateFormat.parse(fechaB);
+    // Convierte las fechas y horas a DateTime usando DateFormat
+    DateTime parsedFechaA = dateFormat.parse(fechaA);
+    DateTime parsedFechaB = dateFormat.parse(fechaB);
 
-      return parsedFechaA.compareTo(parsedFechaB);
-    });
+    return parsedFechaA.compareTo(parsedFechaB);
+  });
 
-    // Extraemos días únicos basados en la fecha y día
-    final diasSet = <String>{};
-    diasUnicos = datosSemana.where((clase) {
-      final diaFecha = '${clase.dia} - ${clase.fecha}';
-      if (diasSet.contains(diaFecha)) {
-        return false;
-      } else {
-        diasSet.add(diaFecha);
-        return true;
-      }
-    }).toList();
+  // Extraemos días únicos basados en la fecha y día
+  final diasSet = <String>{};
+  diasUnicos = datosSemana.where((clase) {
+    final diaFecha = '${clase.dia} - ${clase.fecha}';
+    if (diasSet.contains(diaFecha)) {
+      return false;
+    } else {
+      diasSet.add(diaFecha);
+      return true;
+    }
+  }).toList();
+
+
 
     horariosPorDia = {};
     for (var clase in datosSemana) {
@@ -88,115 +83,107 @@ class _TurnosScreenState extends State<TurnosScreen> {
   }
 
   void mostrarConfirmacion(BuildContext context, ClaseModels clase) async {
-    final user = Supabase.instance.client.auth.currentUser;
+  final user = Supabase.instance.client.auth.currentUser;
 
-    // Inicializar variables para el mensaje y el botón
-    String mensaje;
-    bool mostrarBotonAceptar = false;
+  // Inicializar variables para el mensaje y el botón
+  String mensaje;
+  bool mostrarBotonAceptar = false;
 
-    // Verificar si el usuario está autenticado
-    if (user == null) {
-      mensaje = "Debes iniciar sesión para inscribirte a una clase";
-    } else if (clase.mails.contains(user.userMetadata?['fullname'])) {
-      mensaje = 'Revisa en "mis clases"';
-    } else {
-      // Verificar clases disponibles
-      // Verificar restricciones adicionales
-      final triggerAlert = await ObtenerAlertTrigger()
-          .alertTrigger(user.userMetadata?['fullname']);
-      final clasesDisponibles = await ObtenerClasesDisponibles()
-          .clasesDisponibles(user.userMetadata?['fullname']);
+  // Verificar si el usuario está autenticado
+  if (user == null) {
+    mensaje = "Debes iniciar sesión para inscribirte a una clase";
+  } else if (clase.mails.contains(user.userMetadata?['fullname'])) {
+    mensaje = 'Revisa en "mis clases"';
+  } else {
+    // Verificar clases disponibles
+    // Verificar restricciones adicionales
+    final triggerAlert = await ObtenerAlertTrigger().alertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles = await ObtenerClasesDisponibles().clasesDisponibles(user.userMetadata?['fullname']);
 
-      if (triggerAlert > 0 && clasesDisponibles == 0) {
-        mensaje =
-            'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-        return;
-      }
-
-      if (clasesDisponibles == 0) {
-        mensaje =
-            "No tienes créditos disponibles para inscribirte a esta clase";
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-        return;
-      }
-
-      // Verificar si la clase está dentro del plazo permitido
-      if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
-        mensaje = 'No puedes inscribirte a esta clase';
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-        return;
-      }
-
-      // Si no hay restricciones, configurar el mensaje de confirmación
-      mensaje =
-          '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
-      mostrarBotonAceptar = true;
+    if (triggerAlert > 0 && clasesDisponibles == 0) {
+      mensaje = 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      return;
     }
 
-    // Mostrar el diálogo final
-    _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
+    if (clasesDisponibles == 0) {
+      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      return;
+    }
+
+    // Verificar si la clase está dentro del plazo permitido
+    if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
+      mensaje = 'No puedes inscribirte a esta clase';
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      return;
+    }
+
+    // Si no hay restricciones, configurar el mensaje de confirmación
+    mensaje = '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+    mostrarBotonAceptar = true;
   }
 
-  void _mostrarDialogo(
-      BuildContext context, String mensaje, bool mostrarBotonAceptar,
-      [ClaseModels? clase, dynamic user]) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            _obtenerTituloDialogo(mensaje),
+  // Mostrar el diálogo final
+  _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
+}
+
+void _mostrarDialogo(BuildContext context, String mensaje, bool mostrarBotonAceptar,
+    [ClaseModels? clase, dynamic user]) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          _obtenerTituloDialogo(mensaje),
+        ),
+        content: Text(
+          mensaje,
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar el diálogo
+            },
+            child: const Text('Cancelar'),
           ),
-          content: Text(
-            mensaje,
-            style: const TextStyle(fontSize: 14),
-          ),
-          actions: [
-            TextButton(
+          if (mostrarBotonAceptar)
+            ElevatedButton(
               onPressed: () {
+                if (clase != null && user != null) {
+                  manejarSeleccionClase(clase, user.userMetadata?['fullname'] ?? '');
+                  ModificarAlertTrigger().resetearAlertTrigger(user.userMetadata?['fullname'] ?? '');
+                }
                 Navigator.of(context).pop(); // Cerrar el diálogo
               },
-              child: const Text('Cancelar'),
+              child: const Text('Aceptar'),
             ),
-            if (mostrarBotonAceptar)
-              ElevatedButton(
-                onPressed: () {
-                  if (clase != null && user != null) {
-                    manejarSeleccionClase(
-                        clase, user.userMetadata?['fullname'] ?? '');
-                    ModificarAlertTrigger().resetearAlertTrigger(
-                        user.userMetadata?['fullname'] ?? '');
-                  }
-                  Navigator.of(context).pop(); // Cerrar el diálogo
-                },
-                child: const Text('Aceptar'),
-              ),
-          ],
-        );
-      },
-    );
-  }
+        ],
+      );
+    },
+  );
+}
 
-  String _obtenerTituloDialogo(String mensaje) {
-    if (mensaje == "Debes iniciar sesión para inscribirte a una clase") {
-      return "Inicia sesión";
-    } else if (mensaje == 'Revisa en "mis clases"') {
-      return "Ya estás inscrito en esta clase";
-    } else if (mensaje ==
-            "No tienes créditos disponibles para inscribirte a esta clase" ||
-        mensaje ==
-            'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación' ||
-        mensaje == 'No puedes inscribirte a esta clase') {
-      return "No puedes inscribirte a esta clase";
-    } else {
-      return "Confirmar Inscripción";
-    }
+String _obtenerTituloDialogo(String mensaje) {
+  if (mensaje == "Debes iniciar sesión para inscribirte a una clase") {
+    return "Inicia sesión";
+  } else if (mensaje == 'Revisa en "mis clases"') {
+    return "Ya estás inscrito en esta clase";
+  } else if (mensaje == "No tienes créditos disponibles para inscribirte a esta clase" ||
+      mensaje == 'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación' ||
+      mensaje == 'No puedes inscribirte a esta clase') {
+    return "No puedes inscribirte a esta clase";
+  } else {
+    return "Confirmar Inscripción";
   }
+}
+
+
 
   void manejarSeleccionClase(ClaseModels clase, String user) async {
-    await AgregarUsuario(supabase)
-        .agregarUsuarioAClase(clase.id, user, false, clase);
+    await AgregarUsuario(supabase).agregarUsuarioAClase(clase.id, user, false, clase);
+    
 
     setState(() {
       cargarDatos();
@@ -225,6 +212,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   @override
   void initState() {
+    
     super.initState();
     fechasDisponibles = GenerarFechasDelMes().generarFechasLunesAViernes();
     cargarDatos();
@@ -232,21 +220,19 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   List<String> obtenerDiasConClasesDisponibles() {
     final diasConClases = <String>{};
-    horariosPorDia.forEach((dia, clases) {
-      if (clases.any((clase) =>
-          clase.mails.length < 5 &&
-          !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora))) {
-        final diaSolo =
-            dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
-        diasConClases.add(diaSolo);
-      }
-    });
+      horariosPorDia.forEach((dia, clases) {
+        if (clases.any((clase) => clase.mails.length < 5 && !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora))) {
+          final diaSolo = dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
+          diasConClases.add(diaSolo);
+        }
+      });
 
-    return diasConClases.toList();
-  }
+      return diasConClases.toList();
+    }
 
   @override
   Widget build(BuildContext context) {
+
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
 
@@ -254,9 +240,19 @@ class _TurnosScreenState extends State<TurnosScreen> {
       appBar: const CustomAppBar(),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-            child: BoxText(text:  "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!")
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 20, 10,0),
+            child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.20),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
           ),
           const SizedBox(height: 30),
           _SemanaNavigation(
@@ -279,7 +275,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                           fechasDisponibles: fechasDisponibles,
                         ),
                 ),
-                Expanded(
+                                Expanded(
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 40, right: 10),
@@ -287,12 +283,9 @@ class _TurnosScreenState extends State<TurnosScreen> {
                         ? isLoading
                             ? const Center(child: CircularProgressIndicator())
                             : ListView.builder(
-                                itemCount:
-                                    horariosPorDia[diaSeleccionado]?.length ??
-                                        0,
+                                itemCount: horariosPorDia[diaSeleccionado]?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  final clase =
-                                      horariosPorDia[diaSeleccionado]![index];
+                                  final clase = horariosPorDia[diaSeleccionado]![index];
                                   return construirBotonHorario(clase);
                                 },
                               )
@@ -308,27 +301,16 @@ class _TurnosScreenState extends State<TurnosScreen> {
               builder: (context) {
                 final diasConClases = obtenerDiasConClasesDisponibles();
                 if (isLoading) {
-                  return const SizedBox();
+                  return const SizedBox(); 
                 } else if (diasConClases.isEmpty) {
-                  return _AvisoDeClasesDisponibles(
-                    colors: colors,
-                    color: color,
-                    text: "No hay clases disponibles esta semana.",
-                  );
+                  return _AvisoDeClasesDisponibles(colors: colors, color: color, text: "No hay clases disponibles esta semana.",);
                 } else {
-                  return _AvisoDeClasesDisponibles(
-                    colors: colors,
-                    color: color,
-                    text:
-                        "Hay clases disponibles el ${diasConClases.join(', ')}.",
-                  );
+                  return _AvisoDeClasesDisponibles(colors: colors, color: color, text: "Hay clases disponibles el ${diasConClases.join(', ')}.",);
                 }
               },
             ),
           ),
-          const SizedBox(
-            height: 30,
-          )
+          const SizedBox(height: 30,)
         ],
       ),
     );
@@ -346,14 +328,12 @@ class _TurnosScreenState extends State<TurnosScreen> {
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,
         child: ElevatedButton(
-          onPressed: (estaLlena ||
-                  Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora))
+          onPressed: (estaLlena || Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora))
               ? null
               : () => mostrarConfirmacion(context, clase),
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
-              estaLlena ||
-                      Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)
+              estaLlena || Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)
                   ? Colors.grey
                   : Colors.green,
             ),
@@ -371,6 +351,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
             ],
           ),
         ),
+
       ),
     );
   }
@@ -431,6 +412,7 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
   }
 }
 
+
 // Widget para la navegación de semanas
 class _SemanaNavigation extends StatelessWidget {
   final String semanaSeleccionada;
@@ -446,49 +428,50 @@ class _SemanaNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey.shade200,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 1,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                onPressed: cambiarSemanaAtras,
-                icon: const Icon(Icons.arrow_left, size: 28),
-                color: Colors.black,
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.shade200, 
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15), 
+                  blurRadius: 1, 
+                  offset: const Offset(0, 2), 
+                ),
+              ],
             ),
-            const SizedBox(width: 45),
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey.shade200,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 1,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                onPressed: cambiarSemanaAdelante,
-                icon: const Icon(Icons.arrow_right, size: 28),
-                color: Colors.black, // Color del ícono (puedes personalizarlo)
-              ),
+            child: IconButton(
+              onPressed: cambiarSemanaAtras,
+              icon: const Icon(Icons.arrow_left, size: 28),
+              color: Colors.black, 
             ),
-          ],
-        ));
+          ),
+          const SizedBox(width: 45),
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.shade200, 
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15), 
+                  blurRadius: 1, 
+                  offset: const Offset(0, 2), 
+                ),
+              ],
+            ),
+            child: IconButton(
+              onPressed: cambiarSemanaAdelante,
+              icon: const Icon(Icons.arrow_right, size: 28),
+              color: Colors.black, // Color del ícono (puedes personalizarlo)
+            ),
+          ),
+        ],
+      )
+    );
   }
 }
 
@@ -512,12 +495,12 @@ class _DiaSelection extends StatelessWidget {
       itemCount: diasUnicos.length,
       itemBuilder: (context, index) {
         final clase = diasUnicos[index];
-
+        
         // Procesar clase.fecha para mostrar solo día y mes
         final partesFecha = clase.fecha.split('/');
         final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
         final diaMesAnio = '${clase.dia} - ${clase.fecha}';
-
+        
         final diaFecha = '${clase.dia} - $diaMes';
 
         // Filtrar fechasDisponibles para mostrar solo las fechas del mes actual
@@ -548,8 +531,7 @@ class _DiaSelection extends StatelessWidget {
             ),
           );
         } else {
-          return const SizedBox
-              .shrink(); // Si no está en el mes actual, no mostrar nada
+          return const SizedBox.shrink(); // Si no está en el mes actual, no mostrar nada
         }
       },
     );

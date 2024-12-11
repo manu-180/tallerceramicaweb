@@ -106,7 +106,9 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
               children: [
                 const Padding(
                   padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                  child: BoxText(text:  "En esta sesión podras ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podras recuperar la clase" ),
+                  child: BoxText(
+                      text:
+                          "En esta sesión podras ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podras recuperar la clase"),
                 ),
                 const SizedBox(height: 50),
                 clasesDelUsuario.isEmpty

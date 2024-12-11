@@ -251,7 +251,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
-    
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -260,17 +259,18 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         child: Column(
           children: [
             const Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: BoxText(text: "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas")
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: BoxText(
+                    text:
+                        "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas")),
+            const SizedBox(height: 20),
+            MostrarDiaSegunFecha(
+              text: fechaSeleccionada ?? '',
+              colors: colors,
+              color: color,
+              cambiarFecha: cambiarFecha,
             ),
-            const SizedBox(height: 20 ),
-                MostrarDiaSegunFecha(
-                  text: fechaSeleccionada ?? '',
-                  colors: colors,
-                  color: color,
-                  cambiarFecha: cambiarFecha,
-                ),
-                const SizedBox(height: 20 ),
+            const SizedBox(height: 20),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),

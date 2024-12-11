@@ -83,20 +83,22 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                child: BoxText(text: "En esta sección podrás ver los usuarios registrados y modificar sus créditos, tambien eliminarlos si es necesario" ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: ListView.builder(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  child: BoxText(
+                      text:
+                          "En esta sección podrás ver los usuarios registrados y modificar sus créditos, tambien eliminarlos si es necesario"),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
                     itemCount: usuarios.length,
                     itemBuilder: (context, index) {
                       final usuario = usuarios[index];
                       return Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                         child: Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -109,17 +111,21 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
                                   onPressed: () => eliminarUsuario(usuario.id),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.add, color: Colors.green),
-                                  onPressed: () => agregarCredito(usuario.fullname),
+                                  icon: const Icon(Icons.add,
+                                      color: Colors.green),
+                                  onPressed: () =>
+                                      agregarCredito(usuario.fullname),
                                 ),
                                 IconButton(
-                                  icon:
-                                      const Icon(Icons.remove, color: Colors.orange),
-                                  onPressed: () => removerCredito(usuario.fullname),
+                                  icon: const Icon(Icons.remove,
+                                      color: Colors.orange),
+                                  onPressed: () =>
+                                      removerCredito(usuario.fullname),
                                 ),
                               ],
                             ),
@@ -128,9 +134,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                       );
                     },
                   ),
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
     );
   }
 }

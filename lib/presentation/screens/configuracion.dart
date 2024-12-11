@@ -59,7 +59,9 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
               children: [
                 const Padding(
                   padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                  child: BoxText(text: "En esta sección podrás cambiar el color de la aplicación y el modo de visualización" ),
+                  child: BoxText(
+                      text:
+                          "En esta sección podrás cambiar el color de la aplicación y el modo de visualización"),
                 ),
                 // ExpansionTile que envolverá el ListView.builder
                 ExpansionTile(

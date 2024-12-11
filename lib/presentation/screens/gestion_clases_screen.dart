@@ -291,15 +291,20 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
         children: [
           const Padding(
             padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-            child: BoxText(text: "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases."),
+            child: BoxText(
+                text:
+                    "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases."),
           ),
-          const SizedBox(height: 10,),
-         MostrarDiaSegunFecha(
-              text: fechaSeleccionada ?? '-', 
-              colors: colors, 
-              color: color,
-              cambiarFecha: cambiarFecha,),
-              const SizedBox(height: 20),
+          const SizedBox(
+            height: 10,
+          ),
+          MostrarDiaSegunFecha(
+            text: fechaSeleccionada ?? '-',
+            colors: colors,
+            color: color,
+            cambiarFecha: cambiarFecha,
+          ),
+          const SizedBox(height: 20),
           DropdownButton<String>(
             value: fechaSeleccionada,
             hint: const Text('Selecciona una fecha'),
@@ -337,7 +342,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                               bool? respuesta = await mostrarDialogoConfirmacion(
                                   context,
                                   "¿Quieres agregar un crédito a esta clase?");
-      
+
                               if (respuesta == true) {
                                 agregarLugar(clase.id);
                                 ModificarLugarDisponible()
@@ -352,7 +357,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                               bool? respuesta = await mostrarDialogoConfirmacion(
                                   context,
                                   "¿Quieres remover un crédito a esta clase?");
-      
+
                               if (respuesta == true &&
                                   clase.lugaresDisponibles > 0) {
                                 quitarLugar(clase.id);
@@ -368,7 +373,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                               bool? respuesta = await mostrarDialogoConfirmacion(
                                   context,
                                   "¿Estás seguro/a que quieres eliminar esta clase?");
-      
+
                               if (respuesta == true) {
                                 setState(() {
                                   clasesFiltradas.removeAt(index);
