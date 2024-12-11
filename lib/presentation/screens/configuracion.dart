@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
@@ -56,6 +57,10 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
             )
           : ListView(
               children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  child: BoxText(text: "En esta sección podrás cambiar el color de la aplicación y el modo de visualización" ),
+                ),
                 // ExpansionTile que envolverá el ListView.builder
                 ExpansionTile(
                   title: const Text('Elige un color'),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
@@ -103,20 +104,9 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
             )
           : Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: color.primary
-                          .withOpacity(0.20), // Puedes cambiar el color
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "En esta sesión podras ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podras recuperar la clase", // El texto que deseas mostrar
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  child: BoxText(text:  "En esta sesión podras ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podras recuperar la clase" ),
                 ),
                 const SizedBox(height: 50),
                 clasesDelUsuario.isEmpty

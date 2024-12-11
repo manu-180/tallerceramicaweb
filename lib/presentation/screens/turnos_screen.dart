@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_alert_trigger.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
@@ -253,19 +254,9 @@ class _TurnosScreenState extends State<TurnosScreen> {
       appBar: const CustomAppBar(),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+            child: BoxText(text:  "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!")
           ),
           const SizedBox(height: 30),
           _SemanaNavigation(

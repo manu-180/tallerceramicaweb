@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
   const GestionHorariosScreen({super.key});
@@ -257,26 +259,18 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colors.primary.withOpacity(0.20),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: BoxText(text: "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas")
             ),
-                _DiaSeleccionado(
+            const SizedBox(height: 20 ),
+                MostrarDiaSegunFecha(
                   text: fechaSeleccionada ?? '',
                   colors: colors,
                   color: color,
                   cambiarFecha: cambiarFecha,
                 ),
+                const SizedBox(height: 20 ),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -346,98 +340,6 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _DiaSeleccionado extends StatelessWidget {
-  const _DiaSeleccionado({
-    required this.text,
-    required this.colors,
-    required this.color,
-    required this.cambiarFecha,
-  });
-
-  final ColorScheme colors;
-  final Color color;
-  final String text;
-  final void Function(bool) cambiarFecha;
-
-  @override
-  Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade200,
-            boxShadow: [
-              BoxShadow(
-                color: colors.primaryContainer.withOpacity(0.15),
-                blurRadius: 1,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () {
-              cambiarFecha(false);
-            },
-            icon: const Icon(Icons.arrow_left, size: 28),
-            color: Colors.black,
-          ),
-        ),
-        SizedBox(width: screenWidth * 0.05),
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          width: screenWidth * 0.35,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colors.secondaryContainer,
-                colors.primary.withOpacity(0.6)
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Center(
-            child: Text(
-              text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(width: screenWidth * 0.05),
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade200,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 1,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () {
-              cambiarFecha(true);
-            },
-            icon: const Icon(Icons.arrow_right, size: 28),
-            color: Colors.black, // Color del ícono (puedes personalizarlo)
-          ),
-        ),
-      ],
     );
   }
 }

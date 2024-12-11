@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
+import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/supabase/functions/eliminar_clase.dart';
 import 'package:taller_ceramica/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
@@ -11,6 +12,7 @@ import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
 
 class GestionDeClasesScreen extends StatefulWidget {
   const GestionDeClasesScreen({super.key});
@@ -255,121 +257,134 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     );
   }
 
+  void cambiarFecha(bool siguiente) {
+    setState(() {
+      if (fechaSeleccionada != null) {
+        final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
+
+        if (siguiente) {
+          // Ir a la siguiente fecha y volver al inicio si es la última
+          fechaSeleccionada =
+              fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
+        } else {
+          // Ir a la fecha anterior y volver al final si es la primera
+          fechaSeleccionada = fechasDisponibles[
+              (indexActual - 1 + fechasDisponibles.length) %
+                  fechasDisponibles.length];
+        }
+        seleccionarFecha(fechaSeleccionada!);
+      } else {
+        fechaSeleccionada = fechasDisponibles[0];
+        seleccionarFecha(fechaSeleccionada!);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
-    final partesFecha = fechaSeleccionada?.split('/');
-    final diaMes = '${partesFecha?[0]}/${partesFecha?[1]}';
 
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colors.primary.withOpacity(0.20),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  "En esta sesión podrás gestionar tus clases. Ver cuantos lugares disponibles tienen, agregar o quitar lugares, eliminar clases y crear clases nuevas.",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
-            ),
-            _DiaSeleccionado(
-                text: fechaSeleccionada ?? '-', colors: colors, color: color),
-            DropdownButton<String>(
-              value: fechaSeleccionada,
-              hint: const Text('Selecciona una fecha'),
-              onChanged: (value) {
-                seleccionarFecha(value!);
-              },
-              items: fechasDisponibles.map((fecha) {
-                return DropdownMenuItem(
-                  value: fecha,
-                  child: Text(fecha),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 10),
-            if (isLoading) const CircularProgressIndicator(),
-            if (!isLoading &&
-                fechaSeleccionada != null &&
-                clasesFiltradas.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  itemCount: clasesFiltradas.length,
-                  itemBuilder: (context, index) {
-                    final clase = clasesFiltradas[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(
-                            '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () async {
-                                // Muestra un diálogo de confirmación antes de agregar el crédito
-                                bool? respuesta = await mostrarDialogoConfirmacion(
-                                    context,
-                                    "¿Quieres agregar un crédito a esta clase?");
-
-                                if (respuesta == true) {
-                                  agregarLugar(clase.id);
-                                  ModificarLugarDisponible()
-                                      .agregarLugarDisponible(clase.id);
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () async {
-                                // Muestra un diálogo de confirmación antes de remover el crédito
-                                bool? respuesta = await mostrarDialogoConfirmacion(
-                                    context,
-                                    "¿Quieres remover un crédito a esta clase?");
-
-                                if (respuesta == true &&
-                                    clase.lugaresDisponibles > 0) {
-                                  quitarLugar(clase.id);
-                                  ModificarLugarDisponible()
-                                      .removerLugarDisponible(clase.id);
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () async {
-                                // Muestra un diálogo de confirmación antes de eliminar la clase
-                                bool? respuesta = await mostrarDialogoConfirmacion(
-                                    context,
-                                    "¿Estás seguro/a que quieres eliminar esta clase?");
-
-                                if (respuesta == true) {
-                                  setState(() {
-                                    clasesFiltradas.removeAt(index);
-                                    EliminarClase().eliminarClase(clase.id);
-                                  });
-                                }
-                              },
-                            ),
-                          ],
-                        ),
+      body: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+            child: BoxText(text: "En esta sección podrás gestionar las clases disponibles. Agregar o remover lugares, eliminar clases y agregar nuevas clases."),
+          ),
+          const SizedBox(height: 10,),
+         MostrarDiaSegunFecha(
+              text: fechaSeleccionada ?? '-', 
+              colors: colors, 
+              color: color,
+              cambiarFecha: cambiarFecha,),
+              const SizedBox(height: 20),
+          DropdownButton<String>(
+            value: fechaSeleccionada,
+            hint: const Text('Selecciona una fecha'),
+            onChanged: (value) {
+              seleccionarFecha(value!);
+            },
+            items: fechasDisponibles.map((fecha) {
+              return DropdownMenuItem(
+                value: fecha,
+                child: Text(fecha),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 20),
+          if (isLoading) const CircularProgressIndicator(),
+          if (!isLoading &&
+              fechaSeleccionada != null &&
+              clasesFiltradas.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                itemCount: clasesFiltradas.length,
+                itemBuilder: (context, index) {
+                  final clase = clasesFiltradas[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(
+                          '${clase.hora} - Lugares disponibles: ${clase.lugaresDisponibles}'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () async {
+                              // Muestra un diálogo de confirmación antes de agregar el crédito
+                              bool? respuesta = await mostrarDialogoConfirmacion(
+                                  context,
+                                  "¿Quieres agregar un crédito a esta clase?");
+      
+                              if (respuesta == true) {
+                                agregarLugar(clase.id);
+                                ModificarLugarDisponible()
+                                    .agregarLugarDisponible(clase.id);
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: () async {
+                              // Muestra un diálogo de confirmación antes de remover el crédito
+                              bool? respuesta = await mostrarDialogoConfirmacion(
+                                  context,
+                                  "¿Quieres remover un crédito a esta clase?");
+      
+                              if (respuesta == true &&
+                                  clase.lugaresDisponibles > 0) {
+                                quitarLugar(clase.id);
+                                ModificarLugarDisponible()
+                                    .removerLugarDisponible(clase.id);
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              // Muestra un diálogo de confirmación antes de eliminar la clase
+                              bool? respuesta = await mostrarDialogoConfirmacion(
+                                  context,
+                                  "¿Estás seguro/a que quieres eliminar esta clase?");
+      
+                              if (respuesta == true) {
+                                setState(() {
+                                  clasesFiltradas.removeAt(index);
+                                  EliminarClase().eliminarClase(clase.id);
+                                });
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-          ],
-        ),
+            ),
+        ],
       ),
       floatingActionButton: SizedBox(
         width: 200,
