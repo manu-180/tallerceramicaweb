@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -7,6 +8,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeColor = Theme.of(context).primaryColor;
+    final user = Supabase.instance.client.auth.currentUser;
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -21,6 +23,7 @@ class HomeScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
+             
             const SizedBox(height: 20),
             Center(
               child: ClipRRect(

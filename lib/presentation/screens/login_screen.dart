@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
 
                   // Navegar a la pantalla principal
-                  context.go('/');
+                  context.push('/');
                 } on AuthException catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

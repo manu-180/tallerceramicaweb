@@ -376,7 +376,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                     padding: const EdgeInsets.only(left: 40, right: 10),
                     child: diaSeleccionado != null
                         ? isLoading
-                            ? const Center(child: CircularProgressIndicator())
+                            ? const SizedBox()
                             : ListView.builder(
                                 itemCount:
                                     horariosPorDia[diaSeleccionado]?.length ??

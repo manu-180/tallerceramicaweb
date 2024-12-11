@@ -53,13 +53,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
             : userRoutes;
 
         return AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: color.primary,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: () {
-                  context.go("/");
+                  context.push("/");
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +87,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               const SizedBox(width: 16),
               PopupMenuButton<String>(
                 onSelected: (value) {
-                  context.go(value); // Navega a la ruta seleccionada
+                  context.push(value); // Navega a la ruta seleccionada
                 },
                 itemBuilder: (BuildContext context) => menuItems
                     .map((route) => PopupMenuItem(
@@ -124,7 +125,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         height: size.height * 0.05,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.go('/crear-usuario');
+                            context.push('/crear-usuario');
                           },
                           child: const Padding(
                             padding: EdgeInsets.all(3.0),
@@ -141,7 +142,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         height: size.height * 0.05,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.go('/iniciar-sesion');
+                            context.push('/iniciar-sesion');
                           },
                           child: const Padding(
                             padding: EdgeInsets.all(3.0),
@@ -167,7 +168,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.remove('session');
 
-                            context.go('/');
+                            context.push('/');
                           },
                           child: const Text('Cerrar sesión'),
                         ),
