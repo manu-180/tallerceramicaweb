@@ -1,17 +1,14 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class EnviarWpp {
   void sendWhatsAppMessage(String texto, String num) async {
-
-    await dotenv.load(fileName: ".env");
     // Configura tus credenciales de Twilio
-    final accountSid = dotenv.env['ACCOUNT_SID'] ?? '';
-    final authToken = dotenv.env['AUTH_TOKEN'] ?? '';
+    const accountSid = 'AC3dc31aa60bcd46645dd763faef054683';
+    const authToken = '72aaa336959fb14087b3ff269e3cd10b';
     const fromWhatsAppNumber = 'whatsapp:+14155238886'; // Número de Twilio
 
-    final url =
+    const url =
         'https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages.json';
 
     // Datos del mensaje
