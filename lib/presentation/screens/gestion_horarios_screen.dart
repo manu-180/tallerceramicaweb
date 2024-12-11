@@ -82,22 +82,27 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   }
 
   void cambiarFecha(bool siguiente) {
-  setState(() {
-    final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
+    setState(() {
+      if (fechaSeleccionada != null) {
+        final int indexActual = fechasDisponibles.indexOf(fechaSeleccionada!);
 
-    if (siguiente) {
-      // Ir a la siguiente fecha y volver al inicio si es la última
-      fechaSeleccionada = fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
-    } else {
-      // Ir a la fecha anterior y volver al final si es la primera
-      fechaSeleccionada = fechasDisponibles[
-        (indexActual - 1 + fechasDisponibles.length) % fechasDisponibles.length
-      ];
-    }
-    seleccionarFecha(fechaSeleccionada!);
-  });
-}
-
+        if (siguiente) {
+          // Ir a la siguiente fecha y volver al inicio si es la última
+          fechaSeleccionada =
+              fechasDisponibles[(indexActual + 1) % fechasDisponibles.length];
+        } else {
+          // Ir a la fecha anterior y volver al final si es la primera
+          fechaSeleccionada = fechasDisponibles[
+              (indexActual - 1 + fechasDisponibles.length) %
+                  fechasDisponibles.length];
+        }
+        seleccionarFecha(fechaSeleccionada!);
+      } else {
+        fechaSeleccionada = fechasDisponibles[0];
+        seleccionarFecha(fechaSeleccionada!);
+      }
+    });
+  }
 
   Future<void> mostrarDialogo(
       String tipoAccion, ClaseModels clase, ColorScheme color) async {
@@ -244,6 +249,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
   Widget build(BuildContext context) {
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
+    
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -265,59 +271,12 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey.shade200,
-                    boxShadow: [
-                      BoxShadow(
-                        color: colors.primaryContainer.withOpacity(0.15),
-                        blurRadius: 1,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      cambiarFecha(false);
-                    },
-                    icon: const Icon(Icons.arrow_left, size: 28),
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(width: 20),
                 _DiaSeleccionado(
                   text: fechaSeleccionada ?? '',
                   colors: colors,
                   color: color,
+                  cambiarFecha: cambiarFecha,
                 ),
-                const SizedBox(width: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey.shade200,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 1,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      cambiarFecha(true);
-                    },
-                    icon: const Icon(Icons.arrow_right, size: 28),
-                    color:
-                        Colors.black, // Color del ícono (puedes personalizarlo)
-                  ),
-                ),
-              ],
-            ),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -396,41 +355,89 @@ class _DiaSeleccionado extends StatelessWidget {
     required this.text,
     required this.colors,
     required this.color,
+    required this.cambiarFecha,
   });
 
   final ColorScheme colors;
   final Color color;
   final String text;
+  final void Function(bool) cambiarFecha;
 
   @override
   Widget build(BuildContext context) {
-
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      width: screenWidth * 0.35, 
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [colors.secondaryContainer, colors.primary.withOpacity(0.6)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Center(
-        child: Text(
-          text.isEmpty
-              ? "Seleccione una fecha"
-              : DiaConFecha().obtenerDiaDeLaSemana(text),
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey.shade200,
+            boxShadow: [
+              BoxShadow(
+                color: colors.primaryContainer.withOpacity(0.15),
+                blurRadius: 1,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            onPressed: () {
+              cambiarFecha(false);
+            },
+            icon: const Icon(Icons.arrow_left, size: 28),
+            color: Colors.black,
           ),
         ),
-      ),
+        SizedBox(width: screenWidth * 0.05),
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          width: screenWidth * 0.35,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colors.secondaryContainer,
+                colors.primary.withOpacity(0.6)
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Center(
+            child: Text(
+              text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: screenWidth * 0.05),
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey.shade200,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 1,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            onPressed: () {
+              cambiarFecha(true);
+            },
+            icon: const Icon(Icons.arrow_right, size: 28),
+            color: Colors.black, // Color del ícono (puedes personalizarlo)
+          ),
+        ),
+      ],
     );
   }
 }
-

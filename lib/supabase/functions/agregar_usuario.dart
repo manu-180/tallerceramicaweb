@@ -14,8 +14,11 @@ class AgregarUsuario {
       int idClase, String user, bool parametro, ClaseModels claseModels) async {
     final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-    final data =
-        await supabaseClient.from('respaldo').select().eq('id', idClase).single();
+    final data = await supabaseClient
+        .from('respaldo')
+        .select()
+        .eq('id', idClase)
+        .single();
 
     final clase = ClaseModels.fromMap(data);
 

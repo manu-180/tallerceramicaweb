@@ -25,7 +25,7 @@ class DiaConFecha {
       // Retornar el día correspondiente (DateTime.weekday devuelve 1 para lunes, 7 para domingo)
       return diasDeLaSemana[parsedDate.weekday - 1];
     } catch (e) {
-      return "Formato de fecha no válido";
+      return "-";
     }
   }
 }

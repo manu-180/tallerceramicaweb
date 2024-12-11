@@ -8,7 +8,6 @@ import 'package:taller_ceramica/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/utils/dia_con_fecha.dart';
-import 'package:taller_ceramica/utils/encontrar_semana.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 import 'package:intl/intl.dart';
@@ -284,9 +283,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
               ),
             ),
             _DiaSeleccionado(
-                text: fechaSeleccionada ?? 'Seleccione una fecha',
-                colors: colors,
-                color: color),
+                text: fechaSeleccionada ?? '-', colors: colors, color: color),
             DropdownButton<String>(
               value: fechaSeleccionada,
               hint: const Text('Selecciona una fecha'),
@@ -422,9 +419,7 @@ class _DiaSeleccionado extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Text(
-        text.isEmpty
-            ? "Seleccione una fecha"
-            : DiaConFecha().obtenerDiaDeLaSemana(text),
+        text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text),
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
