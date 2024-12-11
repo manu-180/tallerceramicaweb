@@ -44,12 +44,12 @@ class MostrarDiaSegunFecha extends StatelessWidget {
           ),
         ),
         SizedBox(width: screenWidth * 0.05),
-       CustomBox(
-        width: screenWidth * 0.35,
-        color1: colors.secondaryContainer,
-        color2: colors.primary.withOpacity(0.6),
-        text: text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text)
-        ),
+        CustomBox(
+            width: screenWidth * 0.35,
+            color1: colors.secondaryContainer,
+            color2: colors.primary.withOpacity(0.6),
+            text:
+                text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text)),
         SizedBox(width: screenWidth * 0.05),
         Container(
           decoration: BoxDecoration(
@@ -75,5 +75,3 @@ class MostrarDiaSegunFecha extends StatelessWidget {
     );
   }
 }
-
-

@@ -4,7 +4,6 @@ import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/models/clase_models.dart';
 import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 import 'package:taller_ceramica/widgets/mostrar_dia_segun_fecha.dart';
@@ -249,6 +248,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
 
@@ -309,19 +309,29 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            mostrarDialogo(
-                                                "insertar", clase, colors);
-                                          },
-                                          child: const Text("Agregar Usuario"),
+                                        SizedBox(
+                                          width: size.width * 0.33,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              mostrarDialogo(
+                                                  "insertar", clase, colors);
+                                            },
+                                            child: const Text(
+                                              "Agregar Usuario",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            mostrarDialogo(
-                                                "remover", clase, colors);
-                                          },
-                                          child: const Text("Remover Usuario"),
+                                        SizedBox(
+                                          width: size.width * 0.33,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              mostrarDialogo(
+                                                  "remover", clase, colors);
+                                            },
+                                            child: const Text("Remover Usuario",
+                                                style: TextStyle(fontSize: 10)),
+                                          ),
                                         ),
                                       ],
                                     ),

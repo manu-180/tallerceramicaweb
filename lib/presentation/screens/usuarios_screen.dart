@@ -93,7 +93,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
               onPressed: () => Navigator.of(context).pop(false), // Cancelar
               child: const Text('No'),
             ),
-            FilledButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // Confirmar
               },

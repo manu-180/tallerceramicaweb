@@ -112,7 +112,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
               },
               child: const Text("No"),
             ),
-            FilledButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // "Sí"
               },

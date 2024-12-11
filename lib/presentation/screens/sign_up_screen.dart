@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/widgets/custom_appbar.dart'; // Asegúrate de tener importado el paquete correcto.
+import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -15,11 +15,15 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController fullnamecontroller = TextEditingController();
+  final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-  String passwordError = ''; // Mensaje de error para la contraseña
+  String passwordError = '';
+  String confirmPasswordError = '';
+  String mailError = '';
 
   String capitalize(String input) {
     if (input.isEmpty) return input;
@@ -34,6 +38,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final color = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: Center(
@@ -43,8 +50,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                        'Crea tu usuario y contraseña : ',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: color.primary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                  ],
+                ),
+                  const SizedBox(height: 40),
                 TextField(
-                  controller: fullnamecontroller,
+                  controller: fullnameController,
                   decoration: const InputDecoration(
                     labelText: 'Nombre y apellido',
                     border: OutlineInputBorder(),
@@ -54,11 +76,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Correo Electrónico',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
+                    errorText: mailError.isEmpty ? null : mailError,
                   ),
                   keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {
+                    setState(() {
+                      mailError = !emailRegex.hasMatch(emailController.text.trim())
+                          ? 'El correo electrónico es invalido.'
+                          : '';
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -78,13 +108,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
+                TextField(
+                  controller: confirmPasswordController,
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar Contraseña',
+                    border: const OutlineInputBorder(),
+                    errorText: confirmPasswordError.isEmpty ? null : confirmPasswordError,
+                  ),
+                  obscureText: true,
+                  onChanged: (value) {
+                    setState(() {
+                      confirmPasswordError = value != passwordController.text
+                          ? 'La contraseña no coincide.'
+                          : '';
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () async {
-                    final fullname = fullnamecontroller.text.trim();
+                    final fullname = fullnameController.text.trim();
                     final email = emailController.text.trim();
                     final password = passwordController.text.trim();
+                    final confirmPassword = confirmPasswordController.text.trim();
 
-                    if (fullname.isEmpty || email.isEmpty || password.isEmpty) {
+                    if (fullname.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -110,11 +158,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       return;
                     }
 
+                    if (password != confirmPassword) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'La contraseña no coincide.',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
                     try {
                       final listausuarios =
                           await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-                      // Verifica si el email o fullname ya existen
                       final emailExiste = listausuarios
                           .any((usuario) => usuario.usuario == email);
                       final fullnameExiste = listausuarios.any((usuario) =>
@@ -147,7 +207,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return;
                       }
 
-                      // Si pasa las validaciones, procede con el registro
                       final AuthResponse res = await supabase.auth.signUp(
                         email: email,
                         password: password,
@@ -175,9 +234,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           backgroundColor: Colors.green,
                         ),
                       );
-
-                      // Opcional: Redirigir después del éxito
-                      // context.go("/");
                     } on AuthException catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

@@ -18,6 +18,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final color = Theme.of(context).colorScheme;
 
     return StreamBuilder<User?>(
@@ -118,33 +119,37 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ? Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          context.go('/crear-usuario');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: color.primaryContainer,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                        ),
-                        child: const Text(
-                          'Crear usuario',
-                          style: TextStyle(fontSize: 12),
+                      SizedBox(
+                        width: size.width * 0.25,
+                        height: size.height * 0.05,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context.go('/crear-usuario');
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(3.0),
+                            child: Text(
+                              'Crear usuario',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.go('/iniciar-sesion');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: color.primaryContainer,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                        ),
-                        child: const Text(
-                          'Iniciar sesión',
-                          style: TextStyle(fontSize: 12),
+                      SizedBox(
+                        width: size.width * 0.25,
+                        height: size.height * 0.05,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context.go('/iniciar-sesion');
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(3.0),
+                            child: Text(
+                              'Iniciar sesión',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -152,16 +157,20 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          await Supabase.instance.client.auth.signOut();
+                      SizedBox(
+                        width: size.width * 0.35,
+                        height: size.height * 0.05,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await Supabase.instance.client.auth.signOut();
 
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.remove('session');
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.remove('session');
 
-                          context.go('/');
-                        },
-                        child: const Text('Cerrar sesión'),
+                            context.go('/');
+                          },
+                          child: const Text('Cerrar sesión'),
+                        ),
                       ),
                     ],
                   ),
