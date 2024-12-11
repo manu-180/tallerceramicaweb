@@ -341,7 +341,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                               // Muestra un diálogo de confirmación antes de agregar el crédito
                               bool? respuesta = await mostrarDialogoConfirmacion(
                                   context,
-                                  "¿Quieres agregar un crédito a esta clase?");
+                                  "¿Quieres agregar un lugar disponible a esta clase?");
 
                               if (respuesta == true) {
                                 agregarLugar(clase.id);
@@ -356,7 +356,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                               // Muestra un diálogo de confirmación antes de remover el crédito
                               bool? respuesta = await mostrarDialogoConfirmacion(
                                   context,
-                                  "¿Quieres remover un crédito a esta clase?");
+                                  "¿Quieres remover un lugar disponible a esta clase?");
 
                               if (respuesta == true &&
                                   clase.lugaresDisponibles > 0) {

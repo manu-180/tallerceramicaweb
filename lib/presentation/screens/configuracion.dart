@@ -63,6 +63,9 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                       text:
                           "En esta sección podrás cambiar el color de la aplicación y el modo de visualización"),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
                 // ExpansionTile que envolverá el ListView.builder
                 ExpansionTile(
                   title: const Text('Elige un color'),

@@ -76,6 +76,39 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     cargarUsuarios();
   }
 
+  Future<void> mostrarDialogoConfirmacion({
+    required BuildContext context,
+    required String titulo,
+    required String contenido,
+    required VoidCallback onConfirmar,
+  }) async {
+    final resultado = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titulo),
+          content: Text(contenido),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false), // Cancelar
+              child: const Text('No'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Confirmar
+              },
+              child: const Text('Sí'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (resultado == true) {
+      onConfirmar();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +121,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                   padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
                   child: BoxText(
                       text:
-                          "En esta sección podrás ver los usuarios registrados y modificar sus créditos, tambien eliminarlos si es necesario"),
+                          "En esta sección podrás ver los usuarios registrados y modificar sus créditos, también eliminarlos si es necesario"),
                 ),
                 const SizedBox(height: 10),
                 Expanded(
@@ -105,27 +138,46 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                           child: ListTile(
                             title: Text('${usuario.fullname} '),
                             subtitle: Text(usuario.clasesDisponibles == 1
-                                ? "(${usuario.clasesDisponibles} credito)"
-                                : "(${usuario.clasesDisponibles} creditos)"),
+                                ? "(${usuario.clasesDisponibles} crédito)"
+                                : "(${usuario.clasesDisponibles} créditos)"),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
                                   icon: const Icon(Icons.delete,
                                       color: Colors.red),
-                                  onPressed: () => eliminarUsuario(usuario.id),
+                                  onPressed: () => mostrarDialogoConfirmacion(
+                                    context: context,
+                                    titulo: 'Eliminar Usuario',
+                                    contenido:
+                                        '¿Estás seguro de que deseas eliminar a este usuario?',
+                                    onConfirmar: () =>
+                                        eliminarUsuario(usuario.id),
+                                  ),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.add,
                                       color: Colors.green),
-                                  onPressed: () =>
-                                      agregarCredito(usuario.fullname),
+                                  onPressed: () => mostrarDialogoConfirmacion(
+                                    context: context,
+                                    titulo: 'Agregar Crédito',
+                                    contenido:
+                                        '¿Estás seguro de que deseas agregar un crédito a este usuario?',
+                                    onConfirmar: () =>
+                                        agregarCredito(usuario.fullname),
+                                  ),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.remove,
                                       color: Colors.orange),
-                                  onPressed: () =>
-                                      removerCredito(usuario.fullname),
+                                  onPressed: () => mostrarDialogoConfirmacion(
+                                    context: context,
+                                    titulo: 'Remover Crédito',
+                                    contenido:
+                                        '¿Estás seguro de que deseas remover un crédito de este usuario?',
+                                    onConfirmar: () =>
+                                        removerCredito(usuario.fullname),
+                                  ),
                                 ),
                               ],
                             ),
