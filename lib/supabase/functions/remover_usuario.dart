@@ -33,15 +33,18 @@ class RemoverUsuario {
       if (!parametro) {
         EnviarWpp().sendWhatsAppMessage(
             "$user ha cancelado la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-            'whatsapp:+5491134272488');
+            'whatsapp:+5491134272488'
+            );
       }
       if (parametro) {
         EnviarWpp().sendWhatsAppMessage(
             "Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-            'whatsapp:+5491134272488');
+            'whatsapp:+5491134272488'
+            );
         EnviarWpp().sendWhatsAppMessage(
             "Has removido a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-            'whatsapp:+5491132820164');
+            'whatsapp:+5491132820164'
+            );
       }
     }
   }
@@ -64,9 +67,11 @@ class RemoverUsuario {
     }
     EnviarWpp().sendWhatsAppMessage(
         "Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}",
-        'whatsapp:+5491134272488');
+        'whatsapp:+5491134272488'
+        );
     EnviarWpp().sendWhatsAppMessage(
         "Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}",
-        'whatsapp:+5491132820164');
+        'whatsapp:+5491132820164'
+        );
   }
 }

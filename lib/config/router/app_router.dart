@@ -30,7 +30,7 @@ final appRouter = GoRouter(initialLocation: "/", routes: [
   GoRoute(
       path: "/iniciar-sesion",
       name: "iniciar sesion",
-      builder: (context, state) => LoginScreen()),
+      builder: (context, state) => const LoginScreen()),
   GoRoute(
       path: "/crear-usuario",
       name: "crear usuario",

@@ -35,19 +35,23 @@ class AgregarUsuario {
             if (parametro) {
               EnviarWpp().sendWhatsAppMessage(
                   "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488');
+                  'whatsapp:+5491134272488'
+                  );
               EnviarWpp().sendWhatsAppMessage(
                   "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164');
+                  'whatsapp:+5491132820164'
+                  );
             }
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
               EnviarWpp().sendWhatsAppMessage(
                   "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488');
+                  'whatsapp:+5491134272488'
+                  );
               EnviarWpp().sendWhatsAppMessage(
                   "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164');
+                  'whatsapp:+5491132820164'
+                  );
             }
           }
         }
@@ -93,7 +97,8 @@ class AgregarUsuario {
     if (count == 4) {
       EnviarWpp().sendWhatsAppMessage(
           "Has insertado a $user a 4 clases el día ${clase.dia} a las ${clase.hora}",
-          'whatsapp:+5491134272488');
+          'whatsapp:+5491134272488'
+          );
     }
   }
 }
