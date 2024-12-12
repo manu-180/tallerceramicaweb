@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taller_ceramica/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/widgets/custom_appbar.dart';
 
@@ -9,6 +10,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeColor = Theme.of(context).primaryColor;
     final user = Supabase.instance.client.auth.currentUser;
+    final fullName = user?.userMetadata?['fullname'] ?? '';
+    final firstName = fullName.split(' ').first;
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -23,7 +26,9 @@ class HomeScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-             
+             BoxText(text: user != null?
+            "¡Hola $firstName y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
+            :"¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"),
             const SizedBox(height: 20),
             Center(
               child: ClipRRect(

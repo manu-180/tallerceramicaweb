@@ -25,7 +25,7 @@ class RemoverUsuario {
     if (clase.mails.contains(user)) {
       clase.mails.remove(user);
       await supabaseClient
-          .from('respaldo')
+          .from('total')
           .update(clase.toMap())
           .eq('id', idClase);
       ModificarLugarDisponible().agregarLugarDisponible(idClase);
