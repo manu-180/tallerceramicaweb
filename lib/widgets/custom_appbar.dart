@@ -32,11 +32,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
         final adminRoutes = [
           {'value': '/turnos', 'label': 'Clases'},
           {'value': '/misclases', 'label': 'Mis clases'},
-          {'value': '/configuracion', 'label': 'Configuración'},
           {'value': '/gestionhorarios', 'label': 'Gestión de horarios'},
           {'value': '/gestionclases', 'label': 'Gestión de clases'},
           {'value': '/usuarios', 'label': 'Usuarios'},
-          {'value': '/prueba', 'label': 'prueba'},
+          {'value': '/configuracion', 'label': 'Configuración'},
+          // {'value': '/prueba', 'label': 'prueba'},
         ];
 
         // Lista de botones visibles para otros usuarios
@@ -87,7 +87,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               const SizedBox(width: 16),
               PopupMenuButton<String>(
                 onSelected: (value) {
-                  context.push(value); // Navega a la ruta seleccionada
+                  context.push(value); 
                 },
                 itemBuilder: (BuildContext context) => menuItems
                     .map((route) => PopupMenuItem(
@@ -111,7 +111,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     _isMenuOpen = false;
                   });
                 },
-                offset: const Offset(0, 45),
+                offset: const Offset(-20, 50),
               ),
             ],
           ),

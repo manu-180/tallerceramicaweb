@@ -72,15 +72,14 @@ class AgregarUsuario {
       'domingo': 7,
     };
 
-    // Ordenar las clases por el día de la semana usando el mapeo
     data.sort((a, b) => diaToNumero[a.dia]!.compareTo(diaToNumero[b.dia]!));
 
     int count = 0;
 
     for (final item in data) {
-      // Verificamos que la clase sea del mismo día y hora
+
       if (item.dia == clase.dia && item.hora == clase.hora) {
-        // Solo agregar al usuario si aún no está en la clase y si no se ha alcanzado el límite de 4 clases
+
         if (!item.mails.contains(user) && count < 4) {
           item.mails.add(user);
           await supabaseClient
@@ -88,7 +87,7 @@ class AgregarUsuario {
               .update(item.toMap())
               .eq('id', item.id);
           ModificarLugarDisponible().removerLugarDisponible(item.id);
-          count++; // Incrementar el contador solo cuando realmente agregas al usuario
+          count++; 
         }
       }
     }

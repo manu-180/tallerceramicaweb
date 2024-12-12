@@ -184,16 +184,14 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   }
 
   void cancelarClase(int claseId, String fullname) async {
-    // Simula cancelar la inscripción en la clase
     final clase = clasesDelUsuario.firstWhere((clase) => clase.id == claseId);
-    clase.mails.remove(fullname); // Remueve el usuario de la lista de correos
+    clase.mails.remove(fullname);
     setState(() {
       clasesDelUsuario = clasesDelUsuario
           .where((clase) => clase.mails.contains(fullname))
           .toList();
     });
-    await RemoverUsuario(Supabase.instance.client)
-        .removerUsuarioDeClase(claseId, fullname, false);
+    await RemoverUsuario(Supabase.instance.client).removerUsuarioDeClase(claseId, fullname, false);
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
