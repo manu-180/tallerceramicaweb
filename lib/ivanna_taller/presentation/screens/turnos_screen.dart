@@ -233,14 +233,20 @@ class _TurnosScreenState extends State<TurnosScreen> {
 
   List<String> obtenerDiasConClasesDisponibles() {
     final diasConClases = <String>{};
+    final currentMonth = DateTime.now().month;
+
     horariosPorDia.forEach((dia, clases) {
       if (clases.any((clase) =>
-          clase.mails.length < 5 
-          && !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)
-          && clase.lugaresDisponibles > 0)) {
-        final diaSolo =
-            dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
-        diasConClases.add(diaSolo);
+          clase.mails.length < 5 &&
+          !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) &&
+          clase.lugaresDisponibles > 0)) {
+        final partesFecha = dia.split(' - ')[1].split('/');
+        final diaMes = int.parse(partesFecha[1]);
+        if (diaMes == currentMonth) {
+          final diaSolo =
+              dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
+          diasConClases.add(diaSolo);
+        }
       }
     });
 
@@ -248,193 +254,208 @@ class _TurnosScreenState extends State<TurnosScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final color = Theme.of(context).primaryColor;
-  final colors = Theme.of(context).colorScheme;
-  final screenWidth = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
-  
-  // Relativo a la pantalla
-  double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
-  double buttonWidth = screenWidth * 0.7;  // 70% del ancho de la pantalla
-  double fontSize = screenWidth * 0.04;    // 4% del ancho de la pantalla
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).primaryColor;
+    final colors = Theme.of(context).colorScheme;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-  return Scaffold(
-    appBar: const CustomAppBar(),
-    body: Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(paddingSize, 20, paddingSize, 0),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.20),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: fontSize),
+    // Relativo a la pantalla
+    double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
+    double buttonWidth = screenWidth * 0.7; // 70% del ancho de la pantalla
+    double fontSize = screenWidth * 0.04; // 4% del ancho de la pantalla
+
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(paddingSize, 20, paddingSize, 0),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.20),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontSize: fontSize),
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 30),
-        _SemanaNavigation(
-          semanaSeleccionada: semanaSeleccionada,
-          cambiarSemanaAdelante: cambiarSemanaAdelante,
-          cambiarSemanaAtras: cambiarSemanaAtras,
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: isLoading
-                    ? Column(
-                      children: List.generate(5, (index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: SizedBox(
-                          height: buttonWidth * 0.166,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Center(
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 3),
-                              ),
-                            ),
-                          ),
+          const SizedBox(height: 30),
+          _SemanaNavigation(
+            semanaSeleccionada: semanaSeleccionada,
+            cambiarSemanaAdelante: cambiarSemanaAdelante,
+            cambiarSemanaAtras: cambiarSemanaAtras,
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: isLoading
+                      ? Column(
+                          children: List.generate(
+                              5,
+                              (index) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: SizedBox(
+                                      height: buttonWidth * 0.166,
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: const Center(
+                                          child: SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 3),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                        )
+                      : _DiaSelection(
+                          diasUnicos: diasUnicos,
+                          seleccionarDia: seleccionarDia,
+                          fechasDisponibles: fechasDisponibles,
                         ),
-                      )),
-                    )
-                    : _DiaSelection(
-                        diasUnicos: diasUnicos,
-                        seleccionarDia: seleccionarDia,
-                        fechasDisponibles: fechasDisponibles,
-                      ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: EdgeInsets.only(left: paddingSize * 2, right: paddingSize),
-                  child: diaSeleccionado != null
-                      ? isLoading
-                          ? const SizedBox()
-                          : ListView.builder(
-                              itemCount:
-                                  horariosPorDia[diaSeleccionado]?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final clase =
-                                    horariosPorDia[diaSeleccionado]![index];
-                                return construirBotonHorario(clase);
-                              },
-                            )
-                      : const SizedBox(),
                 ),
-              ),
-            ],
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: paddingSize * 2, right: paddingSize),
+                    child: diaSeleccionado != null
+                        ? isLoading
+                            ? const SizedBox()
+                            : ListView.builder(
+                                itemCount:
+                                    horariosPorDia[diaSeleccionado]?.length ??
+                                        0,
+                                itemBuilder: (context, index) {
+                                  final clase =
+                                      horariosPorDia[diaSeleccionado]![index];
+                                  return construirBotonHorario(clase);
+                                },
+                              )
+                        : const SizedBox(),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
-          child: Builder(
-            builder: (context) {
-              final diasConClases = obtenerDiasConClasesDisponibles();
-              if (isLoading) {
-                return const SizedBox();
-              } else if (diasConClases.isEmpty) {
-                return _AvisoDeClasesDisponibles(
-                  colors: colors,
-                  color: color,
-                  text: "No hay clases disponibles esta semana.",
-                );
-              } else {
-                return _AvisoDeClasesDisponibles(
-                  colors: colors,
-                  color: color,
-                  text:
-                      "Hay clases disponibles el ${diasConClases.join(', ')}.",
-                );
-              }
-            },
-          ),
-        ),
-        const SizedBox(
-          height: 30,
-        )
-      ],
-    ),
-  );
-}
-
-Widget construirBotonHorario(ClaseModels clase) {
-  final partesFecha = clase.fecha.split('/');
-  final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-  final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
-  final estaLlena = clase.mails.length >= 5;
-  final screenWidth = MediaQuery.of(context).size.width;
-   final user = Supabase.instance.client.auth.currentUser;
-
-  return Column(
-    children: [
-      SizedBox(
-        width: screenWidth * 0.7,
-        height: screenWidth * 0.12,
-        child: ElevatedButton(
-          onPressed: ((estaLlena ||
-                  Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) ||
-                  clase.lugaresDisponibles == 0) && user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b")
-              ? null
-              : () { if (user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b") {
-                mostrarConfirmacion(context, clase);
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
+            child: Builder(
+              builder: (context) {
+                final diasConClases = obtenerDiasConClasesDisponibles();
+                if (isLoading) {
+                  return const SizedBox();
+                } else if (diasConClases.isEmpty) {
+                  return _AvisoDeClasesDisponibles(
+                    colors: colors,
+                    color: color,
+                    text: "No hay clases disponibles esta semana.",
+                  );
                 } else {
-                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
-          ),
-          duration: const Duration(seconds: 5),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(10),
-        ),
-      );
-              }
+                  return _AvisoDeClasesDisponibles(
+                    colors: colors,
+                    color: color,
+                    text:
+                        "Hay clases disponibles el ${diasConClases.join(', ')}.",
+                  );
+                }
               },
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(
-              estaLlena ||
-              Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) ||
-              clase.lugaresDisponibles == 0
-                  ? Colors.grey
-                  : Colors.green,
-            ),
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(screenWidth * 0.03)),
             ),
           ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Text(
-                diaYHora,
-                style: const TextStyle(fontSize: 11, color: Colors.white),
+          const SizedBox(
+            height: 30,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget construirBotonHorario(ClaseModels clase) {
+    final partesFecha = clase.fecha.split('/');
+    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
+    final estaLlena = clase.mails.length >= 5;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final user = Supabase.instance.client.auth.currentUser;
+
+    return Column(
+      children: [
+        SizedBox(
+          width: screenWidth * 0.7,
+          height: screenWidth * 0.12,
+          child: ElevatedButton(
+            onPressed: ((estaLlena ||
+                        Calcular24hs()
+                            .esMenorA0Horas(clase.fecha, clase.hora) ||
+                        clase.lugaresDisponibles == 0) &&
+                    user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b")
+                ? null
+                : () {
+                    if (user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b") {
+                      mostrarConfirmacion(context, clase);
+                    } else {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+                          ),
+                          duration: const Duration(seconds: 5),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(10),
+                        ),
+                      );
+                    }
+                  },
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(
+                estaLlena ||
+                        Calcular24hs()
+                            .esMenorA0Horas(clase.fecha, clase.hora) ||
+                        clase.lugaresDisponibles == 0
+                    ? Colors.grey
+                    : Colors.green,
               ),
-            ],
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(screenWidth * 0.03)),
+              ),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(
+                  diaYHora,
+                  style: const TextStyle(fontSize: 11, color: Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      const SizedBox(height: 18),
-    ],
-  );
-}
+        const SizedBox(height: 18),
+      ],
+    );
+  }
 }
 
 class _AvisoDeClasesDisponibles extends StatelessWidget {
@@ -455,7 +476,8 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      padding: EdgeInsets.all(screenWidth * 0.04), // 4% del ancho para el padding
+      padding:
+          EdgeInsets.all(screenWidth * 0.04), // 4% del ancho para el padding
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -465,13 +487,16 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(screenWidth * 0.03), // 3% del ancho para el borde redondeado
+        borderRadius: BorderRadius.circular(
+            screenWidth * 0.03), // 3% del ancho para el borde redondeado
         boxShadow: [
           BoxShadow(
             color: colors.primary.withOpacity(0.55),
-            spreadRadius: screenWidth * 0.005, // 0.5% del ancho para spreadRadius
+            spreadRadius:
+                screenWidth * 0.005, // 0.5% del ancho para spreadRadius
             blurRadius: screenWidth * 0.01, // 1% del ancho para blurRadius
-            offset: Offset(0, screenHeight * 0.005), // 0.5% del alto para offset
+            offset:
+                Offset(0, screenHeight * 0.005), // 0.5% del alto para offset
           ),
         ],
       ),
@@ -487,7 +512,8 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                fontSize: screenWidth * 0.04, // 4% del ancho para el tamaño de fuente
+                fontSize:
+                    screenWidth * 0.04, // 4% del ancho para el tamaño de fuente
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -498,7 +524,6 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     );
   }
 }
-
 
 class _SemanaNavigation extends StatelessWidget {
   final String semanaSeleccionada;
@@ -519,7 +544,8 @@ class _SemanaNavigation extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.04, // 4% del ancho para el padding horizontal
+        horizontal:
+            screenWidth * 0.04, // 4% del ancho para el padding horizontal
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -534,7 +560,8 @@ class _SemanaNavigation extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.15),
                   blurRadius: screenWidth * 0.01, // 1% del ancho para el blur
-                  offset: Offset(0, screenHeight * 0.005), // 0.5% del alto para el offset
+                  offset: Offset(
+                      0, screenHeight * 0.005), // 0.5% del alto para el offset
                 ),
               ],
             ),
@@ -542,7 +569,8 @@ class _SemanaNavigation extends StatelessWidget {
               onPressed: cambiarSemanaAtras,
               icon: Icon(
                 Icons.arrow_left,
-                size: screenWidth * 0.07, // 7% del ancho para el tamaño del ícono
+                size:
+                    screenWidth * 0.07, // 7% del ancho para el tamaño del ícono
               ),
               color: Colors.black,
             ),
@@ -576,7 +604,6 @@ class _SemanaNavigation extends StatelessWidget {
     );
   }
 }
-
 
 // Widget para la selección de días
 
@@ -635,22 +662,28 @@ class _DiaSelection extends StatelessWidget {
                   onPressed: () => seleccionarDia(diaMesAnio),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(screenWidth * 0.03), // 2% del ancho como radio
+                      borderRadius: BorderRadius.circular(
+                          screenWidth * 0.03), // 2% del ancho como radio
                     ),
                   ),
                   child: Text(
                     diaFecha,
-                    style: TextStyle(fontSize: screenWidth * 0.033), // 4% del ancho para el tamaño de fuente
+                    style: TextStyle(
+                        fontSize: screenWidth *
+                            0.033), // 4% del ancho para el tamaño de fuente
                   ),
                 ),
               ),
-              const SizedBox(height: 20,)
+              const SizedBox(
+                height: 20,
+              )
             ],
           );
         } else {
-          return const SizedBox.shrink(); // Si no está en el mes actual, no mostrar nada
+          return const SizedBox
+              .shrink(); // Si no está en el mes actual, no mostrar nada
         }
-     },
-);
-}
+      },
+    );
+  }
 }
