@@ -59,7 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -73,51 +72,51 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                'Inicia sesión : ',
-                style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: color.primary,
+                  'Inicia sesión : ',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: color.primary,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-                              ),
               ],
             ),
-                          const SizedBox(height: 40),
+            const SizedBox(height: 40),
             TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-            labelText: 'Correo Electrónico',
-            border: const OutlineInputBorder(),
-            errorText: mailError.isEmpty ? null : mailError,
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          onChanged: (value) {
-            setState(() {
-              mailError = !emailRegex.hasMatch(emailController.text.trim())
-                  ? 'El correo electrónico es invalido.'
-                  : '';
-            });
-                          },
-                        ),
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'Correo Electrónico',
+                border: const OutlineInputBorder(),
+                errorText: mailError.isEmpty ? null : mailError,
+              ),
+              keyboardType: TextInputType.emailAddress,
+              onChanged: (value) {
+                setState(() {
+                  mailError = !emailRegex.hasMatch(emailController.text.trim())
+                      ? 'El correo electrónico es invalido.'
+                      : '';
+                });
+              },
+            ),
             const SizedBox(height: 8),
             const SizedBox(height: 16),
-                        TextField(
-                          controller: passwordController,
-                          decoration: InputDecoration(
-            labelText: 'Contraseña',
-            border: const OutlineInputBorder(),
-            errorText: passwordError.isEmpty ? null : passwordError,
-                          ),
-                          obscureText: true,
-                          onChanged: (value) {
-            setState(() {
-              passwordError = value.length < 6
-                  ? 'La contraseña debe tener al menos 6 caracteres.'
-                  : '';
-            });
-                          },
-                        ),
+            TextField(
+              controller: passwordController,
+              decoration: InputDecoration(
+                labelText: 'Contraseña',
+                border: const OutlineInputBorder(),
+                errorText: passwordError.isEmpty ? null : passwordError,
+              ),
+              obscureText: true,
+              onChanged: (value) {
+                setState(() {
+                  passwordError = value.length < 6
+                      ? 'La contraseña debe tener al menos 6 caracteres.'
+                      : '';
+                });
+              },
+            ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
@@ -137,8 +136,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (password.length < 6) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content:
-                          Text('La contraseña debe tener al menos 6 caracteres'),
+                      content: Text(
+                          'La contraseña debe tener al menos 6 caracteres'),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -167,8 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } on AuthException catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content:
-                          Text('Error de inicio de sesión: ${e.message}'),
+                      content: Text('Error de inicio de sesión: ${e.message}'),
                       backgroundColor: Colors.red,
                     ),
                   );

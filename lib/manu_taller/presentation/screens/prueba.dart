@@ -26,7 +26,7 @@ class Prueba extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()  {
+        onPressed: () {
           context.push("/homemanu");
         },
         child: const Icon(Icons.print),

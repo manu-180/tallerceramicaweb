@@ -5,8 +5,7 @@ import 'package:taller_ceramica/ivanna_taller/presentation/screens/gestion_clase
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/prueba.dart';
 
 final appRouter = GoRouter(initialLocation: "/homeivanna", routes: [
-  GoRoute(
-      path: "/homeivanna", builder: (context, state) => const HomeScreen()),
+  GoRoute(path: "/homeivanna", builder: (context, state) => const HomeScreen()),
   GoRoute(
       path: "/turnosivanna",
       // name: "turnos",
@@ -43,8 +42,7 @@ final appRouter = GoRouter(initialLocation: "/homeivanna", routes: [
       path: "/gestionclasesivanna",
       // name: "gestionclases",
       builder: (context, state) => const GestionDeClasesScreen()),
-  GoRoute(
-      path: "/homemanu", builder: (context, state) => const HomeScreen()),
+  GoRoute(path: "/homemanu", builder: (context, state) => const HomeScreen()),
   GoRoute(
       path: "/turnosmanu",
       // name: "turnos",
@@ -81,6 +79,4 @@ final appRouter = GoRouter(initialLocation: "/homeivanna", routes: [
       path: "/gestionclasesmanu",
       // name: "gestionclases",
       builder: (context, state) => const GestionDeClasesScreen()),
-  
-
 ]);

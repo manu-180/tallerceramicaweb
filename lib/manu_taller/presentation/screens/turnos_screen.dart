@@ -286,8 +286,8 @@ class _TurnosScreenState extends State<TurnosScreen> {
                   flex: 2,
                   child: isLoading
                       ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
                             children: [
                               const SizedBox(height: 20),
                               ElevatedButton(
@@ -299,10 +299,11 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                 ),
                                 child: const Center(
                                     child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                        ))),
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton(
@@ -314,10 +315,11 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                 ),
                                 child: const Center(
                                     child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                        ))),
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton(
@@ -329,10 +331,11 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                 ),
                                 child: const Center(
                                     child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                        ))),
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton(
@@ -344,10 +347,11 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                 ),
                                 child: const Center(
                                     child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                        ))),
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton(
@@ -359,15 +363,15 @@ class _TurnosScreenState extends State<TurnosScreen> {
                                 ),
                                 child: const Center(
                                     child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                        ))),
                               ),
-                              
                             ],
                           ),
-                      )
+                        )
                       : _DiaSelection(
                           diasUnicos: diasUnicos,
                           seleccionarDia: seleccionarDia,
@@ -448,8 +452,8 @@ class _TurnosScreenState extends State<TurnosScreen> {
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
               estaLlena ||
-              Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) ||
-              clase.lugaresDisponibles == 0
+                      Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) ||
+                      clase.lugaresDisponibles == 0
                   ? Colors.grey
                   : Colors.green,
             ),

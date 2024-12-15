@@ -195,7 +195,10 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
           .where((clase) => clase.mails.contains(fullname))
           .toList();
     });
-    await RemoverUsuario(Supabase.instance.client).removerUsuarioDeClase(claseId, fullname, false);
+    await RemoverUsuario(Supabase.instance.client)
+        .removerUsuarioDeClase(claseId, fullname, false);
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

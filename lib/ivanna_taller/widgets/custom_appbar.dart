@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
-  final Size preferredSize; // Tamaño del AppBar
+  final Size preferredSize;
 
   const CustomAppBar({super.key}) : preferredSize = const Size.fromHeight(70.0);
 
@@ -26,9 +26,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           .map((event) => event.session?.user),
       builder: (context, snapshot) {
         final user = snapshot.data;
-        final userId = user?.id; // Obtiene el id del usuario actual
+        final userId = user?.id;
 
-        // Lista de botones visibles para usuarios con id == 14 o 31
         final adminRoutes = [
           {'value': '/turnosivanna', 'label': 'Clases'},
           {'value': '/misclasesivanna', 'label': 'Mis clases'},
@@ -39,14 +38,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
           {'value': '/pruebaivanna', 'label': 'prueba'},
         ];
 
-        // Lista de botones visibles para otros usuarios
         final userRoutes = [
           {'value': '/turnosivanna', 'label': 'Clases'},
           {'value': '/misclasesivanna', 'label': 'Mis clases'},
           {'value': '/configuracionivanna', 'label': 'Configuración'},
         ];
 
-        // Determina qué lista de botones mostrar
         final menuItems = (userId == "c1b53dba-88d6-4aea-bede-603e3d9d7ff8" ||
                 userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
             ? adminRoutes
@@ -68,7 +65,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     Text(
                       'Taller de',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: size.width * 0.045, // Tamaño relativo
                         fontWeight: FontWeight.bold,
                         color: color.surface,
                       ),
@@ -76,7 +73,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     Text(
                       'Cerámica',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: size.width * 0.045, // Tamaño relativo
                         fontWeight: FontWeight.bold,
                         color: color.surface,
                       ),
@@ -84,10 +81,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: size.width * 0.04),
               PopupMenuButton<String>(
                 onSelected: (value) {
-                  context.push(value); 
+                  context.push(value);
                 },
                 itemBuilder: (BuildContext context) => menuItems
                     .map((route) => PopupMenuItem(
@@ -111,7 +108,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     _isMenuOpen = false;
                   });
                 },
-                offset: const Offset(-20, 50),
+                offset: Offset(-size.width * 0.05, size.height * 0.07),
               ),
             ],
           ),
@@ -121,35 +118,29 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        width: size.width * 0.25,
-                        height: size.height * 0.05,
+                        width: size.width * 0.23,
+                        height: size.height * 0.044,
                         child: ElevatedButton(
                           onPressed: () {
                             context.push('/crear-usuarioivanna');
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.all(3.0),
-                            child: Text(
-                              'Crear usuario',
-                              style: TextStyle(fontSize: 13),
-                            ),
+                          child: Text(
+                            'Crear',
+                            style: TextStyle(fontSize: size.width * 0.032),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: size.width * 0.02),
                       SizedBox(
-                        width: size.width * 0.25,
-                        height: size.height * 0.05,
+                        width: size.width * 0.23,
+                        height: size.height * 0.044,
                         child: ElevatedButton(
                           onPressed: () {
                             context.push('/iniciar-sesionivanna');
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.all(3.0),
-                            child: Text(
-                              'Iniciar sesión',
-                              style: TextStyle(fontSize: 12),
-                            ),
+                          child: Text(
+                            'Iniciar',
+                            style: TextStyle(fontSize: size.width * 0.032),
                           ),
                         ),
                       ),
@@ -159,8 +150,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        width: size.width * 0.35,
-                        height: size.height * 0.05,
+                        width: size.width * 0.34,
+                        height: size.height * 0.044,
                         child: ElevatedButton(
                           onPressed: () async {
                             await Supabase.instance.client.auth.signOut();
@@ -168,14 +159,17 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.remove('session');
 
-                            context.push('/');
+                            context.push('/homeivanna');
                           },
-                          child: const Text('Cerrar sesión'),
+                          child: Text(
+                            'Cerrar sesión',
+                            style: TextStyle(fontSize: size.width * 0.034),
+                          ),
                         ),
                       ),
                     ],
                   ),
-            const SizedBox(width: 10),
+            SizedBox(width: size.width * 0.032),
           ],
         );
       },

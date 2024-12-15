@@ -8,6 +8,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme;
     final themeColor = Theme.of(context).primaryColor;
     final user = Supabase.instance.client.auth.currentUser;
     final fullName = user?.userMetadata?['fullname'] ?? '';
@@ -20,15 +21,18 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '¡Bienvenido Manu!',
-              style: Theme.of(context).textTheme.headlineLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-             BoxText(text: user != null?
-            "¡Hola $firstName y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
-            :"¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"),
+            const SizedBox(height: 10),
+            Text('¡Bienvenido a taller de ceramica ricardo rojas!',
+                style: TextStyle(
+                  fontSize: 33,
+                  fontWeight: FontWeight.bold,
+                  color: color.primary,
+                )),
+            const SizedBox(height: 30),
+            BoxText(
+                text: user != null
+                    ? "¡Hola $firstName y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
+                    : "¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"),
             const SizedBox(height: 20),
             Center(
               child: ClipRRect(

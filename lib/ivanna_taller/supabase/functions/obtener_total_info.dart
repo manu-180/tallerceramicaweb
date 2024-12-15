@@ -14,4 +14,3 @@ class ObtenerTotalInfo {
         data.map((map) => UsuarioModels.fromMap(map)));
   }
 }
-

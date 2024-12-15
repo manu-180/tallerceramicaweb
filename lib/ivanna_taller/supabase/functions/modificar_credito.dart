@@ -2,7 +2,6 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_alert
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/main.dart';
 
-
 class ModificarCredito {
   Future<bool> agregarCreditoUsuario(String user) async {
     final data = await ObtenerTotalInfo().obtenerInfoUsuarios();

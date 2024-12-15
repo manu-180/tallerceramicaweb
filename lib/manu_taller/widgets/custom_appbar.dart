@@ -87,7 +87,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               const SizedBox(width: 16),
               PopupMenuButton<String>(
                 onSelected: (value) {
-                  context.push(value); 
+                  context.push(value);
                 },
                 itemBuilder: (BuildContext context) => menuItems
                     .map((route) => PopupMenuItem(

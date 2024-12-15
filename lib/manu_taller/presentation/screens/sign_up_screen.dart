@@ -18,7 +18,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
   String passwordError = '';
@@ -38,7 +39,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -54,17 +54,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                        'Crea tu usuario y contraseña : ',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          color: color.primary,
-                        ),
-                        textAlign: TextAlign.center,
+                      'Crea tu usuario y contraseña : ',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                        color: color.primary,
                       ),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
-                  const SizedBox(height: 40),
+                const SizedBox(height: 40),
                 TextField(
                   controller: fullnameController,
                   decoration: const InputDecoration(
@@ -84,9 +84,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
                     setState(() {
-                      mailError = !emailRegex.hasMatch(emailController.text.trim())
-                          ? 'El correo electrónico es invalido.'
-                          : '';
+                      mailError =
+                          !emailRegex.hasMatch(emailController.text.trim())
+                              ? 'El correo electrónico es invalido.'
+                              : '';
                     });
                   },
                 ),
@@ -113,7 +114,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     labelText: 'Confirmar Contraseña',
                     border: const OutlineInputBorder(),
-                    errorText: confirmPasswordError.isEmpty ? null : confirmPasswordError,
+                    errorText: confirmPasswordError.isEmpty
+                        ? null
+                        : confirmPasswordError,
                   ),
                   obscureText: true,
                   onChanged: (value) {
@@ -130,9 +133,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     final fullname = fullnameController.text.trim();
                     final email = emailController.text.trim();
                     final password = passwordController.text.trim();
-                    final confirmPassword = confirmPasswordController.text.trim();
+                    final confirmPassword =
+                        confirmPasswordController.text.trim();
 
-                    if (fullname.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+                    if (fullname.isEmpty ||
+                        email.isEmpty ||
+                        password.isEmpty ||
+                        confirmPassword.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(

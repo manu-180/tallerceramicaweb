@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/agregar_usuario.dart';
@@ -237,8 +235,9 @@ class _TurnosScreenState extends State<TurnosScreen> {
     final diasConClases = <String>{};
     horariosPorDia.forEach((dia, clases) {
       if (clases.any((clase) =>
-          clase.mails.length < 5 &&
-          !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora))) {
+          clase.mails.length < 5 
+          && !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)
+          && clase.lugaresDisponibles > 0)) {
         final diaSolo =
             dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
         diasConClases.add(diaSolo);
@@ -249,202 +248,166 @@ class _TurnosScreenState extends State<TurnosScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryColor;
-    final colors = Theme.of(context).colorScheme;
+Widget build(BuildContext context) {
+  final color = Theme.of(context).primaryColor;
+  final colors = Theme.of(context).colorScheme;
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+  
+  // Relativo a la pantalla
+  double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
+  double buttonWidth = screenWidth * 0.7;  // 70% del ancho de la pantalla
+  double fontSize = screenWidth * 0.04;    // 4% del ancho de la pantalla
 
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+  return Scaffold(
+    appBar: const CustomAppBar(),
+    body: Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(paddingSize, 20, paddingSize, 0),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.20),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: fontSize),
             ),
           ),
-          const SizedBox(height: 30),
-          _SemanaNavigation(
-            semanaSeleccionada: semanaSeleccionada,
-            cambiarSemanaAdelante: cambiarSemanaAdelante,
-            cambiarSemanaAtras: cambiarSemanaAtras,
-          ),
-          const SizedBox(height: 15),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: isLoading
-                      ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: const Center(
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
+        ),
+        const SizedBox(height: 30),
+        _SemanaNavigation(
+          semanaSeleccionada: semanaSeleccionada,
+          cambiarSemanaAdelante: cambiarSemanaAdelante,
+          cambiarSemanaAtras: cambiarSemanaAtras,
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: isLoading
+                    ? Column(
+                      children: List.generate(5, (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: SizedBox(
+                          height: buttonWidth * 0.166,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: const Center(
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
+                            ),
+                            child: const Center(
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 3),
                               ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: const Center(
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
-                              ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: const Center(
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
-                              ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: const Center(
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 3,)
-                                      )),
-                              ),
-                              
-                            ],
+                            ),
                           ),
-                      )
-                      : _DiaSelection(
-                          diasUnicos: diasUnicos,
-                          seleccionarDia: seleccionarDia,
-                          fechasDisponibles: fechasDisponibles,
                         ),
+                      )),
+                    )
+                    : _DiaSelection(
+                        diasUnicos: diasUnicos,
+                        seleccionarDia: seleccionarDia,
+                        fechasDisponibles: fechasDisponibles,
+                      ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: EdgeInsets.only(left: paddingSize * 2, right: paddingSize),
+                  child: diaSeleccionado != null
+                      ? isLoading
+                          ? const SizedBox()
+                          : ListView.builder(
+                              itemCount:
+                                  horariosPorDia[diaSeleccionado]?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final clase =
+                                    horariosPorDia[diaSeleccionado]![index];
+                                return construirBotonHorario(clase);
+                              },
+                            )
+                      : const SizedBox(),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 10),
-                    child: diaSeleccionado != null
-                        ? isLoading
-                            ? const SizedBox()
-                            : ListView.builder(
-                                itemCount:
-                                    horariosPorDia[diaSeleccionado]?.length ??
-                                        0,
-                                itemBuilder: (context, index) {
-                                  final clase =
-                                      horariosPorDia[diaSeleccionado]![index];
-                                  return construirBotonHorario(clase);
-                                },
-                              )
-                        : const SizedBox(),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Builder(
-              builder: (context) {
-                final diasConClases = obtenerDiasConClasesDisponibles();
-                if (isLoading) {
-                  return const SizedBox();
-                } else if (diasConClases.isEmpty) {
-                  return _AvisoDeClasesDisponibles(
-                    colors: colors,
-                    color: color,
-                    text: "No hay clases disponibles esta semana.",
-                  );
-                } else {
-                  return _AvisoDeClasesDisponibles(
-                    colors: colors,
-                    color: color,
-                    text:
-                        "Hay clases disponibles el ${diasConClases.join(', ')}.",
-                  );
-                }
-              },
-            ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: paddingSize, vertical: 20),
+          child: Builder(
+            builder: (context) {
+              final diasConClases = obtenerDiasConClasesDisponibles();
+              if (isLoading) {
+                return const SizedBox();
+              } else if (diasConClases.isEmpty) {
+                return _AvisoDeClasesDisponibles(
+                  colors: colors,
+                  color: color,
+                  text: "No hay clases disponibles esta semana.",
+                );
+              } else {
+                return _AvisoDeClasesDisponibles(
+                  colors: colors,
+                  color: color,
+                  text:
+                      "Hay clases disponibles el ${diasConClases.join(', ')}.",
+                );
+              }
+            },
           ),
-          const SizedBox(
-            height: 30,
-          )
-        ],
-      ),
-    );
-  }
+        ),
+        const SizedBox(
+          height: 30,
+        )
+      ],
+    ),
+  );
+}
 
-  Widget construirBotonHorario(ClaseModels clase) {
-    final partesFecha = clase.fecha.split('/');
-    final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-    final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
-    final estaLlena = clase.mails.length >= 5;
+Widget construirBotonHorario(ClaseModels clase) {
+  final partesFecha = clase.fecha.split('/');
+  final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
+  final diaYHora = '${clase.dia} $diaMes - ${clase.hora}';
+  final estaLlena = clase.mails.length >= 5;
+  final screenWidth = MediaQuery.of(context).size.width;
+   final user = Supabase.instance.client.auth.currentUser;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.7,
+  return Column(
+    children: [
+      SizedBox(
+        width: screenWidth * 0.7,
+        height: screenWidth * 0.12,
         child: ElevatedButton(
-          onPressed: (estaLlena ||
+          onPressed: ((estaLlena ||
                   Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) ||
-                  clase.lugaresDisponibles == 0)
+                  clase.lugaresDisponibles == 0) && user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b")
               ? null
-              : () => mostrarConfirmacion(context, clase),
+              : () { if (user?.id != "939d2e1a-13b3-4af0-be54-1a0205581f3b") {
+                mostrarConfirmacion(context, clase);
+                } else {
+                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Los alumnos de esta clase son: ${clase.mails.join(', ')}",
+          ),
+          duration: const Duration(seconds: 5),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(10),
+        ),
+      );
+              }
+              },
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
               estaLlena ||
@@ -454,7 +417,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                   : Colors.green,
             ),
             shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(screenWidth * 0.03)),
             ),
           ),
           child: Stack(
@@ -468,8 +431,10 @@ class _TurnosScreenState extends State<TurnosScreen> {
           ),
         ),
       ),
-    );
-  }
+      const SizedBox(height: 18),
+    ],
+  );
+}
 }
 
 class _AvisoDeClasesDisponibles extends StatelessWidget {
@@ -485,21 +450,28 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Obtener dimensiones de la pantalla
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(screenWidth * 0.04), // 4% del ancho para el padding
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [colors.secondaryContainer, colors.primary.withOpacity(0.6)],
+          colors: [
+            colors.secondaryContainer,
+            colors.primary.withOpacity(0.6),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(screenWidth * 0.03), // 3% del ancho para el borde redondeado
         boxShadow: [
           BoxShadow(
             color: colors.primary.withOpacity(0.55),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 2),
+            spreadRadius: screenWidth * 0.005, // 0.5% del ancho para spreadRadius
+            blurRadius: screenWidth * 0.01, // 1% del ancho para blurRadius
+            offset: Offset(0, screenHeight * 0.005), // 0.5% del alto para offset
           ),
         ],
       ),
@@ -508,14 +480,14 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
           Icon(
             Icons.info,
             color: color,
-            size: 32,
+            size: screenWidth * 0.08, // 8% del ancho para el tamaño del ícono
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: screenWidth * 0.03), // 3% del ancho para el espaciado
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: screenWidth * 0.04, // 4% del ancho para el tamaño de fuente
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -527,7 +499,7 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
   }
 }
 
-// Widget para la navegación de semanas
+
 class _SemanaNavigation extends StatelessWidget {
   final String semanaSeleccionada;
   final VoidCallback cambiarSemanaAdelante;
@@ -541,54 +513,73 @@ class _SemanaNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Dimensiones de la pantalla
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey.shade200,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 1,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                onPressed: cambiarSemanaAtras,
-                icon: const Icon(Icons.arrow_left, size: 28),
-                color: Colors.black,
-              ),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.04, // 4% del ancho para el padding horizontal
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: screenWidth * 0.12, // 12% del ancho de la pantalla
+            height: screenWidth * 0.12, // 12% del ancho para que sea circular
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.shade200,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: screenWidth * 0.01, // 1% del ancho para el blur
+                  offset: Offset(0, screenHeight * 0.005), // 0.5% del alto para el offset
+                ),
+              ],
             ),
-            const SizedBox(width: 45),
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey.shade200,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 1,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+            child: IconButton(
+              onPressed: cambiarSemanaAtras,
+              icon: Icon(
+                Icons.arrow_left,
+                size: screenWidth * 0.07, // 7% del ancho para el tamaño del ícono
               ),
-              child: IconButton(
-                onPressed: cambiarSemanaAdelante,
-                icon: const Icon(Icons.arrow_right, size: 28),
-                color: Colors.black, // Color del ícono (puedes personalizarlo)
-              ),
+              color: Colors.black,
             ),
-          ],
-        ));
+          ),
+          SizedBox(width: screenWidth * 0.12), // Espaciado entre los botones
+          Container(
+            width: screenWidth * 0.12,
+            height: screenWidth * 0.12,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.shade200,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: screenWidth * 0.01,
+                  offset: Offset(0, screenHeight * 0.005),
+                ),
+              ],
+            ),
+            child: IconButton(
+              onPressed: cambiarSemanaAdelante,
+              icon: Icon(
+                Icons.arrow_right,
+                size: screenWidth * 0.07,
+              ),
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
+
 // Widget para la selección de días
+
 class _DiaSelection extends StatelessWidget {
   final List<ClaseModels> diasUnicos;
   final Function(String) seleccionarDia;
@@ -603,6 +594,10 @@ class _DiaSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentMonth = DateTime.now().month;
+
+    // Obtener las dimensiones de la pantalla
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return ListView.builder(
       itemCount: diasUnicos.length,
@@ -631,26 +626,31 @@ class _DiaSelection extends StatelessWidget {
 
         // Si la fecha está en el mes actual, mostrar el botón
         if (filteredFechas.contains(clase.fecha)) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-            child: SizedBox(
-              child: ElevatedButton(
-                onPressed: () => seleccionarDia(diaMesAnio),
-                style: ElevatedButton.styleFrom(
-                  // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+          return Column(
+            children: [
+              SizedBox(
+                width: screenWidth * 0.8, // 80% del ancho de la pantalla
+                height: screenHeight * 0.053, // 6% del alto de la pantalla
+                child: ElevatedButton(
+                  onPressed: () => seleccionarDia(diaMesAnio),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(screenWidth * 0.03), // 2% del ancho como radio
+                    ),
+                  ),
+                  child: Text(
+                    diaFecha,
+                    style: TextStyle(fontSize: screenWidth * 0.033), // 4% del ancho para el tamaño de fuente
                   ),
                 ),
-                child: Text(diaFecha, style: const TextStyle(fontSize: 10)),
               ),
-            ),
+              const SizedBox(height: 20,)
+            ],
           );
         } else {
-          return const SizedBox
-              .shrink(); // Si no está en el mes actual, no mostrar nada
+          return const SizedBox.shrink(); // Si no está en el mes actual, no mostrar nada
         }
-      },
-    );
-  }
+     },
+);
+}
 }

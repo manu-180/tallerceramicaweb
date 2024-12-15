@@ -1,6 +1,5 @@
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 
-
 class ObtenerAlertTrigger {
   Future<int> alertTrigger(String user) async {
     final data = await ObtenerTotalInfo().obtenerInfoUsuarios();

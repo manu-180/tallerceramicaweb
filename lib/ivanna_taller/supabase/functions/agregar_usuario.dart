@@ -14,11 +14,8 @@ class AgregarUsuario {
       int idClase, String user, bool parametro, ClaseModels claseModels) async {
     final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
-    final data = await supabaseClient
-        .from('total')
-        .select()
-        .eq('id', idClase)
-        .single();
+    final data =
+        await supabaseClient.from('total').select().eq('id', idClase).single();
 
     final clase = ClaseModels.fromMap(data);
 
@@ -35,23 +32,19 @@ class AgregarUsuario {
             if (parametro) {
               EnviarWpp().sendWhatsAppMessage(
                   "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488'
-                  );
+                  'whatsapp:+5491134272488');
               EnviarWpp().sendWhatsAppMessage(
                   "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164'
-                  );
+                  'whatsapp:+5491132820164');
             }
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
               EnviarWpp().sendWhatsAppMessage(
                   "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488'
-                  );
+                  'whatsapp:+5491134272488');
               EnviarWpp().sendWhatsAppMessage(
                   "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164'
-                  );
+                  'whatsapp:+5491132820164');
             }
           }
         }
@@ -77,9 +70,7 @@ class AgregarUsuario {
     int count = 0;
 
     for (final item in data) {
-
       if (item.dia == clase.dia && item.hora == clase.hora) {
-
         if (!item.mails.contains(user) && count < 4) {
           item.mails.add(user);
           await supabaseClient
@@ -87,7 +78,7 @@ class AgregarUsuario {
               .update(item.toMap())
               .eq('id', item.id);
           ModificarLugarDisponible().removerLugarDisponible(item.id);
-          count++; 
+          count++;
         }
       }
     }
@@ -96,8 +87,7 @@ class AgregarUsuario {
     if (count == 4) {
       EnviarWpp().sendWhatsAppMessage(
           "Has insertado a $user a 4 clases el día ${clase.dia} a las ${clase.hora}",
-          'whatsapp:+5491134272488'
-          );
+          'whatsapp:+5491134272488');
     }
   }
 }

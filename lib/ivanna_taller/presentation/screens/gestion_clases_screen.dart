@@ -8,7 +8,6 @@ import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_clase.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/dia_con_fecha.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
