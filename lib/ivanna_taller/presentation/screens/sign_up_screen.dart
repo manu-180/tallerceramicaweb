@@ -140,6 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         email.isEmpty ||
                         password.isEmpty ||
                         confirmPassword.isEmpty) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -153,6 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
 
                     if (password.length < 6) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -166,6 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
 
                     if (password != confirmPassword) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -189,6 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fullname.toLowerCase());
 
                       if (emailExiste) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
@@ -202,6 +206,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
 
                       if (fullnameExiste) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
@@ -231,7 +236,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         'trigger_alert': 0,
                         'clases_canceladas': [],
                       });
-
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -242,6 +247,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       );
                     } on AuthException catch (e) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -252,6 +258,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       );
                     } catch (e) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(

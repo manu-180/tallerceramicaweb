@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/calcular_24hs.dart';
@@ -11,14 +12,14 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/remover_usuario
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
-class MisClasesScreen extends ConsumerStatefulWidget {
-  const MisClasesScreen({super.key});
+class MisClasesScreenManu extends ConsumerStatefulWidget {
+  const MisClasesScreenManu({super.key});
 
   @override
-  ConsumerState<MisClasesScreen> createState() => _MisClasesScreenState();
+  ConsumerState<MisClasesScreenManu> createState() => _MisClasesScreenState();
 }
 
-class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
+class _MisClasesScreenState extends ConsumerState<MisClasesScreenManu> {
   List<ClaseModels> clasesDelUsuario = [];
 
   void mostrarCancelacion(BuildContext context, ClaseModels clase) {
@@ -86,7 +87,7 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: user == null
           ? Center(
               child: Column(

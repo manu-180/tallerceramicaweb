@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreenManu extends StatelessWidget {
+  const HomeScreenManu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
     final firstName = fullName.split(' ').first;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

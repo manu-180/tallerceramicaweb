@@ -6,15 +6,16 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignUpScreenManu extends StatefulWidget {
+  const SignUpScreenManu({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignUpScreenManu> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreenManu> {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -42,7 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

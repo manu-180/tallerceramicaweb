@@ -4,18 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
-class Configuracion extends ConsumerStatefulWidget {
-  const Configuracion({super.key});
+class ConfiguracionManu extends ConsumerStatefulWidget {
+  const ConfiguracionManu({super.key});
 
   @override
   _ConfiguracionState createState() => _ConfiguracionState();
 }
 
-class _ConfiguracionState extends ConsumerState<Configuracion> {
+class _ConfiguracionState extends ConsumerState<ConfiguracionManu> {
   User? user;
 
   @override
@@ -34,7 +35,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: user == null
           ? Center(
               child: Column(

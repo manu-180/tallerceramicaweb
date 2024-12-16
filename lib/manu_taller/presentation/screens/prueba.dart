@@ -3,9 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class Prueba extends StatelessWidget {
-  const Prueba({super.key});
+class PruebaManu extends StatelessWidget {
+  const PruebaManu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class Prueba extends StatelessWidget {
         GenerarFechas().generarFechas(fechaInicio, fechaFin);
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +28,7 @@ class Prueba extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push("/homemanu");
+          context.push("/homeivanna");
         },
         child: const Icon(Icons.print),
       ),

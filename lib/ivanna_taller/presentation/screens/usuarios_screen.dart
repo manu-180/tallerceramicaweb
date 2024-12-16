@@ -38,7 +38,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
 
   Future<void> eliminarUsuario(int userId) async {
     await EliminarUsuario().eliminarDeBaseDatos(userId);
-
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Usuario eliminado exitosamente')),
     );
@@ -48,11 +48,13 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   Future<void> agregarCredito(String user) async {
     final resultado = await ModificarCredito().agregarCreditoUsuario(user);
     if (resultado) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Crédito agregado exitosamente')),
       );
       await cargarUsuarios();
     } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error al agregar el crédito')),
       );
@@ -62,11 +64,13 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   Future<void> removerCredito(String user) async {
     final resultado = await ModificarCredito().removerCreditoUsuario(user);
     if (resultado) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Crédito removido exitosamente')),
       );
       await cargarUsuarios();
     } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error al remover el crédito')),
       );
@@ -79,7 +83,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     cargarUsuarios();
   }
 
-  Future<void> mostrarDialogoConfirmacion({
+  Future<void> mostrarDialogoEliminar({
     required BuildContext context,
     required String titulo,
     required String contenido,
@@ -100,6 +104,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
               onPressed: () {
                 Navigator.of(context).pop(true); // Confirmar
               },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text('Sí'),
             ),
           ],
@@ -109,6 +114,82 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
 
     if (resultado == true) {
       onConfirmar();
+    }
+  }
+
+  Future<void> mostrarDialogoConContador({
+    required BuildContext context,
+    required String titulo,
+    required String contenido,
+    required Function(int cantidad)
+        onConfirmar, // Recibe la cantidad de créditos
+  }) async {
+    int contador = 1; // Comienza con 1 crédito
+
+    final resultado = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          // Para actualizar el estado del contador
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(titulo),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(contenido),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove, color: Colors.orange),
+                        onPressed: () {
+                          if (contador > 1) {
+                            setState(() {
+                              contador--;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        '$contador',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        icon: const Icon(Icons.add, color: Colors.green),
+                        onPressed: () {
+                          setState(() {
+                            contador++;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false), // Cancelar
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // Confirmar
+                  },
+                  child: const Text('Confirmar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (resultado == true) {
+      onConfirmar(contador); // Envía la cantidad seleccionada al callback
     }
   }
 
@@ -149,7 +230,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.delete,
                                       color: Colors.red),
-                                  onPressed: () => mostrarDialogoConfirmacion(
+                                  onPressed: () => mostrarDialogoEliminar(
                                     context: context,
                                     titulo: 'Eliminar Usuario',
                                     contenido:
@@ -161,25 +242,31 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.add,
                                       color: Colors.green),
-                                  onPressed: () => mostrarDialogoConfirmacion(
+                                  onPressed: () => mostrarDialogoConContador(
                                     context: context,
-                                    titulo: 'Agregar Crédito',
+                                    titulo: 'Agregar Créditos',
                                     contenido:
-                                        '¿Estás seguro de que deseas agregar un crédito a este usuario?',
-                                    onConfirmar: () =>
-                                        agregarCredito(usuario.fullname),
+                                        'Selecciona cuántos créditos quieres agregar:',
+                                    onConfirmar: (cantidad) async {
+                                      for (int i = 0; i < cantidad; i++) {
+                                        await agregarCredito(usuario.fullname);
+                                      }
+                                    },
                                   ),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.remove,
                                       color: Colors.orange),
-                                  onPressed: () => mostrarDialogoConfirmacion(
+                                  onPressed: () => mostrarDialogoConContador(
                                     context: context,
-                                    titulo: 'Remover Crédito',
+                                    titulo: 'Remover Créditos',
                                     contenido:
-                                        '¿Estás seguro de que deseas remover un crédito de este usuario?',
-                                    onConfirmar: () =>
-                                        removerCredito(usuario.fullname),
+                                        'Selecciona cuántos créditos quieres remover:',
+                                    onConfirmar: (cantidad) async {
+                                      for (int i = 0; i < cantidad; i++) {
+                                        await removerCredito(usuario.fullname);
+                                      }
+                                    },
                                   ),
                                 ),
                               ],

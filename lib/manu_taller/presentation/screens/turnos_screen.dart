@@ -13,15 +13,16 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_alert_t
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class TurnosScreen extends StatefulWidget {
-  const TurnosScreen({super.key});
+class TurnosScreenManu extends StatefulWidget {
+  const TurnosScreenManu({super.key});
 
   @override
-  State<TurnosScreen> createState() => _TurnosScreenState();
+  State<TurnosScreenManu> createState() => _TurnosScreenState();
 }
 
-class _TurnosScreenState extends State<TurnosScreen> {
+class _TurnosScreenState extends State<TurnosScreenManu> {
   List<String> fechasDisponibles = [];
   String semanaSeleccionada = 'semana1';
   String? diaSeleccionado;
@@ -254,7 +255,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: Column(
         children: [
           Padding(

@@ -10,15 +10,17 @@ import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/mostrar_dia_segun_fecha.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class GestionHorariosScreen extends StatefulWidget {
-  const GestionHorariosScreen({super.key});
+class GestionHorariosScreenManu extends StatefulWidget {
+  const GestionHorariosScreenManu({super.key});
 
   @override
-  State<GestionHorariosScreen> createState() => _GestionHorariosScreenState();
+  State<GestionHorariosScreenManu> createState() =>
+      _GestionHorariosScreenState();
 }
 
-class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
+class _GestionHorariosScreenState extends State<GestionHorariosScreenManu> {
   List<String> fechasDisponibles = [];
   String? fechaSeleccionada;
   List<ClaseModels> horariosDisponibles = [];
@@ -256,7 +258,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

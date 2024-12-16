@@ -169,6 +169,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                       RegExp(r'^\d{2}:\d{2}$').hasMatch(hora);
 
                   if (!horaFormatoValido) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
@@ -184,6 +185,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                     fechaBase =
                         DateFormat('dd/MM/yyyy').parse(fechaSeleccionada!);
                   } catch (e) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content:
@@ -210,6 +212,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                         .maybeSingle();
 
                     if (existingClass != null) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -234,7 +237,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
                       debugPrint('Error al insertar clase: $e');
                     }
                   }
-
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Clases agregadas con éxito.'),
@@ -397,6 +400,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
           backgroundColor: colors.secondaryContainer,
           onPressed: () {
             if (fechaSeleccionada == null) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(

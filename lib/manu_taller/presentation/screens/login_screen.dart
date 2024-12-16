@@ -5,15 +5,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:convert';
 
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginScreenManu extends StatefulWidget {
+  const LoginScreenManu({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreenManu> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FocusNode emailFocusNode = FocusNode();
@@ -62,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

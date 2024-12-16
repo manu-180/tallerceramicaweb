@@ -124,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 final password = passwordController.text.trim();
 
                 if (!emailRegex.hasMatch(email)) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('El correo no es válido'),
@@ -134,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
 
                 if (password.length < 6) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
@@ -164,6 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Navegar a la pantalla principal
                   context.push('/homeivanna');
                 } on AuthException catch (e) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Error de inicio de sesión: ${e.message}'),
@@ -171,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   );
                 } catch (e) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Ocurrió un error inesperado'),

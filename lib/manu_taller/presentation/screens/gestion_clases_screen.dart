@@ -14,15 +14,17 @@ import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart'
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 import 'package:intl/intl.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/mostrar_dia_segun_fecha.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class GestionDeClasesScreen extends StatefulWidget {
-  const GestionDeClasesScreen({super.key});
+class GestionDeClasesScreenManu extends StatefulWidget {
+  const GestionDeClasesScreenManu({super.key});
 
   @override
-  State<GestionDeClasesScreen> createState() => _GestionDeClasesScreenState();
+  State<GestionDeClasesScreenManu> createState() =>
+      _GestionDeClasesScreenState();
 }
 
-class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
+class _GestionDeClasesScreenState extends State<GestionDeClasesScreenManu> {
   List<String> fechasDisponibles = [];
   String? fechaSeleccionada;
   List<ClaseModels> clasesDisponibles = [];
@@ -287,7 +289,7 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: Column(
         children: [
           const Padding(

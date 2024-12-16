@@ -3,17 +3,18 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+class CustomAppBarManu extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize; // Tamaño del AppBar
 
-  const CustomAppBar({super.key}) : preferredSize = const Size.fromHeight(70.0);
+  const CustomAppBarManu({super.key})
+      : preferredSize = const Size.fromHeight(70.0);
 
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
 }
 
-class _CustomAppBarState extends State<CustomAppBar> {
+class _CustomAppBarState extends State<CustomAppBarManu> {
   bool _isMenuOpen = false;
 
   @override

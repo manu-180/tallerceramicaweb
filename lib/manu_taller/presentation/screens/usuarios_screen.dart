@@ -8,15 +8,16 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credi
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/manu_taller/widgets/custom_appbar.dart';
 
-class UsuariosScreen extends StatefulWidget {
-  const UsuariosScreen({super.key});
+class UsuariosScreenManu extends StatefulWidget {
+  const UsuariosScreenManu({super.key});
 
   @override
-  State<UsuariosScreen> createState() => _UsuariosScreenState();
+  State<UsuariosScreenManu> createState() => _UsuariosScreenState();
 }
 
-class _UsuariosScreenState extends State<UsuariosScreen> {
+class _UsuariosScreenState extends State<UsuariosScreenManu> {
   bool isLoading = true;
   List<UsuarioModels> usuarios = [];
 
@@ -115,7 +116,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBarManu(),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
