@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
@@ -127,6 +128,24 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                           ? const Icon(Icons.light_mode_outlined)
                           : const Icon(Icons.dark_mode_outlined),
                     ),
+                  ],
+                ),
+                ExpansionTile(
+                  title: const Text('Actualizar datos'),
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true, // Evita problemas de scroll
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Desactiva el scroll dentro del ExpansionTile
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                return ListTile(
+                  title: const Text("Cambiar contraseña"),
+                  onTap: () => context.push("/cambiarpassword"),
+                );
+                      },
+                    ),
+          
                   ],
                 ),
               ],

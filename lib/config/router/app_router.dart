@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
+import 'package:taller_ceramica/ivanna_taller/presentation/screens/cambiar_password.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/prueba.dart';
@@ -53,7 +54,13 @@ final appRouter = GoRouter(initialLocation: "/homeivanna", routes: [
       // name: "gestionclases",
       builder: (context, state) => const GestionDeClasesScreen()),
   GoRoute(
+    path: "/cambiarpassword",
+    // name: "gestionclases",
+    builder: (context, state) => const CambiarPassword()),
+      
+  GoRoute(
       path: "/homemanu", builder: (context, state) => const HomeScreenManu()),
+
   GoRoute(
       path: "/turnosmanu",
       // name: "turnos",

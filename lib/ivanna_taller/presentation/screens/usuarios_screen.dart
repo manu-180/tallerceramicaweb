@@ -6,7 +6,6 @@ import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_usuario.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
 class UsuariosScreen extends StatefulWidget {
