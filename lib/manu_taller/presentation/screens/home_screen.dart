@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '¡Bienvenido a Taller de Cerámica Ricardo Rojas!',
+              '¡Bienvenido Manu!',
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
             ),
