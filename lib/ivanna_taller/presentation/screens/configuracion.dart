@@ -33,6 +33,16 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     final List<Color> colors = ref.watch(listTheColors);
     final int selectedColor = ref.watch(themeNotifyProvider).selectedColor;
     final color = Theme.of(context).colorScheme;
+    final List<Map<String, String>> options = [
+      {
+        'title': 'Cambiar contraseña',
+        'route': '/cambiarpassword',
+      },
+      {
+        'title': 'Cambiar nombre de usuario',
+        'route': '/cambiarfullname',
+      },
+    ];
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -137,12 +147,13 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                       shrinkWrap: true, // Evita problemas de scroll
                       physics:
                           const NeverScrollableScrollPhysics(), // Desactiva el scroll dentro del ExpansionTile
-                      itemCount: 1,
+                      itemCount: options.length,
                       itemBuilder: (context, index) {
-                return ListTile(
-                  title: const Text("Cambiar contraseña"),
-                  onTap: () => context.push("/cambiarpassword"),
-                );
+                        final option = options[index];
+                        return ListTile(
+                          title: Text(option['title']!),
+                          onTap: () => context.push(option['route']!),
+                        );
                       },
                     ),
           

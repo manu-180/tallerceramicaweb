@@ -4,6 +4,7 @@ import 'package:taller_ceramica/ivanna_taller/presentation/screens/cambiar_passw
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/prueba.dart';
+import 'package:taller_ceramica/ivanna_taller/presentation/screens/update_name_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/manu_taller/presentation/screens/gestion_horarios_screen.dart';
@@ -47,16 +48,17 @@ final appRouter = GoRouter(initialLocation: "/homeivanna", routes: [
       builder: (context, state) => const SignUpScreen()),
   GoRoute(
       path: "/pruebaivanna",
-      // name: "prueba",
       builder: (context, state) => const Prueba()),
   GoRoute(
       path: "/gestionclasesivanna",
-      // name: "gestionclases",
       builder: (context, state) => const GestionDeClasesScreen()),
   GoRoute(
     path: "/cambiarpassword",
-    // name: "gestionclases",
     builder: (context, state) => const CambiarPassword()),
+  GoRoute(
+    path: "/cambiarfullname",
+    builder: (context, state) => const UpdateNameScreen()),
+  
       
   GoRoute(
       path: "/homemanu", builder: (context, state) => const HomeScreenManu()),

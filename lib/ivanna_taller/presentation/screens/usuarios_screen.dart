@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/models/usuario_models.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_de_bd.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_usuario.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
@@ -35,8 +36,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     }
   }
 
-  Future<void> eliminarUsuario(int userId) async {
+  Future<void> eliminarUsuario(int userId, String userUid) async {
     await EliminarUsuario().eliminarDeBaseDatos(userId);
+    await EliminarDeBD().deleteCurrentUser(userUid);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Usuario eliminado exitosamente')),
@@ -235,7 +237,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     contenido:
                                         '¿Estás seguro de que deseas eliminar a este usuario?',
                                     onConfirmar: () =>
-                                        eliminarUsuario(usuario.id),
+                                        eliminarUsuario(usuario.id, usuario.userUid),
                                   ),
                                 ),
                                 IconButton(

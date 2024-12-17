@@ -44,7 +44,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           {'value': '/configuracionivanna', 'label': 'Configuración'},
         ];
 
-        final menuItems = (userId == "c1b53dba-88d6-4aea-bede-603e3d9d7ff8" ||
+        final menuItems = (userId == "48041e8f-d895-4270-a330-48376278276b" ||
                 userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
             ? adminRoutes
             : userRoutes;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
+import 'package:taller_ceramica/ivanna_taller/utils/capitalize.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
@@ -25,17 +26,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String passwordError = '';
   String confirmPasswordError = '';
   String mailError = '';
-
-  String capitalize(String input) {
-    if (input.isEmpty) return input;
-
-    return input
-        .split(' ')
-        .map((word) => word.isEmpty
-            ? word
-            : word[0].toUpperCase() + word.substring(1).toLowerCase())
-        .join(' ');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,13 +212,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       final AuthResponse res = await supabase.auth.signUp(
                         email: email,
                         password: password,
-                        data: {'fullname': capitalize(fullname)},
+                        data: {'fullname': Capitalize().capitalize(fullname)},
                       );
 
                       await supabase.from('usuarios').insert({
                         'id': await GenerarId().generarIdUsuario(),
                         'usuario': email,
-                        'fullname': capitalize(fullname),
+                        'fullname': Capitalize().capitalize(fullname),
                         'user_uid': res.user?.id,
                         'sexo': "mujer",
                         'clases_disponibles': 0,
