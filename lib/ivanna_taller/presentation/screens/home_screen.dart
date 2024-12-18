@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/ivanna_taller/supabase/functions/is_mujer.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  @override
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
@@ -16,68 +18,84 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            Text(
-              '¡Bienvenido a taller de ceramica ricardo rojas!',
-              style: TextStyle(
-                fontSize: 33,
-                fontWeight: FontWeight.bold,
-                color: color.primary,
+      body: FutureBuilder<bool>(
+        future: IsMujer().mujer(fullName),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error al cargar los datos'));
+          } else {
+            final isMujer = snapshot.data ?? false;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    isMujer
+                        ? '¡Bienvenida a taller de ceramica ricardo rojas!'
+                        : '¡Bienvenido a taller de ceramica ricardo rojas!',
+                    style: TextStyle(
+                      fontSize: 33,
+                      fontWeight: FontWeight.bold,
+                      color: color.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  BoxText(
+                    text: user == null
+                        ? "¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!":
+                        isMujer?
+                        "¡Hola $firstName y bienvenida a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!":
+                        "¡Hola $firstName y bienvenido a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!",
+                  ),
+                  const SizedBox(height: 20),
+                  _buildLoadingImage(
+                    imagePath: 'assets/images/creando.png',
+                    height: 500,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    '¿Qué hacemos?',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: themeColor.withAlpha(50),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      'Aquí, en nuestro taller, creamos desde pequeñas piezas decorativas hasta grandes obras de arte, todas con un toque especial y un diseño único.',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildLoadingImage(
+                    imagePath: 'assets/images/bici.webp',
+                    height: 300,
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: themeColor.withAlpha(50),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      'Ofrecemos clases para todos los niveles, desde principiantes hasta expertos, donde podrás aprender las técnicas de modelado, esmaltado y cocción, explorando tus propias ideas y estilo.',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                ],
               ),
-            ),
-            const SizedBox(height: 30),
-            BoxText(
-              text: user != null
-                  ? "¡Hola $firstName y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
-                  : "¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!",
-            ),
-            const SizedBox(height: 20),
-            _buildLoadingImage(
-              imagePath: 'assets/images/creando.png',
-              height: 500,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              '¿Qué hacemos?',
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: themeColor.withAlpha(50),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'Aquí, en nuestro taller, creamos desde pequeñas piezas decorativas hasta grandes obras de arte, todas con un toque especial y un diseño único.',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            const SizedBox(height: 20),
-            _buildLoadingImage(
-              imagePath: 'assets/images/bici.webp',
-              height: 300,
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: themeColor.withAlpha(50),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'Ofrecemos clases para todos los niveles, desde principiantes hasta expertos, donde podrás aprender las técnicas de modelado, esmaltado y cocción, explorando tus propias ideas y estilo.',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            const SizedBox(height: 30),
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }
