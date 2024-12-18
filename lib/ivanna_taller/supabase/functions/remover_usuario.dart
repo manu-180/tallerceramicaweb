@@ -1,8 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
+import 'package:taller_ceramica/ivanna_taller/supabase/functions/calcular_24hs.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_lugar_disponible.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/ivanna_taller/utils/enviar_wpp.dart';
+import 'package:taller_ceramica/ivanna_taller/utils/utils_barril.dart';
 
 class RemoverUsuario {
   final SupabaseClient supabaseClient;
@@ -24,10 +25,14 @@ class RemoverUsuario {
           ModificarLugarDisponible().agregarLugarDisponible(idClase);
           if (!parametro) {
             EnviarWpp().sendWhatsAppMessage(
-                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}",
+                Calcular24hs().esMayorA24Horas(item.fecha, item.hora)?
+                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. Se genero un credito para recuperar la clase" :
+                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
                 'whatsapp:+5491134272488');
             EnviarWpp().sendWhatsAppMessage(
-                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}",
+              Calcular24hs().esMayorA24Horas(item.fecha, item.hora)?
+                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. ¡Se genero un credito para recuperar la clase!" :
+                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
                 'whatsapp:+5491132820164');
           }
           if (parametro) {

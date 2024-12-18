@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/agregar_usuario.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/calcular_24hs.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_clases_disponibles.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_alert_trigger.dart';
-import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_alert_trigger.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';

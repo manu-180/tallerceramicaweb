@@ -28,8 +28,8 @@ class Calcular24hs {
     // Calcular la diferencia entre la fecha de la clase y la fecha actual
     final Duration diferencia = fechaClase.difference(fechaActual);
 
-    // Verificar si la diferencia es mayor a 24 horas
-    return diferencia.inHours > 24;
+    // Verificar si la diferencia es mayor a 24 horas4
+    return diferencia.inHours > 23;
   }
 
   bool esMenorA0Horas(String fecha, String hora) {
