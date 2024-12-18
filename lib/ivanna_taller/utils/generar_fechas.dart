@@ -26,21 +26,9 @@ class GenerarFechas {
         }
       }
       // Avanzar al siguiente día
-      fechaActual = fechaActual.add(Duration(days: 1));
+      fechaActual = fechaActual.add(const Duration(days: 1));
     }
 
     return listaFechas;
-  }
-
-  void main() {
-    // Llamar a la función con las fechas deseadas
-    DateTime fechaInicio = DateTime(2024, 12, 2); // 2 de diciembre de 2024
-    DateTime fechaFin = DateTime(2025, 1, 3); // 3 de enero de 2025
-    List<String> resultado = generarFechas(fechaInicio, fechaFin);
-
-    // Imprimir el resultado
-    for (var fecha in resultado) {
-      print(fecha);
-    }
   }
 }

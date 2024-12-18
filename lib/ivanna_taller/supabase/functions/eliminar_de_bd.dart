@@ -2,13 +2,7 @@ import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 class EliminarDeBD {
-
-    
-
-  
-
   Future<void> deleteCurrentUser(userUid) async {
     await dotenv.load(fileName: ".env");
 
@@ -17,20 +11,13 @@ class EliminarDeBD {
       dotenv.env['SERVICE_ROLE_KEY'] ?? '',
     );
 
-    try {
-      // Obtén el usuario autenticado actual
+    // Obtén el usuario autenticado actual
 
-      if (userUid == null) {
-        throw Exception('No hay ningún usuario autenticado.');
-      }
-
-      // Elimina el usuario usando la API de administración
-      await supabase.auth.admin.deleteUser(userUid);
-
-      print('Usuario eliminado correctamente.');
-    } catch (e) {
-      print('Error al eliminar el usuario: $e');
+    if (userUid == null) {
+      throw Exception('No hay ningún usuario autenticado.');
     }
-  }
 
+    // Elimina el usuario usando la API de administración
+    await supabase.auth.admin.deleteUser(userUid);
+  }
 }

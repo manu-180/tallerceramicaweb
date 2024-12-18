@@ -418,38 +418,3 @@ class _GestionDeClasesScreenState extends State<GestionDeClasesScreen> {
     );
   }
 }
-
-class _DiaSeleccionado extends StatelessWidget {
-  const _DiaSeleccionado({
-    required this.text,
-    required this.colors,
-    required this.color,
-  });
-
-  final ColorScheme colors;
-  final Color color;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [colors.secondaryContainer, colors.primary.withOpacity(0.6)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Text(
-        text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text),
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-}

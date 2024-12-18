@@ -22,28 +22,24 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-            Text('¡Bienvenido a taller de ceramica ricardo rojas!',
-                style: TextStyle(
-                  fontSize: 33,
-                  fontWeight: FontWeight.bold,
-                  color: color.primary,
-                )),
+            Text(
+              '¡Bienvenido a taller de ceramica ricardo rojas!',
+              style: TextStyle(
+                fontSize: 33,
+                fontWeight: FontWeight.bold,
+                color: color.primary,
+              ),
+            ),
             const SizedBox(height: 30),
             BoxText(
-                text: user != null
-                    ? "¡Hola $firstName y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
-                    : "¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"),
+              text: user != null
+                  ? "¡Hola $firstName y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
+                  : "¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!",
+            ),
             const SizedBox(height: 20),
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/images/creando.png',
-                  height: 500,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
+            _buildLoadingImage(
+              imagePath: 'assets/images/creando.png',
+              height: 500,
             ),
             const SizedBox(height: 20),
             Text(
@@ -54,7 +50,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: themeColor.withOpacity(0.2),
+                color: themeColor.withAlpha(50),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -63,22 +59,15 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/images/bici.webp',
-                  height: 300,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
+            _buildLoadingImage(
+              imagePath: 'assets/images/bici.webp',
+              height: 300,
             ),
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: themeColor.withOpacity(0.20),
+                color: themeColor.withAlpha(50),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -91,5 +80,46 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildLoadingImage({
+    required String imagePath,
+    required double height,
+  }) {
+    return FutureBuilder(
+      future: _loadAssetImage(imagePath),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            height: height,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return SizedBox(
+            height: height,
+            child: const Center(
+              child: Text("Error al cargar la imagen"),
+            ),
+          );
+        } else {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              imagePath,
+              height: height,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> _loadAssetImage(String assetPath) async {
+    // Simula el tiempo de carga de la imagen. Esto se ajusta según el contexto.
+    await Future.delayed(const Duration(seconds: 1));
   }
 }

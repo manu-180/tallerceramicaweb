@@ -10,10 +10,10 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FocusNode emailFocusNode = FocusNode();
@@ -162,25 +162,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Convertir sessionData en una cadena JSON antes de guardarlo
                     await prefs.setString('session', jsonEncode(sessionData));
                   }
-
-                  // Navegar a la pantalla principal
-                  context.push('/homeivanna');
+                  if (context.mounted) {
+                    context.push('/homeivanna');
+                  }
+                  return;
                 } on AuthException catch (e) {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error de inicio de sesión: ${e.message}'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            Text('Error de inicio de sesión: ${e.message}'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                  return;
                 } catch (e) {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Ocurrió un error inesperado'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Ocurrió un error inesperado'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                  return;
                 }
               },
               child: const Text('Iniciar Sesión'),

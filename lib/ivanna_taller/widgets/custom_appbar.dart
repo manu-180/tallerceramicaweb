@@ -10,10 +10,10 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key}) : preferredSize = const Size.fromHeight(70.0);
 
   @override
-  _CustomAppBarState createState() => _CustomAppBarState();
+  CustomAppBarState createState() => CustomAppBarState();
 }
 
-class _CustomAppBarState extends State<CustomAppBar> {
+class CustomAppBarState extends State<CustomAppBar> {
   bool _isMenuOpen = false;
 
   @override
@@ -33,9 +33,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
           {'value': '/misclasesivanna', 'label': 'Mis clases'},
           {'value': '/gestionhorariosivanna', 'label': 'Gestión de horarios'},
           {'value': '/gestionclasesivanna', 'label': 'Gestión de clases'},
-          {'value': '/usuariosivanna', 'label': 'Usuarios'},
+          {'value': '/usuariosivanna', 'label': 'Alumnos/as'},
           {'value': '/configuracionivanna', 'label': 'Configuración'},
-          {'value': '/cambiarpassword', 'label': 'prueba'},
+          // {'value': '/cambiarpassword', 'label': 'prueba'},
         ];
 
         final userRoutes = [
@@ -44,7 +44,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           {'value': '/configuracionivanna', 'label': 'Configuración'},
         ];
 
-        final menuItems = (userId == "48041e8f-d895-4270-a330-48376278276b" ||
+        final menuItems = (userId == "0f2f1967-621a-4c32-baf3-f5ab78683ded" ||
                 userId == "939d2e1a-13b3-4af0-be54-1a0205581f3b")
             ? adminRoutes
             : userRoutes;
@@ -158,8 +158,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.remove('session');
-
-                            context.push('/homeivanna');
+                            if (context.mounted) {
+                              context.push('/homeivanna');
+                            }
+                            return;
                           },
                           child: Text(
                             'Cerrar sesión',

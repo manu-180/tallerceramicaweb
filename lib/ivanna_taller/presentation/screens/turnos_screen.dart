@@ -98,50 +98,67 @@ class _TurnosScreenState extends State<TurnosScreen> {
     // Verificar si el usuario está autenticado
     if (user == null) {
       mensaje = "Debes iniciar sesión para inscribirte a una clase";
-    } else if (clase.mails.contains(user.userMetadata?['fullname'])) {
-      mensaje = 'Revisa en "mis clases"';
-    } else {
-      // Verificar clases disponibles
-      // Verificar restricciones adicionales
-      final triggerAlert = await ObtenerAlertTrigger()
-          .alertTrigger(user.userMetadata?['fullname']);
-      final clasesDisponibles = await ObtenerClasesDisponibles()
-          .clasesDisponibles(user.userMetadata?['fullname']);
-
-      if (triggerAlert > 0 && clasesDisponibles == 0) {
-        mensaje =
-            'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
+      if (context.mounted) {
         _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-        return;
       }
-
-      if (clasesDisponibles == 0) {
-        mensaje =
-            "No tienes créditos disponibles para inscribirte a esta clase";
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-        return;
-      }
-
-      // Verificar si la clase está dentro del plazo permitido
-      if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
-        mensaje = 'No puedes inscribirte a esta clase';
-        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
-        return;
-      }
-
-      // Si no hay restricciones, configurar el mensaje de confirmación
-      mensaje =
-          '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
-      mostrarBotonAceptar = true;
+      return;
     }
 
-    // Mostrar el diálogo final
-    _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
+    if (clase.mails.contains(user.userMetadata?['fullname'])) {
+      mensaje = 'Revisa en "mis clases"';
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
+    }
+
+    // Operaciones asincrónicas
+    final triggerAlert = await ObtenerAlertTrigger()
+        .alertTrigger(user.userMetadata?['fullname']);
+    final clasesDisponibles = await ObtenerClasesDisponibles()
+        .clasesDisponibles(user.userMetadata?['fullname']);
+
+    if (!context.mounted) return; // Verificar si el widget sigue montado
+
+    if (triggerAlert > 0 && clasesDisponibles == 0) {
+      mensaje =
+          'No puedes recuperar una clase si cancelaste con menos de 24hs de anticipación';
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
+    }
+
+    if (clasesDisponibles == 0) {
+      mensaje = "No tienes créditos disponibles para inscribirte a esta clase";
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
+    }
+
+    if (Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora)) {
+      mensaje = 'No puedes inscribirte a esta clase';
+      if (context.mounted) {
+        _mostrarDialogo(context, mensaje, mostrarBotonAceptar);
+      }
+      return;
+    }
+    mensaje =
+        '¿Deseas inscribirte a la clase el ${clase.dia} a las ${clase.hora}?';
+    mostrarBotonAceptar = true;
+
+    if (context.mounted) {
+      _mostrarDialogo(context, mensaje, mostrarBotonAceptar, clase, user);
+    }
   }
 
   void _mostrarDialogo(
       BuildContext context, String mensaje, bool mostrarBotonAceptar,
       [ClaseModels? clase, dynamic user]) {
+    // Verificar si el widget sigue montado antes de usar el contexto
+    if (!context.mounted) return;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -258,7 +275,6 @@ class _TurnosScreenState extends State<TurnosScreen> {
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     // Relativo a la pantalla
     double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
@@ -274,7 +290,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.20),
+                color: color.withAlpha(50),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -433,7 +449,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
                         Calcular24hs()
                             .esMenorA0Horas(clase.fecha, clase.hora) ||
                         clase.lugaresDisponibles == 0
-                    ? Colors.grey
+                    ? Colors.grey.shade400
                     : Colors.green,
               ),
               shape: WidgetStateProperty.all(
@@ -476,13 +492,12 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      padding:
-          EdgeInsets.all(screenWidth * 0.04), // 4% del ancho para el padding
+      padding: EdgeInsets.all(screenWidth * 0.04),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
             colors.secondaryContainer,
-            colors.primary.withOpacity(0.6),
+            colors.primary.withAlpha(70),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -491,7 +506,7 @@ class _AvisoDeClasesDisponibles extends StatelessWidget {
             screenWidth * 0.03), // 3% del ancho para el borde redondeado
         boxShadow: [
           BoxShadow(
-            color: colors.primary.withOpacity(0.55),
+            color: colors.primary.withAlpha(70),
             spreadRadius:
                 screenWidth * 0.005, // 0.5% del ancho para spreadRadius
             blurRadius: screenWidth * 0.01, // 1% del ancho para blurRadius
@@ -558,7 +573,7 @@ class _SemanaNavigation extends StatelessWidget {
               color: Colors.grey.shade200,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withAlpha(25),
                   blurRadius: screenWidth * 0.01, // 1% del ancho para el blur
                   offset: Offset(
                       0, screenHeight * 0.005), // 0.5% del alto para el offset
@@ -584,7 +599,7 @@ class _SemanaNavigation extends StatelessWidget {
               color: Colors.grey.shade200,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withAlpha(25),
                   blurRadius: screenWidth * 0.01,
                   offset: Offset(0, screenHeight * 0.005),
                 ),

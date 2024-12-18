@@ -156,7 +156,6 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                         );
                       },
                     ),
-          
                   ],
                 ),
               ],

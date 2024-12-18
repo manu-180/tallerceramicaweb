@@ -29,7 +29,7 @@ class MostrarDiaSegunFecha extends StatelessWidget {
             color: Colors.grey.shade200,
             boxShadow: [
               BoxShadow(
-                color: colors.primaryContainer.withOpacity(0.15),
+                color: colors.primaryContainer.withAlpha(20),
                 blurRadius: 1,
                 offset: const Offset(0, 2),
               ),
@@ -47,7 +47,7 @@ class MostrarDiaSegunFecha extends StatelessWidget {
         CustomBox(
             width: screenWidth * 0.35,
             color1: colors.secondaryContainer,
-            color2: colors.primary.withOpacity(0.6),
+            color2: colors.primary.withAlpha(60),
             text:
                 text.isEmpty ? "-" : DiaConFecha().obtenerDiaDeLaSemana(text)),
         SizedBox(width: screenWidth * 0.05),
@@ -57,7 +57,7 @@ class MostrarDiaSegunFecha extends StatelessWidget {
             color: Colors.grey.shade200,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withAlpha(20),
                 blurRadius: 1,
                 offset: const Offset(0, 2),
               ),

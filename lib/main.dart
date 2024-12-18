@@ -7,7 +7,7 @@ import 'package:taller_ceramica/config/theme/app_theme.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 
 Future<void> main() async {
-  // Cargar las variables del archivo .env
+  
   await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
@@ -18,7 +18,6 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-// Get a reference your Supabase client
 final supabase = Supabase.instance.client;
 
 class MyApp extends ConsumerWidget {
@@ -36,5 +35,3 @@ class MyApp extends ConsumerWidget {
     );
   }
 }
-
-// safe 

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/models/usuario_models.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/ivanna_taller/supabase/functions/alumnos_en_clase.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_de_bd.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_usuario.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
@@ -225,6 +226,24 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                             subtitle: Text(usuario.clasesDisponibles == 1
                                 ? "(${usuario.clasesDisponibles} crédito)"
                                 : "(${usuario.clasesDisponibles} créditos)"),
+                            onTap: () async {
+                              final lista = await AlumnosEnClase()
+                                  .clasesAlumno(usuario.fullname);
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    lista.isEmpty
+                                        ? "${usuario.fullname} no tiene clases programadas"
+                                        : "${usuario.fullname} asiste a las clases: ${lista.join(', ')}",
+                                  ),
+                                  duration: const Duration(seconds: 8),
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: const EdgeInsets.all(10),
+                                ),
+                              );
+                            },
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -236,8 +255,8 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                                     titulo: 'Eliminar Usuario',
                                     contenido:
                                         '¿Estás seguro de que deseas eliminar a este usuario?',
-                                    onConfirmar: () =>
-                                        eliminarUsuario(usuario.id, usuario.userUid),
+                                    onConfirmar: () => eliminarUsuario(
+                                        usuario.id, usuario.userUid),
                                   ),
                                 ),
                                 IconButton(

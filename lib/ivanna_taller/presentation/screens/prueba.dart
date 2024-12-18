@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:taller_ceramica/main.dart';
-import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas.dart';
+// import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
 class Prueba extends StatelessWidget {
@@ -9,11 +8,10 @@ class Prueba extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime fechaInicio =
-        DateTime(2024, 12, 2); // 2 de diciembre de 2024
-    final DateTime fechaFin = DateTime(2025, 1, 3);
-    final List<String> resultado =
-        GenerarFechas().generarFechas(fechaInicio, fechaFin);
+    // final DateTime fechaInicio =
+    //     DateTime(2024, 12, 2); // 2 de diciembre de 2024
+    // final DateTime fechaFin = DateTime(2025, 1, 3);
+    // final List<String> resultado = GenerarFechas().generarFechas(fechaInicio, fechaFin);
 
     return Scaffold(
       appBar: const CustomAppBar(),
