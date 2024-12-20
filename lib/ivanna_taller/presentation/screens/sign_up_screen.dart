@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/capitalize.dart';
+import 'package:taller_ceramica/ivanna_taller/utils/enviar_wpp.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
@@ -200,7 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'El nombre completo ya existe. Usa uno diferente.',
+                              'El nombre completo ya existe. Usa uno diferente para no generar conflictos.',
                               style: TextStyle(color: Colors.white),
                             ),
                             backgroundColor: Colors.red,
@@ -222,10 +223,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         'user_uid': res.user?.id,
                         'sexo': "mujer",
                         'clases_disponibles': 0,
-                        'recuperar': 0,
                         'trigger_alert': 0,
                         'clases_canceladas': [],
                       });
+                      EnviarWpp().sendWhatsAppMessage("${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases", 'whatsapp:+5491132820164');
+                      EnviarWpp().sendWhatsAppMessage("${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases", 'whatsapp:+5491134272488');
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -250,10 +252,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     } catch (e) {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text(
-                            'Ocurrió un error inesperado. Por favor, intenta nuevamente.',
-                            style: TextStyle(color: Colors.white),
+                            'Ocurrió un error inesperado: ($e).',
+                            style: const TextStyle(color: Colors.white),
                           ),
                           backgroundColor: Colors.red,
                         ),
