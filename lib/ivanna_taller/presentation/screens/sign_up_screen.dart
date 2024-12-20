@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/capitalize.dart';
@@ -20,13 +21,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
   String passwordError = '';
   String confirmPasswordError = '';
   String mailError = '';
+  bool showSuccessMessage = false; 
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +123,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+
+                    FocusScope.of(context).unfocus();
                     final fullname = fullnameController.text.trim();
                     final email = emailController.text.trim();
                     final password = passwordController.text.trim();
@@ -131,6 +138,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         email.isEmpty ||
                         password.isEmpty ||
                         confirmPassword.isEmpty) {
+                          setState(() {
+                        isLoading = false;
+                      });
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -143,8 +153,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       );
                       return;
                     }
+                    
 
                     if (password.length < 6) {
+                      setState(() {
+                        isLoading = false;
+                      });
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -159,6 +173,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
 
                     if (password != confirmPassword) {
+                      setState(() {
+                        isLoading = false;
+                      });
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -179,10 +196,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       final emailExiste = listausuarios
                           .any((usuario) => usuario.usuario == email);
                       final fullnameExiste = listausuarios.any((usuario) =>
-                          usuario.fullname.toLowerCase() ==
+                          usuario.fullname.toLowerCase() == 
                           fullname.toLowerCase());
 
                       if (emailExiste) {
+                        setState(() {
+                        isLoading = false;
+                      });
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -197,6 +217,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
 
                       if (fullnameExiste) {
+                        setState(() {
+                        isLoading = false;
+                      });
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -226,19 +249,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         'trigger_alert': 0,
                         'clases_canceladas': [],
                       });
-                      EnviarWpp().sendWhatsAppMessage("${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases", 'whatsapp:+5491132820164');
-                      EnviarWpp().sendWhatsAppMessage("${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases", 'whatsapp:+5491134272488');
+
+                      EnviarWpp().sendWhatsAppMessage(
+                          "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
+                          'whatsapp:+5491132820164');
+                      EnviarWpp().sendWhatsAppMessage(
+                          "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
+                          'whatsapp:+5491134272488');
+
+                      setState(() {
+                        isLoading = false;
+                        showSuccessMessage = true;
+                      });
+
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                            'Registro exitoso. Por favor, verifica tu correo.',
+                            '¡Registro exitoso!',
                             style: TextStyle(color: Colors.white),
                           ),
                           backgroundColor: Colors.green,
                         ),
                       );
+
+                      Future.delayed(const Duration(seconds: 30), () {
+                        setState(() {
+                          showSuccessMessage = false;
+                        });
+                      });
                     } on AuthException catch (e) {
+                      setState(() {
+                        isLoading = false;
+                      });
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -250,6 +293,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       );
                     } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                      });
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -264,6 +310,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   child: const Text('Registrar'),
                 ),
+                // Aquí mostramos el mensaje de éxito
+                if (showSuccessMessage) ...[
+                  const SizedBox(height: 30),
+                  const BoxText(text: "¡Registro exitoso! El siguiente paso: verifica tu correo para verificarte presionando el link."),
+                ],
+                if (isLoading) ...[
+                  const SizedBox(height: 30),
+                  const CircularProgressIndicator(),
+                ],
               ],
             ),
           ),
