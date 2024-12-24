@@ -42,7 +42,7 @@ class Calcular24hs {
     }
     final int dia = int.parse(partesFecha[0]);
     final int mes = int.parse(partesFecha[1]);
-    final int anio = int.parse(partesFecha[2]); 
+    final int anio = int.parse(partesFecha[2]);
 
     // Dividir la hora en horas y minutos
     final List<String> partesHora = hora.split(':');
@@ -61,7 +61,7 @@ class Calcular24hs {
 
     // Calcular la diferencia entre la fecha de la clase y la fecha actual
     final Duration diferencia = fechaClase.difference(fechaActual);
-  
+
     return diferencia.inSeconds < 0;
   }
 }

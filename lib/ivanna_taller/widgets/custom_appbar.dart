@@ -65,7 +65,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                     Text(
                       'Taller de',
                       style: TextStyle(
-                        fontSize: size.width * 0.045, // Tamaño relativo
+                        fontSize: size.width * 0.05, // Tamaño relativo
                         fontWeight: FontWeight.bold,
                         color: color.surface,
                       ),
@@ -73,7 +73,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                     Text(
                       'Cerámica',
                       style: TextStyle(
-                        fontSize: size.width * 0.045, // Tamaño relativo
+                        fontSize: size.width * 0.05, // Tamaño relativo
                         fontWeight: FontWeight.bold,
                         color: color.surface,
                       ),
@@ -172,9 +172,9 @@ class CustomAppBarState extends State<CustomAppBar> {
                     ],
                   ),
             SizedBox(width: size.width * 0.032),
-          ],
-        );
-      },
+            ]);
+        
+      }
     );
   }
 }

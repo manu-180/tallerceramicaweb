@@ -7,7 +7,6 @@ import 'package:taller_ceramica/config/theme/app_theme.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 
 Future<void> main() async {
-  
   await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(

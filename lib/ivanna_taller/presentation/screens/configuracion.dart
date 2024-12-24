@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
@@ -33,6 +34,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     final List<Color> colors = ref.watch(listTheColors);
     final int selectedColor = ref.watch(themeNotifyProvider).selectedColor;
     final color = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
     final List<Map<String, String>> options = [
       {
         'title': 'Cambiar contraseña',
@@ -45,7 +47,7 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     ];
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: user == null
           ? Center(
               child: Column(

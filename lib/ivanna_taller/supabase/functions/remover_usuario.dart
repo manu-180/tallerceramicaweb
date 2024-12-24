@@ -25,14 +25,14 @@ class RemoverUsuario {
           ModificarLugarDisponible().agregarLugarDisponible(idClase);
           if (!parametro) {
             EnviarWpp().sendWhatsAppMessage(
-                Calcular24hs().esMayorA24Horas(item.fecha, item.hora)?
-                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. Se genero un credito para recuperar la clase" :
-                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
+                Calcular24hs().esMayorA24Horas(item.fecha, item.hora)
+                    ? "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. Se genero un credito para recuperar la clase"
+                    : "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
                 'whatsapp:+5491134272488');
             EnviarWpp().sendWhatsAppMessage(
-              Calcular24hs().esMayorA24Horas(item.fecha, item.hora)?
-                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. ¡Se genero un credito para recuperar la clase!" :
-                "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
+                Calcular24hs().esMayorA24Horas(item.fecha, item.hora)
+                    ? "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. ¡Se genero un credito para recuperar la clase!"
+                    : "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
                 'whatsapp:+5491132820164');
           }
           if (parametro) {

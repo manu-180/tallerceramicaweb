@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
@@ -269,6 +270,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
     final color = Theme.of(context).primaryColor;
     final colors = Theme.of(context).colorScheme;
     final screenWidth = MediaQuery.of(context).size.width;
+    final size = MediaQuery.of(context).size;
 
     // Relativo a la pantalla
     double paddingSize = screenWidth * 0.05; // 5% del ancho de la pantalla
@@ -276,7 +278,7 @@ class _TurnosScreenState extends State<TurnosScreen> {
     double fontSize = screenWidth * 0.04; // 4% del ancho de la pantalla
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: Column(
         children: [
           Padding(

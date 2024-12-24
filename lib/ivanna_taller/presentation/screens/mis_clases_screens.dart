@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
@@ -78,9 +79,10 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(authProvider); // Observa el estado del usuario
     final color = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: user == null
           ? Center(
               child: Column(

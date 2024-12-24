@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/agregar_usuario.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/remover_usuario.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
@@ -253,7 +254,7 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

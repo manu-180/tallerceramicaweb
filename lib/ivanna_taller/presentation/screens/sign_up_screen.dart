@@ -7,6 +7,7 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/generar_id.dart
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/capitalize.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/enviar_wpp.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
@@ -21,21 +22,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
   String passwordError = '';
   String confirmPasswordError = '';
   String mailError = '';
-  bool showSuccessMessage = false; 
+  bool showSuccessMessage = false;
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -138,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         email.isEmpty ||
                         password.isEmpty ||
                         confirmPassword.isEmpty) {
-                          setState(() {
+                      setState(() {
                         isLoading = false;
                       });
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -153,7 +156,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       );
                       return;
                     }
-                    
 
                     if (password.length < 6) {
                       setState(() {
@@ -196,13 +198,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       final emailExiste = listausuarios
                           .any((usuario) => usuario.usuario == email);
                       final fullnameExiste = listausuarios.any((usuario) =>
-                          usuario.fullname.toLowerCase() == 
+                          usuario.fullname.toLowerCase() ==
                           fullname.toLowerCase());
 
                       if (emailExiste) {
                         setState(() {
-                        isLoading = false;
-                      });
+                          isLoading = false;
+                        });
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -218,8 +220,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       if (fullnameExiste) {
                         setState(() {
-                        isLoading = false;
-                      });
+                          isLoading = false;
+                        });
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -313,7 +315,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 // Aquí mostramos el mensaje de éxito
                 if (showSuccessMessage) ...[
                   const SizedBox(height: 30),
-                  const BoxText(text: "¡Registro exitoso! El siguiente paso: verifica tu correo para verificarte presionando el link."),
+                  const BoxText(
+                      text:
+                          "¡Registro exitoso! El siguiente paso: verifica tu correo para verificarte presionando el link."),
                 ],
                 if (isLoading) ...[
                   const SizedBox(height: 30),

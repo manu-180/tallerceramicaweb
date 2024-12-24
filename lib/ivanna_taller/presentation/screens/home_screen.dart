@@ -3,6 +3,8 @@ import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/is_mujer.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/tablet_appbar.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,9 +17,10 @@ class HomeScreen extends StatelessWidget {
     final user = Supabase.instance.client.auth.currentUser;
     final fullName = user?.userMetadata?['fullname'] ?? '';
     final firstName = fullName.split(' ').first;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: FutureBuilder<bool>(
         future: IsMujer().mujer(fullName),
         builder: (context, snapshot) {
@@ -46,10 +49,10 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   BoxText(
                     text: user == null
-                        ? "¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!":
-                        isMujer?
-                        "¡Hola $firstName y bienvenida a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!":
-                        "¡Hola $firstName y bienvenido a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!",
+                        ? "¡Hola y bienvenido/a a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
+                        : isMujer
+                            ? "¡Hola $firstName y bienvenida a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!"
+                            : "¡Hola $firstName y bienvenido a nuestro taller de cerámica, un espacio donde la creatividad se mezcla con la tradición para dar forma a piezas únicas y llenas de vida!",
                   ),
                   const SizedBox(height: 20),
                   _buildLoadingImage(

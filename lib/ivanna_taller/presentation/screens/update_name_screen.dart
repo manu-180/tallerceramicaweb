@@ -4,6 +4,7 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_i
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/update_user.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/capitalize.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
+import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/main.dart';
 
 class UpdateNameScreen extends StatefulWidget {
@@ -83,8 +84,9 @@ class UpdateNameScreenState extends State<UpdateNameScreen> {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

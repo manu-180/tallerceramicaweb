@@ -18,4 +18,3 @@ export 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_lugares
 export 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
 export 'package:taller_ceramica/ivanna_taller/supabase/functions/remover_usuario.dart';
 export 'package:taller_ceramica/ivanna_taller/supabase/functions/update_user.dart';
-
