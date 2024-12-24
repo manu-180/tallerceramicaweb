@@ -7,7 +7,7 @@ class TabletAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  const TabletAppBar({super.key})
+  const  TabletAppBar({super.key})
       : preferredSize = const Size.fromHeight(kToolbarHeight * 2.2);
 
   @override
@@ -70,21 +70,21 @@ class CustomAppBarState extends State<TabletAppBar> {
                         CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Taller de',
+                        'Taller de Ceramica',
                         style: TextStyle(
                           fontSize: size.width * 0.03,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
-                      Text(
-                        'Cerámica',
-                        style: TextStyle(
-                          fontSize: size.width * 0.03,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      // Text(
+                      //   'Cerámica',
+                      //   style: TextStyle(
+                      //     fontSize: size.width * 0.03,
+                      //     fontWeight: FontWeight.bold,
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -122,34 +122,34 @@ class CustomAppBarState extends State<TabletAppBar> {
                     ? Row(
                         children: [
                           SizedBox(
-                            height: size.width * 0.055,
+                            height: size.width * 0.035,
                             child: ElevatedButton(
                               onPressed: () {
                                 context.push('/crear-usuarioivanna');
                               },
                               child: Text(
                                 'Crear usuario',
-                                style: TextStyle(fontSize: size.width * 0.032),
+                                style: TextStyle(fontSize: size.width * 0.025),
                               ),
                             ),
                           ),
                           SizedBox(width: size.width * 0.02),
                           SizedBox(
-                            height: size.width * 0.055,
+                            height: size.width * 0.035,
                             child: ElevatedButton(
                               onPressed: () {
                                 context.push('/iniciar-sesionivanna');
                               },
                               child: Text(
                                 'Iniciar sesión',
-                                style: TextStyle(fontSize: size.width * 0.032),
+                                style: TextStyle(fontSize: size.width * 0.025),
                               ),
                             ),
                           ),
                         ],
                       )
                     : SizedBox(
-                      height: size.width * 0.055,
+                      height: size.width * 0.035,
                       child: ElevatedButton(
                           onPressed: () async {
                             await Supabase.instance.client.auth.signOut();
@@ -163,7 +163,7 @@ class CustomAppBarState extends State<TabletAppBar> {
                           },
                           child: Text(
                             'Cerrar sesión',
-                            style: TextStyle(fontSize: size.width * 0.032),
+                            style: TextStyle(fontSize: size.width * 0.025),
                           ),
                         ),
                     ),

@@ -1,17 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taller_ceramica/config/router/barril_screens.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/cambiar_password.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/configuracion.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/gestion_clases_screen.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/prueba.dart';
+import 'package:taller_ceramica/ivanna_taller/presentation/screens/responsive_turnos_screens/resposive_clases_screen.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/screens/update_name_screen.dart';
 
 final appRouter = GoRouter(initialLocation: "/homeivanna", routes: [
   GoRoute(path: "/homeivanna", builder: (context, state) => const HomeScreen()),
   GoRoute(
       path: "/turnosivanna",
-      // name: "turnos",
-      builder: (context, state) => const TurnosScreen()),
+      builder: (context, state) {
+        final isTablet = MediaQuery.of(context).size.width > 600;
+        return ResposiveClasesScreen(isTablet: isTablet);
+      },
+    ),
   GoRoute(
       path: "/misclasesivanna",
       // name: "misclases",

@@ -5,16 +5,15 @@
 // import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 // import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 // import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart';
-// import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
-// class TurnosScreen extends StatefulWidget {
-//   const TurnosScreen({super.key});
+// class TurnosTabletScreen extends StatefulWidget {
+//   const TurnosTabletScreen({super.key});
 
 //   @override
-//   State<TurnosScreen> createState() => _TurnosScreenState();
+//   State<TurnosTabletScreen> createState() => _TurnosScreenState();
 // }
 
-// class _TurnosScreenState extends State<TurnosScreen> {
+// class _TurnosScreenState extends State<TurnosTabletScreen> {
 //   List<String> fechasDisponibles = [];
 //   String semanaSeleccionada = 'semana1';
 //   String? diaSeleccionado;
@@ -281,24 +280,6 @@
 //       appBar: ResponsiveAppBar( isTablet: size.width > 600),
 //       body: Column(
 //         children: [
-//           Padding(
-//             padding: EdgeInsets.fromLTRB(paddingSize, 20, paddingSize, 0),
-//             child: Container(
-//               padding: const EdgeInsets.all(16),
-//               decoration: BoxDecoration(
-//                 color: color.withAlpha(50),
-//                 borderRadius: BorderRadius.circular(10),
-//               ),
-//               child: Text(
-//                 "En esta sesión podrás ver los horarios disponibles para las clases de cerámica. ¡Reserva tu lugar ahora!",
-//                 style: Theme.of(context)
-//                     .textTheme
-//                     .bodyLarge
-//                     ?.copyWith(fontSize: fontSize),
-//               ),
-//             ),
-//           ),
-//           const SizedBox(height: 30),
 //           _SemanaNavigation(
 //             semanaSeleccionada: semanaSeleccionada,
 //             cambiarSemanaAdelante: cambiarSemanaAdelante,
