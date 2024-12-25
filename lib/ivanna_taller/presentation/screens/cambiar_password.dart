@@ -1,5 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-// f
+// funciona
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
