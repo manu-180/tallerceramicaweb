@@ -18,6 +18,10 @@ andriod AAB :
 flutter build appbundle
 ""
 
-final partesFecha = clase.fecha.split('/');
-final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
-final diaMesAnio = '${clase.dia} - ${clase.fecha}';
+despliegue en web:
+*eliminar docs*
+mkdir docs    
+cp -r build/web/* docs/
+git add .
+git commit -m "actualizando pagina webbb" 
+git push
