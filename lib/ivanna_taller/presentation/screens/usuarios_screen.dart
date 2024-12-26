@@ -202,104 +202,109 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
       appBar: ResponsiveAppBar( isTablet: size.width > 600),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                  child: BoxText(
-                      text:
-                          "En esta sección podrás ver los usuarios registrados y modificar sus créditos, también eliminarlos si es necesario"),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: usuarios.length,
-                    itemBuilder: (context, index) {
-                      final usuario = usuarios[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: ListTile(
-                            title: Text('${usuario.fullname} '),
-                            subtitle: Text(usuario.clasesDisponibles == 1
-                                ? "(${usuario.clasesDisponibles} crédito)"
-                                : "(${usuario.clasesDisponibles} créditos)"),
-                            onTap: () async {
-                              final lista = await AlumnosEnClase()
-                                  .clasesAlumno(usuario.fullname);
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    lista.isEmpty
-                                        ? "${usuario.fullname} no tiene clases programadas"
-                                        : "${usuario.fullname} asiste a las clases: ${lista.join(', ')}",
-                                  ),
-                                  duration: const Duration(seconds: 8),
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: const EdgeInsets.all(10),
+          : Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                      child: BoxText(
+                          text:
+                              "En esta sección podrás ver los usuarios registrados y modificar sus créditos, también eliminarlos si es necesario"),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: usuarios.length,
+                        itemBuilder: (context, index) {
+                          final usuario = usuarios[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: ListTile(
+                                title: Text('${usuario.fullname} '),
+                                subtitle: Text(usuario.clasesDisponibles == 1
+                                    ? "(${usuario.clasesDisponibles} crédito)"
+                                    : "(${usuario.clasesDisponibles} créditos)"),
+                                onTap: () async {
+                                  final lista = await AlumnosEnClase()
+                                      .clasesAlumno(usuario.fullname);
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        lista.isEmpty
+                                            ? "${usuario.fullname} no tiene clases programadas"
+                                            : "${usuario.fullname} asiste a las clases: ${lista.join(', ')}",
+                                      ),
+                                      duration: const Duration(seconds: 8),
+                                      behavior: SnackBarBehavior.floating,
+                                      margin: const EdgeInsets.all(10),
+                                    ),
+                                  );
+                                },
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
+                                      onPressed: () => mostrarDialogoEliminar(
+                                        context: context,
+                                        titulo: 'Eliminar Usuario',
+                                        contenido:
+                                            '¿Estás seguro de que deseas eliminar a este usuario?',
+                                        onConfirmar: () => eliminarUsuario(
+                                            usuario.id, usuario.userUid),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.add,
+                                          color: Colors.green),
+                                      onPressed: () => mostrarDialogoConContador(
+                                        context: context,
+                                        titulo: 'Agregar Créditos',
+                                        contenido:
+                                            'Selecciona cuántos créditos quieres agregar:',
+                                        onConfirmar: (cantidad) async {
+                                          for (int i = 0; i < cantidad; i++) {
+                                            await agregarCredito(usuario.fullname);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.remove,
+                                          color: Colors.orange),
+                                      onPressed: () => mostrarDialogoConContador(
+                                        context: context,
+                                        titulo: 'Remover Créditos',
+                                        contenido:
+                                            'Selecciona cuántos créditos quieres remover:',
+                                        onConfirmar: (cantidad) async {
+                                          for (int i = 0; i < cantidad; i++) {
+                                            await removerCredito(usuario.fullname);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () => mostrarDialogoEliminar(
-                                    context: context,
-                                    titulo: 'Eliminar Usuario',
-                                    contenido:
-                                        '¿Estás seguro de que deseas eliminar a este usuario?',
-                                    onConfirmar: () => eliminarUsuario(
-                                        usuario.id, usuario.userUid),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.add,
-                                      color: Colors.green),
-                                  onPressed: () => mostrarDialogoConContador(
-                                    context: context,
-                                    titulo: 'Agregar Créditos',
-                                    contenido:
-                                        'Selecciona cuántos créditos quieres agregar:',
-                                    onConfirmar: (cantidad) async {
-                                      for (int i = 0; i < cantidad; i++) {
-                                        await agregarCredito(usuario.fullname);
-                                      }
-                                    },
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.remove,
-                                      color: Colors.orange),
-                                  onPressed: () => mostrarDialogoConContador(
-                                    context: context,
-                                    titulo: 'Remover Créditos',
-                                    contenido:
-                                        'Selecciona cuántos créditos quieres remover:',
-                                    onConfirmar: (cantidad) async {
-                                      for (int i = 0; i < cantidad; i++) {
-                                        await removerCredito(usuario.fullname);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
             ),
+          ),
     );
   }
 }
