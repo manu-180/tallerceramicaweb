@@ -8,7 +8,6 @@ import 'package:taller_ceramica/main.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box_text.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/mostrar_dia_segun_fecha.dart';
 
 class GestionHorariosScreen extends StatefulWidget {
@@ -255,100 +254,105 @@ class _GestionHorariosScreenState extends State<GestionHorariosScreen> {
 
     return Scaffold(
       appBar: ResponsiveAppBar( isTablet: size.width > 600),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Padding(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: BoxText(
-                    text:
-                        "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas")),
-            const SizedBox(height: 20),
-            MostrarDiaSegunFecha(
-              text: fechaSeleccionada ?? '',
-              colors: colors,
-              color: color,
-              cambiarFecha: cambiarFecha,
-            ),
-            const SizedBox(height: 20),
-            DropdownButton<String>(
-              value: fechaSeleccionada,
-              hint: const Text('Selecciona una fecha'),
-              onChanged: (value) {
-                seleccionarFecha(value!);
-              },
-              items: fechasDisponibles.map((fecha) {
-                return DropdownMenuItem(
-                  value: fecha,
-                  child: Text(fecha),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 10),
-            if (isLoading) const CircularProgressIndicator(),
-            if (!isLoading && fechaSeleccionada != null)
-              Expanded(
-                child: horariosFiltrados.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: horariosFiltrados.length,
-                        itemBuilder: (context, index) {
-                          final clase = horariosFiltrados[index];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ListTile(
-                                    title: Text(
-                                        '${clase.hora} - Alumnos/as: ${clase.mails.join(", ")}'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SizedBox(
-                                          width: size.width * 0.33,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              mostrarDialogo(
-                                                  "insertar", clase, colors);
-                                            },
-                                            child: const Text(
-                                              "Agregar Usuario",
-                                              style: TextStyle(fontSize: 10),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: BoxText(
+                        text:
+                            "En esta sesión podrás gestionar tus horarios. Ver quiénes asisten a tus clases y agregar o remover usuarios de las mismas")),
+                const SizedBox(height: 20),
+                MostrarDiaSegunFecha(
+                  text: fechaSeleccionada ?? '',
+                  colors: colors,
+                  color: color,
+                  cambiarFecha: cambiarFecha,
+                ),
+                const SizedBox(height: 20),
+                DropdownButton<String>(
+                  value: fechaSeleccionada,
+                  hint: const Text('Selecciona una fecha'),
+                  onChanged: (value) {
+                    seleccionarFecha(value!);
+                  },
+                  items: fechasDisponibles.map((fecha) {
+                    return DropdownMenuItem(
+                      value: fecha,
+                      child: Text(fecha),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 10),
+                if (isLoading) const CircularProgressIndicator(),
+                if (!isLoading && fechaSeleccionada != null)
+                  Expanded(
+                    child: horariosFiltrados.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: horariosFiltrados.length,
+                            itemBuilder: (context, index) {
+                              final clase = horariosFiltrados[index];
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ListTile(
+                                        title: Text(
+                                            '${clase.hora} - Alumnos/as: ${clase.mails.join(", ")}'),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            SizedBox(
+                                              width: size.width > 600 ? size.width * 0.15 : size.width * 0.33,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  mostrarDialogo(
+                                                      "insertar", clase, colors);
+                                                },
+                                                child: const Text(
+                                                  "Agregar Usuario",
+                                                  style: TextStyle(fontSize: 10),
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            SizedBox(
+                                              width: size.width > 600 ? size.width * 0.15 : size.width * 0.33,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  mostrarDialogo(
+                                                      "remover", clase, colors);
+                                                },
+                                                child: const Text("Remover Usuario",
+                                                    style: TextStyle(fontSize: 10)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          width: size.width * 0.33,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              mostrarDialogo(
-                                                  "remover", clase, colors);
-                                            },
-                                            child: const Text("Remover Usuario",
-                                                style: TextStyle(fontSize: 10)),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(
-                        child: Text(
-                            "No hay horarios disponibles para esta fecha."),
-                      ),
-              ),
-          ],
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(
+                            child: Text(
+                                "No hay horarios disponibles para esta fecha."),
+                          ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );

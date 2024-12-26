@@ -4,7 +4,6 @@ import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
 class MisClasesScreen extends ConsumerStatefulWidget {
   const MisClasesScreen({super.key});
@@ -76,112 +75,118 @@ class _MisClasesScreenState extends ConsumerState<MisClasesScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final user = ref.watch(authProvider); // Observa el estado del usuario
-    final color = Theme.of(context).colorScheme;
-    final size = MediaQuery.of(context).size;
+Widget build(BuildContext context) {
+  final user = ref.watch(authProvider); // Observa el estado del usuario
+  final color = Theme.of(context).colorScheme;
+  final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
-      body: user == null
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.lock_outline, size: 80, color: Colors.grey),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Para ver tus clases debes iniciar sesión!',
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold,
-                      color: color.primary,
+  return Scaffold(
+    appBar: ResponsiveAppBar(isTablet: size.width > 600),
+    body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: user == null
+            ? Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.lock_outline, size: 80, color: Colors.grey),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Para ver tus clases debes iniciar sesión!',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                        color: color.primary,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            )
-          : Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                  child: BoxText(
-                      text:
-                          "En esta sesión podras ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podras recuperar la clase"),
+                  ],
                 ),
-                const SizedBox(height: 50),
-                clasesDelUsuario.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.event_busy,
-                                size: 80, color: Colors.grey),
-                            const SizedBox(height: 20),
-                            Text(
-                              'No estás inscripto en ninguna clase',
-                              style: TextStyle(
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
-                                color: color.primary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: clasesDelUsuario.length,
-                          itemBuilder: (context, index) {
-                            final clase = clasesDelUsuario[index];
-                            final partesFecha = clase.fecha.split('/');
-                            final diaMes =
-                                '${partesFecha[0]}/${partesFecha[1]}';
-                            final diaMesAnio = '${clase.dia} $diaMes';
-                            final claseInfo = '$diaMesAnio - ${clase.hora}';
-
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 10,
-                              ),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+              )
+            : Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                    child: BoxText(
+                        text:
+                            "En esta sesión podrás ver y cancelar tus clases pero ¡cuidado! Si cancelas con menos de 24hs de anticipación no podrás recuperar la clase"),
+                  ),
+                  const SizedBox(height: 50),
+                  clasesDelUsuario.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.event_busy,
+                                  size: 80, color: Colors.grey),
+                              const SizedBox(height: 20),
+                              Text(
+                                'No estás inscripto en ninguna clase',
+                                style: TextStyle(
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold,
+                                  color: color.primary,
                                 ),
-                                child: ListTile(
-                                  title: Text(
-                                    claseInfo,
-                                    style: const TextStyle(fontSize: 14),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: clasesDelUsuario.length,
+                            itemBuilder: (context, index) {
+                              final clase = clasesDelUsuario[index];
+                              final partesFecha = clase.fecha.split('/');
+                              final diaMes =
+                                  '${partesFecha[0]}/${partesFecha[1]}';
+                              final diaMesAnio = '${clase.dia} $diaMes';
+                              final claseInfo = '$diaMesAnio - ${clase.hora}';
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  trailing: ElevatedButton(
-                                    onPressed: () {
-                                      mostrarCancelacion(context, clase);
-                                    },
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(
-                                          166, 252, 93, 93),
+                                  child: ListTile(
+                                    title: Text(
+                                      claseInfo,
+                                      style: const TextStyle(fontSize: 14),
                                     ),
-                                    child: Text(
-                                      'Cancelar',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: color.surface,
+                                    trailing: ElevatedButton(
+                                      onPressed: () {
+                                        mostrarCancelacion(context, clase);
+                                      },
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: const Color.fromARGB(
+                                            166, 252, 93, 93),
+                                      ),
+                                      child: Text(
+                                        'Cancelar',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: color.surface,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-              ],
-            ),
-    );
-  }
+                ],
+              ),
+      ),
+    ),
+  );
+}
+
 
   void cancelarClase(int claseId, String fullname) async {
     final clase = clasesDelUsuario.firstWhere((clase) => clase.id == claseId);

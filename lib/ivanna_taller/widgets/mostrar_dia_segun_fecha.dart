@@ -45,7 +45,7 @@ class MostrarDiaSegunFecha extends StatelessWidget {
         ),
         SizedBox(width: screenWidth * 0.05),
         CustomBox(
-            width: screenWidth * 0.35,
+            width: screenWidth > 600 ? screenWidth * 0.15: screenWidth * 0.35,
             color1: colors.secondaryContainer,
             color2: colors.primary.withAlpha(60),
             text:
@@ -68,7 +68,7 @@ class MostrarDiaSegunFecha extends StatelessWidget {
               cambiarFecha(true);
             },
             icon: const Icon(Icons.arrow_right, size: 28),
-            color: Colors.black, // Color del ícono (puedes personalizarlo)
+            color: Colors.black, 
           ),
         ),
       ],

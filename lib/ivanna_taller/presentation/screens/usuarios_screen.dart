@@ -8,7 +8,6 @@ import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_de_bd.
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/eliminar_usuario.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/modificar_credito.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/functions/obtener_total_info.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 
 class UsuariosScreen extends StatefulWidget {

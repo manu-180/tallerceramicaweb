@@ -6,14 +6,14 @@ import 'package:taller_ceramica/ivanna_taller/models/clase_models.dart';
 import 'package:taller_ceramica/ivanna_taller/supabase/supabase_barril.dart';
 import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas_del_mes.dart';
 
-class clasesScreen extends StatefulWidget {
-  const clasesScreen({super.key});
+class ClasesScreen extends StatefulWidget {
+  const ClasesScreen({super.key});
 
   @override
-  State<clasesScreen> createState() => _ClasesScreenState();
+  State<ClasesScreen> createState() => _ClasesScreenState();
 }
 
-class _ClasesScreenState extends State<clasesScreen> {
+class _ClasesScreenState extends State<ClasesScreen> {
   List<String> fechasDisponibles = [];
   String semanaSeleccionada = 'semana1';
   String? diaSeleccionado;

@@ -8,7 +8,6 @@ import 'package:taller_ceramica/ivanna_taller/presentation/functions_screens/box
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 import 'package:taller_ceramica/providers/auth_notifier.dart';
 import 'package:taller_ceramica/providers/theme_provider.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 
 class Configuracion extends ConsumerStatefulWidget {
   const Configuracion({super.key});
@@ -47,8 +46,11 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
     ];
 
     return Scaffold(
-      appBar: ResponsiveAppBar( isTablet: size.width > 600),
-      body: user == null
+  appBar: ResponsiveAppBar(isTablet: size.width > 600),
+  body: Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 600), // Establece el ancho máximo
+      child: user == null
           ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -162,6 +164,9 @@ class _ConfiguracionState extends ConsumerState<Configuracion> {
                 ),
               ],
             ),
-    );
+    ),
+  ),
+);
+
   }
 }

@@ -24,7 +24,7 @@ ResposiveClasesScreen({super.key, required bool isTablet})
       return const ClasesTabletScreen();
     } else {
       // Renderiza el AppBar para celulares
-      return const clasesScreen();
+      return const ClasesScreen();
     }
   }
 }

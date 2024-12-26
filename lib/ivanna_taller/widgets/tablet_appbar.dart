@@ -72,7 +72,7 @@ class CustomAppBarState extends State<TabletAppBar> {
                       Text(
                         'Taller de Ceramica',
                         style: TextStyle(
-                          fontSize: size.width * 0.03,
+                          fontSize: size.width * 0.02,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -88,7 +88,7 @@ class CustomAppBarState extends State<TabletAppBar> {
                     ],
                   ),
                 ),
-                SizedBox(width: size.width * 0.04),
+                SizedBox(width: size.width * 0.02),
                 PopupMenuButton<String>(
                   onSelected: (value) {
                     context.push(value);
@@ -103,7 +103,7 @@ class CustomAppBarState extends State<TabletAppBar> {
                     turns: _isMenuOpen ? 0.5 : 0.0,
                     duration: const Duration(milliseconds: 200),
                     child: Icon(Icons.keyboard_arrow_down_outlined,
-                        size: size.width * 0.03, color: color.surface),
+                        size: size.width * 0.02, color: color.surface),
                   ),
                   onOpened: () {
                     setState(() {
@@ -122,34 +122,37 @@ class CustomAppBarState extends State<TabletAppBar> {
                     ? Row(
                         children: [
                           SizedBox(
-                            height: size.width * 0.035,
+                            height: size.width * 0.03,
+                            width: size.width * 0.15,
                             child: ElevatedButton(
                               onPressed: () {
                                 context.push('/crear-usuarioivanna');
                               },
                               child: Text(
                                 'Crear usuario',
-                                style: TextStyle(fontSize: size.width * 0.025),
+                                style: TextStyle(fontSize: size.width * 0.015),
                               ),
                             ),
                           ),
                           SizedBox(width: size.width * 0.02),
                           SizedBox(
-                            height: size.width * 0.035,
+                            height: size.width * 0.03,
+                            width: size.width * 0.15,
                             child: ElevatedButton(
                               onPressed: () {
                                 context.push('/iniciar-sesionivanna');
                               },
                               child: Text(
                                 'Iniciar sesión',
-                                style: TextStyle(fontSize: size.width * 0.025),
+                                style: TextStyle(fontSize: size.width * 0.015),
                               ),
                             ),
                           ),
                         ],
                       )
                     : SizedBox(
-                      height: size.width * 0.035,
+                      height: size.width * 0.03,
+                      width: size.width * 0.15,
                       child: ElevatedButton(
                           onPressed: () async {
                             await Supabase.instance.client.auth.signOut();
@@ -163,7 +166,7 @@ class CustomAppBarState extends State<TabletAppBar> {
                           },
                           child: Text(
                             'Cerrar sesión',
-                            style: TextStyle(fontSize: size.width * 0.025),
+                            style: TextStyle(fontSize: size.width * 0.015),
                           ),
                         ),
                     ),

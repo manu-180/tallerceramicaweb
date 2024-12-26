@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:taller_ceramica/ivanna_taller/utils/generar_fechas.dart';
-import 'package:taller_ceramica/ivanna_taller/widgets/custom_appbar.dart';
 import 'package:taller_ceramica/ivanna_taller/widgets/responsive_appbar.dart';
 
 class Prueba extends StatelessWidget {
