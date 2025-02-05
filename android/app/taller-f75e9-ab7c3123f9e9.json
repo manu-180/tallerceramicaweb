@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "taller-f75e9",
+  "private_key_id": "ab7c3123f9e99c5f6beb8c123032a4d4757c7d2a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDEEXJN94j8eWOG\nqxqc6vKZfMBNfUGPloqh4Cl9Oc6L8dprlhuz1+kyQdVPJ54Y86wJoelFQBkJg51X\npnrDxLzS1FFbGOzR88wEgI8KmLfIY95u5jntGfxMjsE+WzO/VxUJVY5qYUe+bk59\n27xONhaZH6t1H2hvSTT/Pivre9HRyZdhStBfn2Jji4oQ91XA48Yuh5UF8Pfm9PCP\nnN8q1CVu624Hu3B0g0n+cwJajR3rHZGp7dkyOsKqYA3FDT4lqP8z1SUXo/BCcAqq\ny9Zgl74ZEAYHup/gII7Rc8eQOI6fK1oS+8dVII/5MLYLfUIXwB1hf8OeoHhnBcg4\nXv409Rh5AgMBAAECggEAGevV487nsmajV34u3N4G8sSBG/2E+bnFBupUMd++7yuA\nspvmz7D/feB261RpMhKiWlJTPQ+LVSxW/0Ey68eKezO3XxwoJbMInvPBdXzZQfSf\ncflIC+ZVP73ZIyhQQBSq4vqyWF1swcANlSrEIMbv1+X4TK9j/DUpJ4bjAZVIw7ua\nxo/IbC8d6hvYfTNA3CPU30FhYaSznm1LxqmI43/mbVsmitoYjlic2yWyNSC7OmRB\nkCdC2LPZJrDU1VgJqddqJ86IVxSZlCfj87B20bMPZhjnWW9QK3O6iI5hbXlq/3nC\n4GPfWlm21EORRUc8Lt3j45KsZSnham4u/ShLExQW7QKBgQDu2VYYN/+hBQy5s8ZI\n01qCRGA7fh8xvaziPwQS/gUf32P90TMqhUuVAfoJ3olD72TViaEBGajfYdHk7vMO\nPT26s48aHDqpVYlom4lQLeN0Z6TiRDvHKDFYLrN1Sxu8uQhJYvp7htxgLXL1GnWs\nrenPoeFS6zdRpyQBzx4SYIs6kwKBgQDSJbAQVQVc0OV10BDaXMINmxR9el0O13XJ\nq33+FnfNiHhX1k9xgJnGgSYw2DEbKLdjDSO8Nw+aMHm6OqSIeM9e9VDw8YPUZBjU\nR/8TDQQ1QIrR6Prsc9zL7OVGScuaQaEwPRY2dO+Kb2CT+fedbWZ1QhHFTAoVW3Ig\nXrJ7Hm6sQwKBgQClbVQq/AYKMSQqLnBkGjayyMbaDbVvTw7BuKGKwfMsqx1nO5Cz\nn5TExJS4ZzAtJE5zc5pW173V0bt9U152e0YY3Kp9jBW5GKxODoPhS5chFXPm3xmE\nC7t5dwcGcxnn8UPjCDGygqp51qCrUEM2cVHiZB1av90VqazPr/MFCWcFDwKBgQDE\np3IQho+jIPVp/5CV17Hc66AMIEMPTX+zfqFD8qCgHTKI+EuVqsO8qEUl9lpV0Q90\nSOqFCn22S+DN7mzkLTHZ6fWZ1FkKm7VEii9gE5E5iDGgZ8bRGUepKgIQeaRnsTz3\nGGM+CMXVJY8aSxR2JNd5qZ9Zo2PYQqAVPKkHYB4vYwKBgBGeMeBRJWe1+K8ROyE/\nqo2jdvjByMH1MRR3cvTa9gseqowCP4ZbqGo6z1F5nk1HRFONCCyHJU/1Vusj3dj4\naeBFNS1tt7gBgZwPX/Pu/mSwgskNthu0b2VkBecIdyb6sQn+gapjIcsT8DtqvNtC\nfQnlsRiLM9gL9aHD0qP5Yhaf\n-----END PRIVATE KEY-----\n",
+  "client_email": "app-flutter@taller-f75e9.iam.gserviceaccount.com",
+  "client_id": "114282628006879156521",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/app-flutter%40taller-f75e9.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

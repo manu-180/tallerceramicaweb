@@ -15,7 +15,7 @@ class AgregarUsuario {
     final usuarios = await ObtenerTotalInfo().obtenerInfoUsuarios();
 
     final data =
-        await supabaseClient.from('total').select().eq('id', idClase).single();
+        await supabaseClient.from('ceramica Ricardo Rojas').select().eq('id', idClase).single();
 
     final clase = ClaseModels.fromMap(data);
 
@@ -25,7 +25,7 @@ class AgregarUsuario {
           if (!clase.mails.contains(user)) {
             clase.mails.add(user);
             await supabaseClient
-                .from('total')
+                .from('ceramica Ricardo Rojas')
                 .update(clase.toMap())
                 .eq('id', idClase);
             ModificarLugarDisponible().removerLugarDisponible(idClase);
@@ -74,7 +74,7 @@ class AgregarUsuario {
         if (!item.mails.contains(user) && count < 4) {
           item.mails.add(user);
           await supabaseClient
-              .from('total')
+              .from('ceramica Ricardo Rojas')
               .update(item.toMap())
               .eq('id', item.id);
           ModificarLugarDisponible().removerLugarDisponible(item.id);
