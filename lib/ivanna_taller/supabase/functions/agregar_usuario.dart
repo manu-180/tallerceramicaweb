@@ -31,20 +31,28 @@ class AgregarUsuario {
             ModificarLugarDisponible().removerLugarDisponible(idClase);
             if (parametro) {
               EnviarWpp().sendWhatsAppMessage(
-                  "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488');
-              EnviarWpp().sendWhatsAppMessage(
-                  "Has insertado a $user a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164');
+  "HX6dad986ed219654d62aed35763d10ccb",
+  'whatsapp:+5491134272488',
+  [user, clase.dia, clase.fecha, clase.hora, ""] 
+);
+EnviarWpp().sendWhatsAppMessage(
+  "HX6dad986ed219654d62aed35763d10ccb",
+  'whatsapp:+5491132820164',
+  [user, clase.dia, clase.fecha, clase.hora, ""] 
+);
             }
             if (!parametro) {
               ModificarCredito().removerCreditoUsuario(user);
               EnviarWpp().sendWhatsAppMessage(
-                  "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491134272488');
-              EnviarWpp().sendWhatsAppMessage(
-                  "$user se ha inscripto a la clase del dia ${clase.dia} ${clase.fecha} a las ${clase.hora}",
-                  'whatsapp:+5491132820164');
+  "HXb7f90c40c60e781a4c4be85825808e79",
+  'whatsapp:+5491132820164',
+  [user, clase.dia, clase.fecha, clase.hora, ""] 
+);
+EnviarWpp().sendWhatsAppMessage(
+  "HXb7f90c40c60e781a4c4be85825808e79",
+  'whatsapp:+5491134272488',
+  [user, clase.dia, clase.fecha, clase.hora, ""] 
+);
             }
           }
         }
@@ -86,8 +94,15 @@ class AgregarUsuario {
     // Enviar el mensaje al usuario solo después de que se haya agregado a las 4 clases
     if (count == 4) {
       EnviarWpp().sendWhatsAppMessage(
-          "Has insertado a $user a 4 clases el día ${clase.dia} a las ${clase.hora}",
-          'whatsapp:+5491134272488');
+      "HX5a0f97cd3b0363325e3b1cc6c4d6a372",
+      'whatsapp:+5491132820164',
+      [user,clase.dia,"","",""],
+    );
+    EnviarWpp().sendWhatsAppMessage(
+      "HX5a0f97cd3b0363325e3b1cc6c4d6a372",
+      'whatsapp:+5491134272488',
+      [user,clase.dia,"","",""],
+    );
     }
   }
 }

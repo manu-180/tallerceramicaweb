@@ -24,24 +24,33 @@ class RemoverUsuario {
               .update({'mails': listUsers}).eq('id', idClase);
           ModificarLugarDisponible().agregarLugarDisponible(idClase);
           if (!parametro) {
-            EnviarWpp().sendWhatsAppMessage(
-                Calcular24hs().esMayorA24Horas(item.fecha, item.hora)
-                    ? "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. Se genero un credito para recuperar la clase"
-                    : "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
-                'whatsapp:+5491134272488');
-            EnviarWpp().sendWhatsAppMessage(
-                Calcular24hs().esMayorA24Horas(item.fecha, item.hora)
-                    ? "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. ¡Se genero un credito para recuperar la clase!"
-                    : "$user ha cancelado la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}. No podra recuperar la clase",
-                'whatsapp:+5491132820164');
+        EnviarWpp().sendWhatsAppMessage(
+          "HXc3a9c584ef95fdb872121c9cb8a09fd1",
+          'whatsapp:+5491132820164',
+            Calcular24hs().esMayorA24Horas(item.fecha, item.hora)
+                ? [user, item.dia, item.fecha, item.hora, "Se genero un credito para recuperar la clase"]
+                : [user, item.dia, item.fecha, item.hora, "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
+            );
+        EnviarWpp().sendWhatsAppMessage(
+          "HXc3a9c584ef95fdb872121c9cb8a09fd1",
+          'whatsapp:+5491134272488',
+            Calcular24hs().esMayorA24Horas(item.fecha, item.hora)
+                ? [user, item.dia, item.fecha, item.hora, "Se genero un credito para recuperar la clase"]
+                : [user, item.dia, item.fecha, item.hora, "Cancelo con menos de 24 horas de anticipacion, no podra recuperar la clase"],
+            );
+
           }
           if (parametro) {
             EnviarWpp().sendWhatsAppMessage(
-                "Has removido a $user a la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}",
-                'whatsapp:+5491134272488');
-            EnviarWpp().sendWhatsAppMessage(
-                "Has removido a $user a la clase del dia ${item.dia} ${item.fecha} a las ${item.hora}",
-                'whatsapp:+5491132820164');
+          "HXc0f22718dded5d710b659d89b4117bb1",
+          'whatsapp:+5491132820164',
+          [user, item.dia, item.fecha, item.hora, ""]
+            );
+        EnviarWpp().sendWhatsAppMessage(
+          "HXc0f22718dded5d710b659d89b4117bb1",
+          'whatsapp:+5491134272488',
+          [user, item.dia, item.fecha, item.hora, ""]
+            );
           }
         }
       }
@@ -65,10 +74,14 @@ class RemoverUsuario {
       }
     }
     EnviarWpp().sendWhatsAppMessage(
-        "Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}",
-        'whatsapp:+5491134272488');
+      "HX5a0f97cd3b0363325e3b1cc6c4d6a372",
+      'whatsapp:+5491132820164',
+      [user,clase.dia,"","",""],
+    );
     EnviarWpp().sendWhatsAppMessage(
-        "Has removido a $user a 4 clases el dia ${clase.dia} a las ${clase.hora}",
-        'whatsapp:+5491132820164');
+      "HX5a0f97cd3b0363325e3b1cc6c4d6a372",
+      'whatsapp:+5491134272488',
+      [user,clase.dia,"","",""],
+    );
   }
 }

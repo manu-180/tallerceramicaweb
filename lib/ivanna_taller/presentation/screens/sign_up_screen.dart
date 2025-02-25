@@ -252,13 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'trigger_alert': 0,
                           'clases_canceladas': [],
                         });
-          
-                        EnviarWpp().sendWhatsAppMessage(
-                            "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
-                            'whatsapp:+5491132820164');
-                        EnviarWpp().sendWhatsAppMessage(
-                            "${Capitalize().capitalize(fullname)} creo una cuenta. Ya esta disponible para asignar sus clases",
-                            'whatsapp:+5491134272488');
+      
           
                         setState(() {
                           isLoading = false;
