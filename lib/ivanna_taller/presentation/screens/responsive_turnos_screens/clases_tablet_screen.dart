@@ -578,7 +578,7 @@ class _DiaSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentMonth = DateTime.now().month;
+    final currentMonth = 3;
 
     // Obtener las dimensiones de la pantalla
     final screenWidth = MediaQuery.of(context).size.width;
@@ -606,7 +606,7 @@ class _DiaSelection extends StatelessWidget {
           );
 
           // Compara solo el mes
-          return fecha.month == currentMonth;
+          return fecha.month == 3;
         }).toList();
 
         // Si la fecha está en el mes actual, mostrar el botón
