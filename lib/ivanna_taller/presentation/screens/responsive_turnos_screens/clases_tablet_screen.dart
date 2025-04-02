@@ -577,71 +577,55 @@ class _DiaSelection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final currentMonth = 3;
+Widget build(BuildContext context) {
+  final currentMonth = 4;
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
 
-    // Obtener las dimensiones de la pantalla
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+  return ListView.builder(
+    itemCount: diasUnicos.length,
+    itemBuilder: (context, index) {
+      final clase = diasUnicos[index];
+      final partesFecha = clase.fecha.split('/');
 
-    return ListView.builder(
-      itemCount: diasUnicos.length,
-      itemBuilder: (context, index) {
-        final clase = diasUnicos[index];
+      final dia = int.parse(partesFecha[0]);
+      final mes = int.parse(partesFecha[1]);
+      final anio = int.parse(partesFecha[2]);
 
-        // Procesar clase.fecha para mostrar solo día y mes
-        final partesFecha = clase.fecha.split('/');
+      final fechaClase = DateTime(anio, mes, dia);
+
+      // Mostramos el botón solo si la clase es del mes actual (abril)
+      if (fechaClase.month == currentMonth) {
         final diaMes = '${partesFecha[0]}/${partesFecha[1]}';
         final diaMesAnio = '${clase.dia} - ${clase.fecha}';
-
         final diaFecha = '${clase.dia} - $diaMes';
 
-        // Filtrar fechasDisponibles para mostrar solo las fechas del mes actual
-        final filteredFechas = fechasDisponibles.where((dateString) {
-          final partes = dateString.split('/');
-          final fecha = DateTime(
-            int.parse(partes[2]), // Año
-            int.parse(partes[1]), // Mes
-            int.parse(partes[0]), // Día
-          );
-
-          // Compara solo el mes
-          return fecha.month == 3;
-        }).toList();
-
-        // Si la fecha está en el mes actual, mostrar el botón
-        if (filteredFechas.contains(clase.fecha)) {
-          return Column(
-            children: [
-              SizedBox(
-                width: screenWidth * 0.15, // 80% del ancho de la pantalla
-                height: screenHeight * 0.075, // 6% del alto de la pantalla
-                child: ElevatedButton(
-                  onPressed: () => seleccionarDia(diaMesAnio),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          screenWidth * 0.03), // 2% del ancho como radio
-                    ),
-                  ),
-                  child: Text(
-                    diaFecha,
-                    style: TextStyle(
-                        fontSize: screenWidth *
-                            0.012), // 4% del ancho para el tamaño de fuente
+        return Column(
+          children: [
+            SizedBox(
+              width: screenWidth * 0.15,
+              height: screenHeight * 0.075,
+              child: ElevatedButton(
+                onPressed: () => seleccionarDia(diaMesAnio),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(screenWidth * 0.03),
                   ),
                 ),
+                child: Text(
+                  diaFecha,
+                  style: TextStyle(fontSize: screenWidth * 0.012),
+                ),
               ),
-              const SizedBox(
-                height: 20,
-              )
-            ],
-          );
-        } else {
-          return const SizedBox
-              .shrink(); // Si no está en el mes actual, no mostrar nada
-        }
-      },
-    );
-  }
+            ),
+            const SizedBox(height: 20),
+          ],
+        );
+      } else {
+        return const SizedBox.shrink();
+      }
+    },
+  );
+}
+
 }
