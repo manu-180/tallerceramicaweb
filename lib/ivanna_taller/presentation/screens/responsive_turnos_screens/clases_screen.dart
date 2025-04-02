@@ -655,8 +655,8 @@ Widget build(BuildContext context) {
         return Column(
           children: [
             SizedBox(
-              width: screenWidth * 0.15,
-              height: screenHeight * 0.075,
+              width: screenWidth * 0.5,
+              height: screenHeight * 0.05,
               child: ElevatedButton(
                 onPressed: () => seleccionarDia(diaMesAnio),
                 style: ElevatedButton.styleFrom(
@@ -666,7 +666,7 @@ Widget build(BuildContext context) {
                 ),
                 child: Text(
                   diaFecha,
-                  style: TextStyle(fontSize: screenWidth * 0.012),
+                  style: TextStyle(fontSize: screenWidth * 0.03),
                 ),
               ),
             ),
