@@ -96015,7 +96015,7 @@ while(true)switch(s){case 0:s=2
 return A.p(new A.cQ().fA(),$async$nh)
 case 2:i=a1
 h=q.a
-g=h.eJ("ceramica Ricardo Rojas").yb(0).fu("id",a)
+g=h.eJ("Taller de cer\xe1mica Ricardo Rojas").yb(0).fu("id",a)
 f=t.N
 f=A.dr(g.b,f,f)
 f.m(0,"Accept","application/vnd.pgrst.object+json")
@@ -96035,7 +96035,7 @@ case 8:s=!B.b.n(f,b)?10:11
 break
 case 10:f.push(b)
 s=12
-return A.p(h.eJ("ceramica Ricardo Rojas").bB(0,o.ty()).fu("id",a),$async$nh)
+return A.p(h.eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,o.ty()).fu("id",a),$async$nh)
 case 12:new A.oB().pP(a)
 if(c){new A.hy().h3("HX6dad986ed219654d62aed35763d10ccb","whatsapp:+5491134272488",A.b([b,n,m,l,""],k))
 new A.hy().h3("HX6dad986ed219654d62aed35763d10ccb","whatsapp:+5491132820164",A.b([b,n,m,l,""],k))}if(p){new A.w2().tm(b)
@@ -96061,7 +96061,7 @@ case 5:k=l.f
 s=!B.b.n(k,b)&&m<4?7:8
 break
 case 7:k.push(b)
-k=n.eJ("ceramica Ricardo Rojas").bB(0,l.ty())
+k=n.eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,l.ty())
 l=l.a
 s=9
 return A.p(k.fu("id",l),$async$vu)
@@ -96116,7 +96116,7 @@ BS(a){return this.arm(a)},
 arm(a){var s=0,r=A.w(t.H)
 var $async$BS=A.x(function(b,c){if(b===1)return A.t(c,r)
 while(true)switch(s){case 0:s=2
-return A.p($.eq().eJ("ceramica Ricardo Rojas").Ym(0).fu("id",a),$async$BS)
+return A.p($.eq().eJ("Taller de cer\xe1mica Ricardo Rojas").Ym(0).fu("id",a),$async$BS)
 case 2:return A.u(null,r)}})
 return A.v($async$BS,r)}}
 A.a8o.prototype={
@@ -96155,7 +96155,7 @@ s=B.b.n(m,p)?7:8
 break
 case 7:B.b.F(m,p)
 s=9
-return A.p($.eq().eJ("ceramica Ricardo Rojas").bB(0,A.a_(["mails",m],o,o)).fu("id",n.a),$async$pa)
+return A.p($.eq().eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,A.a_(["mails",m],o,o)).fu("id",n.a),$async$pa)
 case 9:case 8:s=5
 break
 case 6:return A.u(null,r)}})
@@ -96323,7 +96323,7 @@ s=m===a?6:7
 break
 case 6:l=n.r
 s=8
-return A.p($.eq().eJ("ceramica Ricardo Rojas").bB(0,A.a_(["lugar_disponible",l+1],o,o)).fu("id",m),$async$oN)
+return A.p($.eq().eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,A.a_(["lugar_disponible",l+1],o,o)).fu("id",m),$async$oN)
 case 8:case 7:s=4
 break
 case 5:q=!0
@@ -96345,7 +96345,7 @@ s=m===a?6:7
 break
 case 6:l=n.r
 s=8
-return A.p($.eq().eJ("ceramica Ricardo Rojas").bB(0,A.a_(["lugar_disponible",l-1],o,o)).fu("id",m),$async$pP)
+return A.p($.eq().eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,A.a_(["lugar_disponible",l-1],o,o)).fu("id",m),$async$pP)
 case 8:case 7:s=4
 break
 case 5:q=!0
@@ -96397,7 +96397,7 @@ var $async$fV=A.x(function(a,b){if(a===1)return A.t(b,r)
 while(true)switch(s){case 0:p=A
 o=J
 s=3
-return A.p($.eq().eJ("ceramica Ricardo Rojas").yb(0),$async$fV)
+return A.p($.eq().eJ("Taller de cer\xe1mica Ricardo Rojas").yb(0),$async$fV)
 case 3:q=p.e7(o.lH(b,new A.ah9(),t.z),!0,t.Zi)
 s=1
 break
@@ -96438,7 +96438,7 @@ s=B.b.n(j,b)?7:8
 break
 case 7:B.b.F(j,b)
 s=9
-return A.p(n.eJ("ceramica Ricardo Rojas").bB(0,A.a_(["mails",j],m,m)).fu("id",a),$async$tn)
+return A.p(n.eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,A.a_(["mails",j],m,m)).fu("id",a),$async$tn)
 case 9:new A.oB().oN(a)
 if(o){i=k.d
 h=k.e
@@ -96470,7 +96470,7 @@ case 5:k=l.f
 s=B.b.n(k,b)?7:8
 break
 case 7:B.b.F(k,b)
-k=m.eJ("ceramica Ricardo Rojas").bB(0,l.ty())
+k=m.eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,l.ty())
 l=l.a
 s=9
 return A.p(k.fu("id",l),$async$xu)
@@ -96498,7 +96498,7 @@ break
 case 5:B.b.F(l,a)
 l.push(b)
 s=7
-return A.p(o.eJ("ceramica Ricardo Rojas").bB(0,A.a_(["mails",l],n,n)).fu("id",m.a),$async$xO)
+return A.p(o.eJ("Taller de cer\xe1mica Ricardo Rojas").bB(0,A.a_(["mails",l],n,n)).fu("id",m.a),$async$xO)
 case 7:case 6:s=3
 break
 case 4:return A.u(null,r)}})
