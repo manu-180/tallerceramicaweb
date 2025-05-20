@@ -20,7 +20,7 @@ class RemoverUsuario {
         if (listUsers.contains(user)) {
           listUsers.remove(user);
           await supabaseClient
-              .from('ceramica Ricardo Rojas')
+              .from('Taller de cerámica Ricardo Rojas')
               .update({'mails': listUsers}).eq('id', idClase);
           ModificarLugarDisponible().agregarLugarDisponible(idClase);
           if (!parametro) {
@@ -66,7 +66,7 @@ class RemoverUsuario {
         if (item.mails.contains(user)) {
           item.mails.remove(user);
           await supabaseClient
-              .from('ceramica Ricardo Rojas')
+              .from('Taller de cerámica Ricardo Rojas')
               .update(item.toMap())
               .eq('id', item.id);
           ModificarLugarDisponible().agregarLugarDisponible(item.id);

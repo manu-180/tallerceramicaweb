@@ -15,7 +15,7 @@ class UpdateUser {
         listUsers.remove(user);
         listUsers.add(updateUser);
         await supabaseClient
-            .from('ceramica Ricardo Rojas')
+            .from('Taller de cerámica Ricardo Rojas')
             .update({'mails': listUsers}).eq('id', clase.id);
       }
     }

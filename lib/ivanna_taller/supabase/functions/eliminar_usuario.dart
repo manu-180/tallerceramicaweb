@@ -20,7 +20,7 @@ class EliminarUsuario {
         var alumnos = clase.mails;
         alumnos.remove(user);
         await supabase
-            .from('ceramica Ricardo Rojas')
+            .from('Taller de cerámica Ricardo Rojas')
             .update({'mails': alumnos}).eq('id', clase.id);
       }
     }
