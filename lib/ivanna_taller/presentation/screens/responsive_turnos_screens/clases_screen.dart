@@ -630,7 +630,7 @@ class _DiaSelection extends StatelessWidget {
 
   @override
 Widget build(BuildContext context) {
-  final currentMonth = 5;
+  final currentMonth = 6;
   final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
 
