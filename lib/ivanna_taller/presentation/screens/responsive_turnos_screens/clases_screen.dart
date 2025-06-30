@@ -242,27 +242,22 @@ class _ClasesScreenState extends State<ClasesScreen> {
     cargarDatos();
   }
 
-  List<String> obtenerDiasConClasesDisponibles() {
-    final diasConClases = <String>{};
-    final currentMonth = DateTime.now().month;
+ List<String> obtenerDiasConClasesDisponibles() {
+  final diasConClases = <String>{};
 
-    horariosPorDia.forEach((dia, clases) {
-      if (clases.any((clase) =>
-          clase.mails.length < 5 &&
-          !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) &&
-          clase.lugaresDisponibles > 0)) {
-        final partesFecha = dia.split(' - ')[1].split('/');
-        final diaMes = int.parse(partesFecha[1]);
-        if (diaMes == currentMonth) {
-          final diaSolo =
-              dia.split(' - ')[0]; // Extraer solo el día (ej: "Lunes")
-          diasConClases.add(diaSolo);
-        }
-      }
-    });
+  horariosPorDia.forEach((dia, clases) {
+    if (clases.any((clase) =>
+        clase.mails.length < 5 &&
+        !Calcular24hs().esMenorA0Horas(clase.fecha, clase.hora) &&
+        clase.lugaresDisponibles > 0)) {
+      final diaSolo = dia.split(' - ')[0];
+      diasConClases.add(diaSolo);
+    }
+  });
 
-    return diasConClases.toList();
-  }
+  return diasConClases.toList();
+}
+
 
   @override
   Widget build(BuildContext context) {
